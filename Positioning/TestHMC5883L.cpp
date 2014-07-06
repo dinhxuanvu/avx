@@ -32,10 +32,29 @@ int main(int argc, char **argv) {
         printf("Mag X: %d\n", hmc.getMagnitudeX());
         printf("Mag Y: %d\n", hmc.getMagnitudeY());
         printf("Mag Z: %d\n", hmc.getMagnitudeZ());
+
+        // Calculate heading
+        float heading = atan2((float)hmc.getMagnitudeY(), (float)hmc.getMagnitudeX());
+        
+        // Declineation Angle at Rochester (-11o30')
+        float declinationAngle = -0.200712864;
+        heading += declinationAngle;
+        
+        // Correct for when signs are reversed.
+        if(heading < 0)
+            heading += 2*M_PI;
+        
+        // Check for wrap due to addition of declination.
+        if(heading > 2*M_PI)
+            heading -= 2*M_PI;
+        
+        // Convert radians to degrees
+        float headingDegrees = heading * 180/M_PI;
+        
+        printf("Heading: %f\n", headingDegrees);
         printf("-------------\n");
         
-        usleep(2000);
+        usleep(100000);
     }
     return 0;
 }
-

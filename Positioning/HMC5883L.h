@@ -19,7 +19,7 @@
 #define	HMC5883L_H
 #include "BBB_I2C.h"
 
-#define I2C_BUS 1
+#define I2C_BUS 2
 
 #define DEF_DEV_ADD 0x1E
 #define CONFIG_A 0x00
