@@ -103,7 +103,7 @@ Path PathPlanner::getDirection()
 
 
   #if DISPLAY_WINDOWS==0
-    compass = -this->position->getHeadingOffset();
+    compass = 0; //-this->position->getHeadingOffset();
   #else
     compass = 0;
   #endif

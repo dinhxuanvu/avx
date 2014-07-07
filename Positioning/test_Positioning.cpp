@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstdlib>
+#include <iomanip>
 
 #include "Positioning.h"
 #include "../macros.h"
@@ -13,7 +14,7 @@ int main(int argc, char** argv)
 
   while(1)
   {
-    cout << "Val: " << pos.getHeadingOffset() << endl;
+    cout << "Heading: " << fixed << setw(0) << setprecision(0) << pos.getHeadingOffset() << endl;
     usleep(100000);
   }
 

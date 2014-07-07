@@ -18,14 +18,29 @@ lcd_d7        = 'P8_41'
 lcd_columns = 16
 lcd_rows    = 2
 
+# Define read last lines function
+def follow(thefile):
+	thefile.seek(0,2)
+	while True:
+		line = thefile.readline()
+		if not line:
+			time.sleep(0.1)
+			continue
+		yield line
+
 # Initialize the LCD using the pins above.
 lcd = LCD.Adafruit_CharLCD(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7, 
 							lcd_columns, lcd_rows)
 
 # Print a two line message
-lcd.message("Write\n here")
-while True:
-	userinput = stdin.readline()
+logfile = open("PythonDaemon/lcd-log","r")
+loglines = follow(logfile)
+lastline = ""
+lcd.blink(True)
+for line in loglines:
 	lcd.clear()
-	lcd.message(userinput)
-	time.sleep(1)
+	lcd.home()
+	lcd.message(lastline.rstrip()[0:15])
+	lcd.message('\n')
+	lcd.message(line.rstrip()[0:15])
+	lastline = line

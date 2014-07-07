@@ -12,6 +12,7 @@ hmc(i2c)
 {
     this->hmc.initialize();
     this->target = 180;
+    this->calibrate();
 }
 
 /*
@@ -22,6 +23,29 @@ void Positioning::setTarget()
     float heading = this->getHeading(5);
     this->target = heading;
     this->lastH = heading;
+}
+
+void Positioning::calibrate()
+{
+    this->calX = -15;
+    this->calY = 153;
+    return;
+    int maxX = 0; int maxY = 0;
+    int minX = 0; int minY = 0;
+    for(int i=0; i<500; i++)
+    {
+      int X = this->getMagX();
+      int Y = this->getMagY();
+      this->getMagZ();
+      if(X > maxX) { maxX = X; } 
+      if(Y > maxY) { maxY = Y; } 
+      if(X < minX) { minX = X; } 
+      if(Y < minY) { minY = Y; }
+      usleep(200000);
+    }
+    this->calX = (float)(maxX + minX) / -2.0f;
+    this->calY = (float)(maxY + minY) / -2.0f;
+    printf("Compass clibrated.\n X-offset: %d Y-offset: %d\n",this->calX,this->calY);
 }
 
 /*
@@ -67,16 +91,11 @@ float Positioning::getHead()
 float Positioning::getHeading(int n)
 {
     int X = 0; int Y = 0;
-    //for(int i=0; i<n; i++)
-    //{
-      X = this->getMagX()+300;
-      Y = this->getMagY()+300;
-      this->getMagZ();
-      usleep(100);
-    //}
+    X = this->getMagX()+this->calX;
+    Y = this->getMagY()+this->calY;
+    this->getMagZ();
 
     // Calculate heading
-    printf("X: %df, Y: %d\n",X,Y);
     float heading = atan2(X, Y);
     
     // Declineation Angle at Rochester (-11o30')
@@ -106,7 +125,7 @@ float Positioning::getHeadingOffset()
 {
     float current = this->getHead();
     
-    printf("Heading current: %0.0f, Target: %0.0f\n",current, this->target);
+    //printf("Heading current: %0.0f, Target: %0.0f\n",current, this->target);
 
     float offset = this->target - current;
     return offset;
