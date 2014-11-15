@@ -56,11 +56,12 @@ masked_img = img_plane.*img;
 % Visualize masked version of detph iamge
 subplot(2,2,4);
 title('Masked Depth Image');
+imagesc(img-B_plane);
 
 % Scale image?
 num = 1;
 masked_img = round(num.*masked_img./max(max(masked_img)));
-imagesc(masked_img);
+%imagesc(masked_img);
 
 % Find first pixels for outside of box
 [~,top] = find(masked_img'~=0,1);
