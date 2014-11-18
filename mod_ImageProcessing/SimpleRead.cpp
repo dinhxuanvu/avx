@@ -19,12 +19,19 @@
 *                                                                            *
 *****************************************************************************/
 #include <stdio.h>
+#include <iostream>
+
 #include <OpenNI2/OpenNI.h>
 #include <OpenNI2/OniSampleUtilities.h>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 #define SAMPLE_READ_WAIT_TIMEOUT 2000 //2000ms
 
+using namespace cv;
 using namespace openni;
+using namespace std;
 
 int main()
 {
@@ -62,12 +69,16 @@ int main()
 		return 4;
 	}
 
-	VideoFrameRef frame;
+	VideoFrameRef vfr;
+  int h,w;
+  Mat frame;
 
+  // Loop until keyboard press to end execution
 	while (!wasKeyboardHit())
 	{
 		int changedStreamDummy;
 		VideoStream* pStream = &depth;
+    // Wait stream of good status
 		rc = OpenNI::waitForAnyStream(&pStream, 1, &changedStreamDummy, SAMPLE_READ_WAIT_TIMEOUT);
 		if (rc != STATUS_OK)
 		{
@@ -75,26 +86,38 @@ int main()
 			continue;
 		}
 
-		rc = depth.readFrame(&frame);
+    // Read the frame
+		rc = depth.readFrame(&vfr);
 		if (rc != STATUS_OK)
 		{
 			printf("Read failed!\n%s\n", OpenNI::getExtendedError());
 			continue;
 		}
-
-		if (frame.getVideoMode().getPixelFormat() != PIXEL_FORMAT_DEPTH_1_MM && frame.getVideoMode().getPixelFormat() != PIXEL_FORMAT_DEPTH_100_UM)
+    // Check the video mode is millimeters.
+		if (vfr.getVideoMode().getPixelFormat() != PIXEL_FORMAT_DEPTH_1_MM && vfr.getVideoMode().getPixelFormat() != PIXEL_FORMAT_DEPTH_100_UM)
 		{
 			printf("Unexpected frame format\n");
 			continue;
 		}
 
-		DepthPixel* pDepth = (DepthPixel*)frame.getData();
+    const uint16_t* imgBuf = (const uint16_t*)vfr.getData();
 
-		int middleIndex = (frame.getHeight()+1)*frame.getWidth()/2;
+    // Create openCV frame of appropriate height and width;
+    h = vfr.getHeight(); w = vfr.getWidth();
+    frame.create(h,w,CV_16U);
 
-		printf("[%08llu] %8d\n", (long long)frame.getTimestamp(), pDepth[middleIndex]);
+    // Copy from OpenNI frame to OpenCV frame?
+    memcpy(frame.data, imgBuf, h*w*sizeof(uint16_t));
+
+    // Convert from 16 bit to 8 bit
+    frame.convertTo(frame, CV_8U);
+
+    // Display in a window
+    namedWindow("ir", 1);
+    imshow("ir", frame);
 	}
 
+  printf("Loop stopped, shutting down\n");
 	depth.stop();
 	depth.destroy();
 	device.close();
@@ -102,3 +125,4 @@ int main()
 
 	return 0;
 }
+

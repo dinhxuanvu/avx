@@ -1,6 +1,8 @@
-NILIB=-lOpenNI2
+LIBNI=-lOpenNI2
+LIBCV=`pkg-config opencv --cflags --libs`
 CC=g++
 CFLAGS=-Wall
+LINK=$(LIBCV) $(LIBNI)
 
 
 
@@ -8,15 +10,9 @@ CFLAGS=-Wall
 
 
 SimpleRead: SimpleRead.cpp
-	$(CC) $(CFLAGS) -o SimpleRead SimpleRead.cpp $(NILIB)
-
-Viewer: Viewer.cpp Viewer.h
-	$(CC) $(CFLAGS) -c Viewer.cpp $(NILIB)
-
-SimpleViewer: SimpleViewer.cpp Viewer
-	$(CC) $(CFLAGS) -o SimpleViewer SimpleViewer.cpp Viewer.o $(NILIB)
-
+	$(CC) $(CFLAGS) -o SimpleRead SimpleRead.cpp $(LINK)
 
 .PHONY: clean
 clean:
 	rm -rf *.o SimpleRead SimpleViewer
+######################################
