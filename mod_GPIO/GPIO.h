@@ -17,6 +17,14 @@ extern "C" {
 #define SERVO_PWM       BBBIO_PWMSS2  // Channel A = turn, Channel B = Camera
 #define SERVO_FREQ      50.0f           // 50 Hz
 
+#define TURN_LEFT       2.7f
+#define TURN_CENTER     4.425f
+#define TURN_RIGHT      6.5f
+
+#define CAM_LEFT        2.7f
+#define CAM_CENTER      4.425f
+#define CAM_RIGHT       6.5f
+
 #define MOTOR_A_PWM     BBBIO_PWMSS0  // Both channels A,B
 #define MOTOR_B_PWM     BBBIO_PWMSS1  // Both channels A,B
 #define MOTOR_FREQ      50.0f        // 20Khz
@@ -41,10 +49,10 @@ int disableHBridge(void);
 int setBatteryLEDs(unsigned int percent);
 
 // Both servos need to be stored so we don't mess one up
-int setTurn(signed int angle);
+int setTurn(float angle);
 
 // Both servos need to be stored so we don't mess one up
-int setCamera(signed int angle);
+int setCamera(float angle);
 
 //TODO: differential turning based on stored angle for turn servo
 int setSpeed(unsigned int speed);

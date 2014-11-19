@@ -7,37 +7,11 @@
 int main(int argc, char** argv)
 {
   int test;
-  printf("GPIO Module Testing\n\n");
-  if(argc < 3)
-  {
-    printf("Usage: %s (1|2|3) value\n", argv[0]);
-    printf("\t 1 - Battery level \n");
-    printf("\t 2 - Turning servo angle \n");
-    printf("\t 3 - Motor speed value\n");
-    return -1;
-  }
-  
-  test = atoi(argv[1]);
-
-  printf("Initializing IO lib\n");
   initialize();
+  printf("Initialize\n");
+  
+  setCamera(atof(argv[1]));
 
-  if(test == 1)
-  {
-    printf("Battery level at %s\n",argv[2]);
-    setBatteryLEDs(atoi(argv[2]));
-  }else if(test == 2)
-  {
-    printf("Tuning servo 1 to %s\n",argv[2]);
-    setTurn(atoi(argv[2]));
-  }else if(test == 3)
-  {
-    enableHBridge();
-    printf("Motor speed to %s \n",argv[2]);
-    setSpeed(atoi(argv[2]));
-  }else{
-    printf("Invalid value\n");
-  }
 
   printf("Cleanup\n");
   deinitialize();
@@ -130,24 +104,56 @@ int setBatteryLEDs(unsigned int percent)
   return 1;
 }
 
-// Both servos need to be stored so we don't mess one up
-int setTurn(signed int angle)
+/* setTurn - sets the turning servo angle
+ * param: float angle - [-1,1] range */
+int setTurn(float angle)
 {
-	float duty_wheels = (float)angle;
-	float duty_camera = 50.0f;
+	float duty_wheels;
+
+  if(angle > 1)
+    angle = 1;
+  if(angle < -1)
+    angle = -1;
+
+  if(angle > 0)
+  {
+    duty_wheels = (TURN_RIGHT-TURN_CENTER)*angle + TURN_CENTER;
+  } else
+  {
+    duty_wheels = (TURN_CENTER-TURN_LEFT)*angle + TURN_CENTER;
+  }
+
+	float duty_camera = CAM_CENTER;
 
 	BBBIO_PWMSS_Setting(SERVO_PWM, SERVO_FREQ, duty_wheels, duty_camera);
+  BBBIO_ehrPWM_Enable(SERVO_PWM);
   return 1;
 }
 
-// Both servos need to be stored so we don't mess one up
-int setCamera(signed int angle)
+/* setCamera - sets the camera angle
+ * param: angle - [-90,90] degrees from center */
+int setCamera(float angle)
 {
-	const float duty_wheels = 10.0f;
-	const float duty_camera = angle/100;
-  
+	float duty_camera;
+
+  angle = angle/90;
+
+  if(angle > 1)
+    angle = 1;
+  if(angle < -1)
+    angle = -1;
+
+  if(angle > 0)
+    duty_camera = (CAM_RIGHT-CAM_CENTER)*angle + CAM_CENTER;
+  else
+    duty_camera = (CAM_CENTER-CAM_LEFT)*angle + CAM_CENTER;
+
+	float duty_wheels = TURN_CENTER;
+
 	BBBIO_PWMSS_Setting(SERVO_PWM, SERVO_FREQ, duty_wheels, duty_camera);
+  BBBIO_ehrPWM_Enable(SERVO_PWM);
   return 1;
+
 }
 
 //TODO: differential turning based on stored angle for turn servo
