@@ -1,10 +1,6 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Battery LEDs on P8
 #define LED_BAT1    18
 #define LED_BAT2    16
@@ -29,36 +25,40 @@ extern "C" {
 #define MOTOR_B_PWM     BBBIO_PWMSS1  // Both channels A,B
 #define MOTOR_FREQ      50.0f        // 20Khz
 
-/* initialize - Starts up the configuration for GPIO
- * include pins and PWM
- */
-int initialize(void);
+#define MOTOR_MIN		0.0f
+#define MOTOR_MAX		100.0f
 
-/* Destroy IO lib, etc */
-int deinitialize(void);
+namespace WALLE
+{
+  class GPIO
+  {
+    public:
+      static GPIO *instance();
+    
+      /* Enable the H-Bridge on the motor board */
+      int enableHBridge(void);
 
-/* Enable the H-Bridge on the motor board */
-int enableHBridge(void);
+      /* Disable the H-Bridge on the motor board */
+      int disableHBridge(void);
 
-/* Disable the H-Bridge on the motor board */
-int disableHBridge(void);
+      /* setBattery - sets battery level by 4 LEDs on motor-board
+       * Param: percent (uint8 from 0 to 100)
+       */
+      int setBatteryLEDs(float percent);
 
-/* setBattery - sets battery level by 4 LEDs on motor-board
- * Param: percent (uint8 from 0 to 100)
- */
-int setBatteryLEDs(unsigned int percent);
+      /* setTurn - sets the turning servo angle
+       * param: float angle - [-1,1] range */
+      int setTurn(float angle);
 
-// Both servos need to be stored so we don't mess one up
-int setTurn(float angle);
+      /* setCamera - sets the camera angle
+       * param: angle - [-90,90] degrees from center */
+      int setCamera(float angle);
 
-// Both servos need to be stored so we don't mess one up
-int setCamera(float angle);
-
-//TODO: differential turning based on stored angle for turn servo
-int setSpeed(unsigned int speed);
-
-#ifdef __cplusplus
-  }
-#endif
+      /* setSpeed - sets motor speed based on value.
+       * param: speed in [-1,1], where < 0 is reverse, and > 0 is forward
+       */
+      int setSpeed(float speed);
+  };
+}
 
 #endif /* GPIO_H_ */
