@@ -1,13 +1,12 @@
 IOLIB=-lBBBio
 
-LED : LED.c
-	gcc -o LED LED.c ${IOLIB}
+all : GPIO run
 
-Servo : Servo.c
-	gcc -o Servo Servo.c ${IOLIB}
+GPIO : GPIO.c GPIO.h
+	gcc -o GPIO GPIO.c ${IOLIB}
 
-PWM : PWM.c
-	gcc -o PWM PWM.c ${IOLIB}
+run : GPIO
+	sudo ./GPIO 1 100
 
 ADC : ADC.c
 	gcc -o ADC ADC.c ${IOLIB} -lm
