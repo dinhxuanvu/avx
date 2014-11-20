@@ -23,7 +23,7 @@
 
 #define MOTOR_A_PWM     BBBIO_PWMSS0  // Both channels A,B
 #define MOTOR_B_PWM     BBBIO_PWMSS1  // Both channels A,B
-#define MOTOR_FREQ      50.0f        // 20Khz
+#define MOTOR_FREQ      15000.0f        // 20Khz
 
 #define MOTOR_MIN		0.0f
 #define MOTOR_MAX		100.0f

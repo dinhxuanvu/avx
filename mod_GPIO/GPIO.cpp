@@ -156,7 +156,7 @@ using namespace std;
        */
       int GPIO::setSpeed(float speed)
       {
-        float duty [2] = { 0.0, 0.0 };
+        float duty [2] = { 1.0, 1.0 };
         // Check bounds
         if(speed > 1)
           speed = 1;
@@ -172,9 +172,11 @@ using namespace std;
       
         // Set duty[0] for forward, duty[1] for backward.
         duty[index] = (MOTOR_MAX-MOTOR_MIN)*speed + MOTOR_MIN;
+
+        cout << "Level A: " << duty[0] << endl << "Level B:" << duty[1] << endl;
       
         // Set each motor with new duty cycles
-        setMotor(MOTOR_A_PWM, duty[0], duty[1]);
+        //setMotor(MOTOR_A_PWM, duty[0], duty[1]);
         setMotor(MOTOR_B_PWM, duty[0], duty[1]);
 
         return 1;
@@ -189,7 +191,15 @@ int main(int argc, char** argv)
   cout << "Initialize GPIO" << endl;
   GPIO *gpio = GPIO::instance();
 
-  gpio->setCamera(atof(argv[1]));
+  gpio->disableHBridge();
+  cout << "Disabled";
+
+  cin.ignore();
+
+  gpio->enableHBridge();
+  cout << "Enabled";
+
+  cin.ignore();
 
   cout << "Cleanup" << endl;
   gpio->deinitialize();
