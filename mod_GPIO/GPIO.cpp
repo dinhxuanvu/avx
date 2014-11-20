@@ -1,18 +1,14 @@
 #include "GPIO.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <BBBio_lib/BBBiolib.h>
 
-namespace WALLE
-{
-  class GPIO
-  {
-      static GPIO *s_instance;
+using namespace std;
 
-      float duty_wheels;
-      float duty_camera;
+
+      GPIO * GPIO::s_instance = NULL;
       // Constructor not public
-      GPIO(void)
+      GPIO::GPIO(void)
       {
         // Initialize library
         iolib_init();
@@ -34,24 +30,26 @@ namespace WALLE
         BBBIO_PWMSS_Setting(MOTOR_A_PWM,  MOTOR_FREQ,   0.0,  0.0);   // Clear settings
         BBBIO_PWMSS_Setting(MOTOR_B_PWM,  MOTOR_FREQ,   0.0,  0.0);   // Clear settings
       }
-      ~GPIO(void)
+      
+      int GPIO::deinitialize(void)
       {
         // H-Bridge Disable
         disableHBridge();
 
         iolib_free();
+        return 1;
       }
     
       // Set a single motor PWM value, used by setSpeed.
-      int setMotor(int motor, float duty1, float duty2)
+      int GPIO::setMotor(int motor, float duty1, float duty2)
       {
         // Update value
 	      BBBIO_PWMSS_Setting(motor, MOTOR_FREQ, duty1, duty2);
         // Re-enable after update
         BBBIO_ehrPWM_Enable(motor);
       }
-    public:
-      static GPIO *instance()
+      
+      GPIO * GPIO::instance()
       {
         if(!s_instance)
           s_instance = new GPIO;
@@ -59,14 +57,14 @@ namespace WALLE
       }
     
       /* Enable the H-Bridge on the motor board */
-      int enableHBridge(void)
+      int GPIO::enableHBridge(void)
       {
         pin_high(8, HBRIDGE_EN);
         return 1;
       }
 
       /* Disable the H-Bridge on the motor board */
-      int disableHBridge(void)
+      int GPIO::disableHBridge(void)
       {
         pin_low(8, HBRIDGE_EN);
         return 1;
@@ -75,7 +73,7 @@ namespace WALLE
       /* setBattery - sets battery level by 4 LEDs on motor-board
        * Param: percent (uint8 from 0 to 100)
        */
-      int setBatteryLEDs(float percent)
+      int GPIO::setBatteryLEDs(float percent)
       {
         // Reset to clear
         pin_low(8,LED_BAT1);
@@ -98,7 +96,7 @@ namespace WALLE
 
       /* setTurn - sets the turning servo angle
        * param: float angle - [-1,1] range */
-      int setTurn(float angle)
+      int GPIO::setTurn(float angle)
       {
 	      float new_duty;
       
@@ -125,7 +123,7 @@ namespace WALLE
 
       /* setCamera - sets the camera angle
        * param: angle - [-90,90] degrees from center */
-      int setCamera(float angle)
+      int GPIO::setCamera(float angle)
       {
 	      float new_duty;
       
@@ -156,7 +154,7 @@ namespace WALLE
       /* setSpeed - sets motor speed based on value.
        * param: speed in [-1,1], where < 0 is reverse, and > 0 is forward
        */
-      int setSpeed(float speed)
+      int GPIO::setSpeed(float speed)
       {
         float duty [2] = { 0.0, 0.0 };
         // Check bounds
@@ -182,12 +180,6 @@ namespace WALLE
         return 1;
       }
 
-  }
-
-  };
-}
-
-using namespace WALLE;
 
 /* Main for testing? */
 int main(int argc, char** argv)
@@ -199,7 +191,7 @@ int main(int argc, char** argv)
 
   gpio->setCamera(atof(argv[1]));
 
-  printf("Cleanup\n");
+  cout << "Cleanup" << endl;
   gpio->deinitialize();
   return 0;
 }

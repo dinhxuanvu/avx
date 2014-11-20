@@ -1,9 +1,10 @@
 IOLIB=-lBBBio
+CC=g++
 
 all : GPIO run
 
-GPIO : GPIO.c GPIO.h
-	gcc -o GPIO GPIO.c ${IOLIB}
+GPIO : GPIO.cpp GPIO.h
+	$(CC) -o GPIO GPIO.cpp ${IOLIB}
 
 run : GPIO
 	sudo ./GPIO 1 100
