@@ -1655,6 +1655,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="SUPPLY5" library="SparkFun-Aesthetics" deviceset="3.3V" device=""/>
 <part name="SUPPLY6" library="SparkFun-Aesthetics" deviceset="3.3V" device=""/>
 <part name="SUPPLY7" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
+<part name="EXTRA" library="pinhead" deviceset="PINHD-2X8" device="" value="EXT"/>
+<part name="SUPPLY1" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
+<part name="GND10" library="supply1" deviceset="GND" device=""/>
+<part name="GND11" library="supply1" deviceset="GND" device=""/>
+<part name="SUPPLY8" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1693,6 +1698,9 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <text x="-48.514" y="37.338" size="2.032" layer="97">Compass (I2C)</text>
 <text x="-34.798" y="25.908" size="1.27" layer="97">SDA</text>
 <text x="-34.798" y="28.194" size="1.27" layer="97">SCL</text>
+<wire x1="137.16" y1="15.24" x2="187.96" y2="15.24" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="187.96" y1="15.24" x2="187.96" y2="58.42" width="0.1524" layer="97" style="shortdash"/>
+<text x="139.192" y="51.308" size="3.048" layer="97">Extra GPIO</text>
 </plain>
 <instances>
 <instance part="U$1" gate="P8" x="17.78" y="96.52"/>
@@ -1728,6 +1736,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <instance part="SUPPLY5" gate="G$1" x="-15.24" y="48.26" rot="MR0"/>
 <instance part="SUPPLY6" gate="G$1" x="50.8" y="48.26"/>
 <instance part="SUPPLY7" gate="G$1" x="91.44" y="40.64"/>
+<instance part="EXTRA" gate="A" x="162.56" y="35.56"/>
+<instance part="SUPPLY1" gate="G$1" x="177.8" y="45.72"/>
+<instance part="GND10" gate="1" x="139.7" y="35.56"/>
+<instance part="GND11" gate="1" x="177.8" y="20.32"/>
+<instance part="SUPPLY8" gate="G$1" x="139.7" y="25.4"/>
 </instances>
 <busses>
 </busses>
@@ -1794,6 +1807,21 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="J9" gate="A" pin="12"/>
 <wire x1="165.1" y1="83.82" x2="157.48" y2="83.82" width="0.1524" layer="91"/>
 <junction x="165.1" y="83.82"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="1"/>
+<wire x1="160.02" y1="43.18" x2="139.7" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="EXTRA" gate="A" pin="5"/>
+<wire x1="160.02" y1="38.1" x2="139.7" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="38.1" x2="139.7" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="GND10" gate="1" pin="GND"/>
+<junction x="139.7" y="38.1"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="16"/>
+<wire x1="167.64" y1="25.4" x2="177.8" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="177.8" y1="25.4" x2="177.8" y2="22.86" width="0.1524" layer="91"/>
+<pinref part="GND11" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="I2C1_SCL" class="0">
@@ -2040,6 +2068,147 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-2.54" y1="43.18" x2="-22.86" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="-22.86" y1="43.18" x2="-22.86" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="SUPPLY2" gate="G$1" pin="5V"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="2"/>
+<pinref part="SUPPLY1" gate="G$1" pin="5V"/>
+<wire x1="167.64" y1="43.18" x2="177.8" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="177.8" y1="43.18" x2="177.8" y2="45.72" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="15"/>
+<wire x1="160.02" y1="25.4" x2="152.4" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="25.4" x2="152.4" y2="22.86" width="0.1524" layer="91"/>
+<pinref part="SUPPLY8" gate="G$1" pin="5V"/>
+<wire x1="152.4" y1="22.86" x2="139.7" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="22.86" x2="139.7" y2="25.4" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="EX6" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_72"/>
+<wire x1="-2.54" y1="68.58" x2="-12.7" y2="68.58" width="0.1524" layer="91"/>
+<label x="-15.24" y="68.58" size="1.27" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="13"/>
+<wire x1="160.02" y1="27.94" x2="149.86" y2="27.94" width="0.1524" layer="91"/>
+<label x="147.32" y="27.94" size="1.27" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="EX5" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_74"/>
+<wire x1="-2.54" y1="71.12" x2="-12.7" y2="71.12" width="0.1524" layer="91"/>
+<label x="-15.24" y="71.12" size="1.27" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="14"/>
+<wire x1="167.64" y1="27.94" x2="177.8" y2="27.94" width="0.1524" layer="91"/>
+<label x="180.34" y="27.94" size="1.27" layer="95"/>
+</segment>
+</net>
+<net name="EX4" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_76"/>
+<wire x1="-2.54" y1="73.66" x2="-12.7" y2="73.66" width="0.1524" layer="91"/>
+<label x="-15.24" y="73.66" size="1.27" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="12"/>
+<wire x1="167.64" y1="30.48" x2="177.8" y2="30.48" width="0.1524" layer="91"/>
+<label x="180.34" y="30.48" size="1.27" layer="95"/>
+</segment>
+</net>
+<net name="EX3" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_10"/>
+<wire x1="-2.54" y1="83.82" x2="-12.7" y2="83.82" width="0.1524" layer="91"/>
+<label x="-15.24" y="83.82" size="1.27" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="11"/>
+<wire x1="160.02" y1="30.48" x2="149.86" y2="30.48" width="0.1524" layer="91"/>
+<label x="147.32" y="30.48" size="1.27" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="EX2" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_87"/>
+<wire x1="-2.54" y1="86.36" x2="-12.7" y2="86.36" width="0.1524" layer="91"/>
+<label x="-15.24" y="86.36" size="1.27" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="6"/>
+<wire x1="167.64" y1="38.1" x2="177.8" y2="38.1" width="0.1524" layer="91"/>
+<label x="180.34" y="38.1" size="1.27" layer="95"/>
+</segment>
+</net>
+<net name="EX1" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_86"/>
+<wire x1="-2.54" y1="88.9" x2="-12.7" y2="88.9" width="0.1524" layer="91"/>
+<label x="-15.24" y="88.9" size="1.27" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="4"/>
+<wire x1="167.64" y1="40.64" x2="177.8" y2="40.64" width="0.1524" layer="91"/>
+<label x="180.34" y="40.64" size="1.27" layer="95"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="EXTRA" gate="A" pin="3"/>
+<wire x1="160.02" y1="40.64" x2="149.86" y2="40.64" width="0.1524" layer="91"/>
+<label x="147.32" y="40.64" size="1.27" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="EX9" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_73"/>
+<wire x1="38.1" y1="68.58" x2="48.26" y2="68.58" width="0.1524" layer="91"/>
+<label x="50.8" y="68.58" size="1.27" layer="95"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="9"/>
+<wire x1="160.02" y1="33.02" x2="149.86" y2="33.02" width="0.1524" layer="91"/>
+<label x="147.32" y="33.02" size="1.27" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="EX8" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_75"/>
+<wire x1="38.1" y1="71.12" x2="48.26" y2="71.12" width="0.1524" layer="91"/>
+<label x="50.8" y="71.12" size="1.27" layer="95"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="7"/>
+<wire x1="160.02" y1="35.56" x2="149.86" y2="35.56" width="0.1524" layer="91"/>
+<label x="147.32" y="35.56" size="1.27" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="EX7" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_77"/>
+<wire x1="38.1" y1="73.66" x2="48.26" y2="73.66" width="0.1524" layer="91"/>
+<label x="50.8" y="73.66" size="1.27" layer="95"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="8"/>
+<wire x1="167.64" y1="35.56" x2="177.8" y2="35.56" width="0.1524" layer="91"/>
+<label x="180.34" y="35.56" size="1.27" layer="95"/>
+</segment>
+</net>
+<net name="EX10" class="0">
+<segment>
+<pinref part="U$1" gate="P8" pin="GPIO_89"/>
+<wire x1="38.1" y1="86.36" x2="48.26" y2="86.36" width="0.1524" layer="91"/>
+<label x="50.8" y="86.36" size="1.27" layer="95"/>
+</segment>
+<segment>
+<pinref part="EXTRA" gate="A" pin="10"/>
+<wire x1="167.64" y1="33.02" x2="177.8" y2="33.02" width="0.1524" layer="91"/>
+<label x="180.34" y="33.02" size="1.27" layer="95"/>
 </segment>
 </net>
 </nets>
