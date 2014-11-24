@@ -8,7 +8,7 @@
 #define LED_BAT4    12
 
 #define HBRIDGE_EN  11    // P8
-#define BAT_SENSE   AIN1  // P9
+#define BAT_SENSE   BBBIO_ADC_AIN1  // P9
 
 #define SERVO_PWM       BBBIO_PWMSS2  // Channel A = turn, Channel B = Camera
 #define SERVO_FREQ      50.0f           // 50 Hz
@@ -33,7 +33,7 @@ class GPIO
   private:
     float duty_wheels, duty_camera;
 
-    int batBuff[1];
+    unsigned int batBuff[1];
 
     static GPIO *s_instance;
 

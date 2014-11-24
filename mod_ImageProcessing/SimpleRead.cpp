@@ -22,7 +22,7 @@
 #include <iostream>
 
 #include <OpenNI2/OpenNI.h>
-#include <OpenNI2/OniSampleUtilities.h>
+//#include <OpenNI2/OniSampleUtilities.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -74,7 +74,7 @@ int main()
   Mat frame;
 
   // Loop until keyboard press to end execution
-	while (!wasKeyboardHit())
+	while (1)
 	{
 		int changedStreamDummy;
 		VideoStream* pStream = &depth;
