@@ -28,44 +28,51 @@
 #define MOTOR_MIN		0.0f
 #define MOTOR_MAX		100.0f
 
-  class GPIO
-  {
-    private:
-      float duty_wheels, duty_camera;
+class GPIO
+{
+  private:
+    float duty_wheels, duty_camera;
 
-      static GPIO *s_instance;
+    int batBuff[1];
 
-      GPIO(void);
+    static GPIO *s_instance;
 
-      int setMotor(int, float, float);
-    public:
-      static GPIO *instance();
+    GPIO(void);
 
-      int deinitialize(void);
-    
-      /* Enable the H-Bridge on the motor board */
-      int enableHBridge(void);
+    int setMotor(int, float, float);
+  public:
+    /* get the instance of the GPIO b/c of singleton */
+    static GPIO *instance();
 
-      /* Disable the H-Bridge on the motor board */
-      int disableHBridge(void);
+    /* Disable the GPIO  and cleanup */
+    int deinitialize(void);
+  
+    /* Enable the H-Bridge on the motor board */
+    int enableHBridge(void);
 
-      /* setBattery - sets battery level by 4 LEDs on motor-board
-       * Param: percent (uint8 from 0 to 100)
-       */
-      int setBatteryLEDs(float);
+    /* Disable the H-Bridge on the motor board */
+    int disableHBridge(void);
 
-      /* setTurn - sets the turning servo angle
-       * param: float angle - [-1,1] range */
-      int setTurn(float);
+    /* setBattery - sets battery level by 4 LEDs on motor-board
+     * Param: percent (uint8 from 0 to 100)
+     */
+    int setBatteryLEDs(float);
 
-      /* setCamera - sets the camera angle
-       * param: angle - [-90,90] degrees from center */
-      int setCamera(float);
+    /* getBatteryLevel - gets the battery level as a percentage */
+    float getBatteryLevel(void);
 
-      /* setSpeed - sets motor speed based on value.
-       * param: speed in [-1,1], where < 0 is reverse, and > 0 is forward
-       */
-      int setSpeed(float);
-  };
+    /* setTurn - sets the turning servo angle
+     * param: float angle - [-1,1] range */
+    int setTurn(float);
+
+    /* setCamera - sets the camera angle
+     * param: angle - [-90,90] degrees from center */
+    int setCamera(float);
+
+    /* setSpeed - sets motor speed based on value.
+     * param: speed in [-1,1], where < 0 is reverse, and > 0 is forward
+     */
+    int setSpeed(float);
+};
 
 #endif /* GPIO_H_ */
