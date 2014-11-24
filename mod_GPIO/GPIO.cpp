@@ -30,6 +30,11 @@ GPIO::GPIO(void)
   BBBIO_PWMSS_Setting(SERVO_PWM,    SERVO_FREQ,   0.25, 0.25);  // Clear settings
   BBBIO_PWMSS_Setting(MOTOR_A_PWM,  MOTOR_FREQ,   0.0,  0.0);   // Clear settings
   BBBIO_PWMSS_Setting(MOTOR_B_PWM,  MOTOR_FREQ,   0.0,  0.0);   // Clear settings
+
+  // Setup ADC
+  BBBIO_ADCTSC_module_ctrl(BBBIOJ_ADC_WORK_MODE_TIMER_INT, 160);
+  // Setup the analog input sampling
+  BBBIO_ADCTSC_channel_ctrl(BAT_SENSE, BBBIO_ADC_STEP_MODE_SW_CONTINUOUS, 0, 1, BBBIO_ADC_STEP_AVG_2, batBuff, 1);
 }
 
 // Disable the hbridge and free the IO library
