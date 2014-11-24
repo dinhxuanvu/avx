@@ -1292,110 +1292,6 @@
 </deviceset>
 </devicesets>
 </library>
-<library name="burr-brown">
-<description>&lt;b&gt;Burr-Brown Components&lt;/b&gt;&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="SOT223">
-<description>&lt;b&gt;Smal Outline Transistor&lt;/b&gt;</description>
-<wire x1="-3.124" y1="1.731" x2="-3.124" y2="-1.729" width="0.1524" layer="21"/>
-<wire x1="3.124" y1="-1.729" x2="3.124" y2="1.731" width="0.1524" layer="21"/>
-<wire x1="-3.124" y1="1.731" x2="3.124" y2="1.731" width="0.1524" layer="21"/>
-<wire x1="3.124" y1="-1.729" x2="-3.124" y2="-1.729" width="0.1524" layer="21"/>
-<smd name="1" x="-2.2606" y="-3.1496" dx="1.4986" dy="2.0066" layer="1"/>
-<smd name="2" x="0.0254" y="-3.1496" dx="1.4986" dy="2.0066" layer="1"/>
-<smd name="3" x="2.3114" y="-3.1496" dx="1.4986" dy="2.0066" layer="1"/>
-<smd name="4" x="0" y="3.1496" dx="3.81" dy="2.0066" layer="1"/>
-<text x="-2.54" y="4.318" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-2.794" y="-5.842" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<rectangle x1="-1.524" y1="1.778" x2="1.524" y2="3.302" layer="51"/>
-<rectangle x1="-2.667" y1="-3.302" x2="-1.905" y2="-1.778" layer="51"/>
-<rectangle x1="1.905" y1="-3.302" x2="2.667" y2="-1.778" layer="51"/>
-<rectangle x1="-0.381" y1="-3.302" x2="0.381" y2="-1.778" layer="51"/>
-</package>
-<package name="DD-3">
-<description>&lt;b&gt;DPAC&lt;/b&gt;</description>
-<wire x1="-5.398" y1="-4.445" x2="-5.084" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="-5.084" y1="-4.445" x2="5.076" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="5.076" y1="-4.445" x2="5.398" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="5.398" y1="-4.445" x2="5.398" y2="4.128" width="0.1524" layer="21"/>
-<wire x1="5.398" y1="4.128" x2="-5.398" y2="4.128" width="0.1524" layer="21"/>
-<wire x1="-5.398" y1="4.128" x2="-5.398" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="-5.084" y1="3.81" x2="5.076" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="5.076" y1="3.81" x2="5.076" y2="-4.445" width="0.1524" layer="21"/>
-<wire x1="-5.084" y1="-4.445" x2="-5.084" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="-5.398" y1="4.128" x2="-5.084" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="5.398" y1="4.128" x2="5.076" y2="3.81" width="0.1524" layer="21"/>
-<wire x1="-5.398" y1="4.128" x2="-5.398" y2="5.08" width="0.1524" layer="21"/>
-<wire x1="-5.398" y1="5.08" x2="-4.445" y2="5.715" width="0.1524" layer="21"/>
-<wire x1="-4.445" y1="5.715" x2="4.445" y2="5.715" width="0.1524" layer="21"/>
-<wire x1="4.445" y1="5.715" x2="5.398" y2="5.08" width="0.1524" layer="21"/>
-<wire x1="5.398" y1="5.08" x2="5.398" y2="4.128" width="0.1524" layer="21"/>
-<smd name="1" x="-2.54" y="-7.9375" dx="1.27" dy="5.08" layer="1"/>
-<smd name="2" x="0" y="-7.9375" dx="1.27" dy="5.08" layer="1"/>
-<smd name="3" x="2.54" y="-7.9375" dx="1.27" dy="5.08" layer="1"/>
-<text x="-3.81" y="-10.795" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
-<text x="-2.54" y="-1.27" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<rectangle x1="-3.175" y1="-9.525" x2="-1.905" y2="-4.445" layer="51"/>
-<rectangle x1="-0.635" y1="-9.525" x2="0.635" y2="-4.445" layer="51"/>
-<rectangle x1="1.905" y1="-9.525" x2="3.175" y2="-4.445" layer="51"/>
-</package>
-</packages>
-<symbols>
-<symbol name="REG1118">
-<wire x1="-7.62" y1="-7.62" x2="7.62" y2="-7.62" width="0.4064" layer="94"/>
-<wire x1="7.62" y1="-7.62" x2="7.62" y2="5.08" width="0.4064" layer="94"/>
-<wire x1="7.62" y1="5.08" x2="-7.62" y2="5.08" width="0.4064" layer="94"/>
-<wire x1="-7.62" y1="5.08" x2="-7.62" y2="-7.62" width="0.4064" layer="94"/>
-<text x="-7.62" y="5.715" size="1.778" layer="95" ratio="10">&gt;NAME</text>
-<text x="-5.08" y="2.54" size="1.778" layer="96" ratio="10">&gt;VALUE</text>
-<pin name="VIN" x="-12.7" y="0" length="middle" direction="in"/>
-<pin name="VOUT" x="12.7" y="0" length="middle" direction="out" rot="R180"/>
-<pin name="GND" x="0" y="-12.7" length="middle" direction="pwr" rot="R90"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="REG1117" prefix="IC">
-<description>&lt;b&gt;800mA and 1A Low Dropout (LDO) Positive Regulator&lt;/b&gt;&lt;p&gt;
-1.8V, 2.5V, 2.85V, 3.3V, 5V, and Adj</description>
-<gates>
-<gate name="G$1" symbol="REG1118" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SOT223">
-<connects>
-<connect gate="G$1" pin="GND" pad="1"/>
-<connect gate="G$1" pin="VIN" pad="3"/>
-<connect gate="G$1" pin="VOUT" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="MF" value="" constant="no"/>
-<attribute name="MPN" value="REG1117" constant="no"/>
-<attribute name="OC_FARNELL" value="1097566" constant="no"/>
-<attribute name="OC_NEWARK" value="14P6981" constant="no"/>
-</technology>
-</technologies>
-</device>
-<device name="F" package="DD-3">
-<connects>
-<connect gate="G$1" pin="GND" pad="1"/>
-<connect gate="G$1" pin="VIN" pad="3"/>
-<connect gate="G$1" pin="VOUT" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="MF" value="TEXAS INSTRUMENTS" constant="no"/>
-<attribute name="MPN" value="REG1117FAKTTT" constant="no"/>
-<attribute name="OC_FARNELL" value="1296120" constant="no"/>
-<attribute name="OC_NEWARK" value="87H2562" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="SparkFun-Aesthetics">
 <description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
 In this library you'll find non-functional items- supply symbols, logos, notations, frame blocks, etc.&lt;br&gt;&lt;br&gt;
@@ -1448,6 +1344,87 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </deviceset>
 </devicesets>
 </library>
+<library name="TI_UCC">
+<packages>
+<package name="KTT3_6P22X6P6">
+<smd name="1" x="-2.54" y="-9.6774" dx="0.9652" dy="3.5052" layer="1"/>
+<smd name="2" x="0" y="-9.6774" dx="0.9652" dy="3.5052" layer="1"/>
+<smd name="3" x="2.54" y="-9.6774" dx="0.9652" dy="3.5052" layer="1"/>
+<smd name="4" x="0" y="0.1524" dx="10.668" dy="9.9568" layer="1"/>
+<wire x1="-2.0828" y1="-4.826" x2="-2.9972" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="-2.9972" y1="-4.826" x2="-2.9972" y2="-11.0744" width="0.1524" layer="25"/>
+<wire x1="-2.9972" y1="-11.0744" x2="-2.0828" y2="-11.0744" width="0.1524" layer="25"/>
+<wire x1="-2.0828" y1="-11.0744" x2="-2.0828" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="0.4572" y1="-4.826" x2="-0.4572" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="-0.4572" y1="-4.826" x2="-0.4572" y2="-11.0744" width="0.1524" layer="25"/>
+<wire x1="-0.4572" y1="-11.0744" x2="0.4572" y2="-11.0744" width="0.1524" layer="25"/>
+<wire x1="0.4572" y1="-11.0744" x2="0.4572" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="2.9972" y1="-4.826" x2="2.0828" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="2.0828" y1="-4.826" x2="2.0828" y2="-11.0744" width="0.1524" layer="25"/>
+<wire x1="2.0828" y1="-11.0744" x2="2.9972" y2="-11.0744" width="0.1524" layer="25"/>
+<wire x1="2.9972" y1="-11.0744" x2="2.9972" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="-5.334" y1="-4.826" x2="5.334" y2="-4.826" width="0.1524" layer="25"/>
+<wire x1="5.334" y1="-4.826" x2="5.334" y2="4.826" width="0.1524" layer="25"/>
+<wire x1="5.334" y1="4.826" x2="-5.334" y2="4.826" width="0.1524" layer="25"/>
+<wire x1="-5.334" y1="4.826" x2="-5.334" y2="-4.826" width="0.1524" layer="25"/>
+<text x="-5.0292" y="-10.3124" size="1.27" layer="25" ratio="6" rot="SR0">*</text>
+<text x="-2.8702" y="-0.635" size="1.27" layer="25" ratio="6" rot="SR0">&gt;NAME</text>
+<wire x1="-2.9972" y1="-5.4356" x2="-2.9972" y2="-7.5692" width="0.1524" layer="51"/>
+<wire x1="-0.4572" y1="-5.4356" x2="-0.4572" y2="-7.5692" width="0.1524" layer="51"/>
+<wire x1="2.0828" y1="-5.4356" x2="2.0828" y2="-7.5692" width="0.1524" layer="51"/>
+<wire x1="-2.0828" y1="-5.4356" x2="-2.0828" y2="-7.5692" width="0.1524" layer="51"/>
+<wire x1="0.4572" y1="-5.4356" x2="0.4572" y2="-7.5692" width="0.1524" layer="51"/>
+<wire x1="2.9972" y1="-5.4356" x2="2.9972" y2="-7.5692" width="0.1524" layer="51"/>
+<text x="-5.0292" y="-10.3124" size="1.27" layer="51" ratio="6" rot="SR0">*</text>
+<text x="-3.4544" y="-0.635" size="1.27" layer="27" ratio="6" rot="SR0">&gt;VALUE</text>
+</package>
+</packages>
+<symbols>
+<symbol name="UCC383-5_KTT_3">
+<pin name="VOUT" x="0" y="0" direction="out"/>
+<pin name="GND" x="0" y="-2.54" direction="pwr"/>
+<pin name="VIN" x="35.56" y="-2.54" direction="in" rot="R180"/>
+<pin name="EPAD" x="35.56" y="0" direction="pas" rot="R180"/>
+<wire x1="7.62" y1="5.08" x2="7.62" y2="-7.62" width="0.1524" layer="94"/>
+<wire x1="7.62" y1="-7.62" x2="27.94" y2="-7.62" width="0.1524" layer="94"/>
+<wire x1="27.94" y1="-7.62" x2="27.94" y2="5.08" width="0.1524" layer="94"/>
+<wire x1="27.94" y1="5.08" x2="7.62" y2="5.08" width="0.1524" layer="94"/>
+<text x="13.0556" y="9.1186" size="2.0828" layer="95" ratio="6" rot="SR0">&gt;NAME</text>
+<text x="12.1158" y="6.5786" size="2.0828" layer="96" ratio="6" rot="SR0">&gt;VALUE</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="UCC383-5_KTT_3" prefix="U">
+<gates>
+<gate name="A" symbol="UCC383-5_KTT_3" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="KTT3_6P22X6P6">
+<connects>
+<connect gate="A" pin="EPAD" pad="4"/>
+<connect gate="A" pin="GND" pad="2"/>
+<connect gate="A" pin="VIN" pad="3"/>
+<connect gate="A" pin="VOUT" pad="1"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DATASHEETURL" value="http://www.ti.com/lit/gpn/UCC383-5" constant="no"/>
+<attribute name="DESCRIPTION" value="Single Output LDO, 3.0A, Fixed(5.0V), Reverse Current Protection, Thermal Shutdown" constant="no"/>
+<attribute name="FAMILY_NAME" value="SINGLE CHANNEL LDO" constant="no"/>
+<attribute name="GENERIC_PART_NUMBER" value="UCC383-5" constant="no"/>
+<attribute name="INDUSTRY_STD_PKG_TYPE" value="DDPAK/TO-263" constant="no"/>
+<attribute name="MANUFACTURER" value="Texas Instruments" constant="no"/>
+<attribute name="MANUFACTURER_PART_NUMBER" value="ucc383-5_ktt_3" constant="no"/>
+<attribute name="PACKAGE_DESIGNATOR" value="KTT" constant="no"/>
+<attribute name="PIN_COUNT" value="3" constant="no"/>
+<attribute name="VENDOR" value="Texas Instruments" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1472,7 +1449,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="J1" library="pinhead" deviceset="PINHD-2X8" device=""/>
 <part name="J9" library="pinhead" deviceset="PINHD-2X8" device=""/>
-<part name="VREG" library="burr-brown" deviceset="REG1117" device=""/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY2" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
 <part name="SUPPLY3" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
@@ -1485,6 +1461,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY8" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
+<part name="REG" library="TI_UCC" deviceset="UCC383-5_KTT_3" device=""/>
+<part name="GND12" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1551,10 +1529,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <attribute name="NAME" x="161.29" y="92.075" size="1.778" layer="95" rot="MR0"/>
 <attribute name="VALUE" x="146.05" y="93.98" size="1.778" layer="96" rot="MR180"/>
 </instance>
-<instance part="VREG" gate="G$1" x="111.76" y="38.1" smashed="yes" rot="MR0">
-<attribute name="NAME" x="119.38" y="43.815" size="1.778" layer="95" ratio="10" rot="MR0"/>
-</instance>
-<instance part="GND9" gate="1" x="111.76" y="20.32"/>
+<instance part="GND9" gate="1" x="91.44" y="27.94"/>
 <instance part="SUPPLY2" gate="G$1" x="-22.86" y="48.26"/>
 <instance part="SUPPLY3" gate="G$1" x="58.42" y="48.26"/>
 <instance part="SUPPLY4" gate="G$1" x="-38.862" y="8.89" rot="MR0"/>
@@ -1566,6 +1541,10 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <instance part="GND10" gate="1" x="139.7" y="35.56"/>
 <instance part="GND11" gate="1" x="177.8" y="20.32"/>
 <instance part="SUPPLY8" gate="G$1" x="139.7" y="25.4"/>
+<instance part="REG" gate="A" x="93.98" y="35.56" smashed="yes">
+<attribute name="NAME" x="107.0356" y="42.1386" size="2.0828" layer="95" ratio="6" rot="SR0"/>
+</instance>
+<instance part="GND12" gate="1" x="127" y="40.64"/>
 </instances>
 <busses>
 </busses>
@@ -1621,8 +1600,9 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </segment>
 <segment>
 <pinref part="GND9" gate="1" pin="GND"/>
-<pinref part="VREG" gate="G$1" pin="GND"/>
-<wire x1="111.76" y1="22.86" x2="111.76" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="30.48" x2="91.44" y2="33.02" width="0.1524" layer="91"/>
+<pinref part="REG" gate="A" pin="GND"/>
+<wire x1="91.44" y1="33.02" x2="93.98" y2="33.02" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="J9" gate="A" pin="14"/>
@@ -1647,6 +1627,14 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="167.64" y1="25.4" x2="177.8" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="177.8" y1="25.4" x2="177.8" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="GND11" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="REG" gate="A" pin="EPAD"/>
+<wire x1="129.54" y1="35.56" x2="132.08" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="35.56" x2="132.08" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="GND12" gate="1" pin="GND"/>
+<wire x1="132.08" y1="45.72" x2="127" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="127" y1="45.72" x2="127" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="I2C1_SCL" class="0">
@@ -1865,9 +1853,10 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </net>
 <net name="VBAT" class="0">
 <segment>
-<pinref part="VREG" gate="G$1" pin="VIN"/>
-<wire x1="124.46" y1="38.1" x2="127" y2="38.1" width="0.1524" layer="91"/>
-<label x="127" y="38.1" size="1.778" layer="95"/>
+<wire x1="129.54" y1="33.02" x2="132.08" y2="33.02" width="0.1524" layer="91"/>
+<label x="132.08" y="30.48" size="1.778" layer="95" rot="R180"/>
+<wire x1="132.08" y1="33.02" x2="132.08" y2="30.48" width="0.1524" layer="91"/>
+<pinref part="REG" gate="A" pin="VIN"/>
 </segment>
 <segment>
 <pinref part="J9" gate="A" pin="16"/>
@@ -1877,10 +1866,10 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </net>
 <net name="5V" class="0">
 <segment>
-<pinref part="VREG" gate="G$1" pin="VOUT"/>
-<wire x1="99.06" y1="38.1" x2="91.44" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="38.1" x2="91.44" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="35.56" x2="91.44" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="SUPPLY7" gate="G$1" pin="5V"/>
+<pinref part="REG" gate="A" pin="VOUT"/>
+<wire x1="93.98" y1="35.56" x2="91.44" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="P9" pin="VDD_5V@2"/>
