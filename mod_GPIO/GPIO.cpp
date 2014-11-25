@@ -54,6 +54,7 @@ int GPIO::setMotor(int motor, float duty1, float duty2)
   BBBIO_PWMSS_Setting(motor, MOTOR_FREQ, duty1, duty2);
   // Re-enable after update
   BBBIO_ehrPWM_Enable(motor);
+  return 1;
 }
 
 // Get an instance of the GPIO, used instead of contructor for 
@@ -204,26 +205,3 @@ int GPIO::setSpeed(float speed)
   return 1;
 }
 
-
-/* Main for testing? */
-int main(int argc, char** argv)
-{
-  int test;
-
-  cout << "Initialize GPIO" << endl;
-  GPIO *gpio = GPIO::instance();
-
-  gpio->disableHBridge();
-  cout << "Disabled";
-
-  cin.ignore();
-
-  gpio->enableHBridge();
-  cout << "Enabled";
-
-  cin.ignore();
-
-  cout << "Cleanup" << endl;
-  gpio->deinitialize();
-  return 0;
-}

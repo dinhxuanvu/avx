@@ -1,9 +1,10 @@
-#include <stdio>
 #include <iostream>
 
 #include "../mod_GPIO/GPIO.h"
 
 using namespace std;
+
+int testGPIOunits(void);
 
 int main(void)
 {
@@ -22,13 +23,13 @@ int testGPIOunits(void)
 {
   cout << "Testing GPIO module" << endl << endl;
   cout << "Initializing GPIO: ";
-  GPIO::initialize();
+  GPIO *gpio = GPIO::instance();
   cout << "Successful" << endl;
   // Status LEDs
   cout << "Testing battery LEDs" << endl;
   for(int per=10; per<100; per+=10)
   {
-    GPIO::setBatteryLEDs(per);
+    gpio->setBatteryLEDs(per);
     cout << "\tBattery level: " << per << endl;
     cin.ignore();
   }
@@ -36,52 +37,56 @@ int testGPIOunits(void)
 
   // Motors currently match
   cout << "Testing H-Bridge PWM outputs" << endl;
-  GPIO::enableHBridge();
+  gpio->enableHBridge();
 
-  GPIO::setSpeed(5);
+  gpio->setSpeed(0.5f);
   cout << "Verify P9.22 and P9.14 are at 5% duty cycle, 2000Hz" << endl;
-  GPIO::setSpeed(50);
+  gpio->setSpeed(0.50f);
   cin.ignore();
   cout << "Verify P9.22 and P9.14 are at 50% duty cycle, 2000Hz" << endl;
-  GPIO::setSpeed(95);
+  gpio->setSpeed(0.95f);
   cin.ignore();
   cout << "Verify P9.22 and P9.14 are at 95% duty cycle, 2000Hz" << endl;
-  GPIO::setSpeed(95);
+  gpio->setSpeed(0.95f);
   cin.ignore();
   cout << "Verify P9.22 and P9.14 are at 95% duty cycle, 2000Hz" << endl;
 
-  GPIO::disableHBridge();
+  gpio->disableHBridge();
   
   // Servo 1
   cout << "Testing PWM outputs" << endl;
 
-  GPIO::enableHBridge();
+  gpio->enableHBridge();
 
   cout << "Verify wheels turned full left" << endl;
-  GPIO::setTurn(-100);
+  gpio->setTurn(-1.0f);
   cin.ignore();
   cout << "Verify wheels turned full right" << endl;
-  GPIO::setTurn(+100);
+  gpio->setTurn(+1.0f);
   cin.ignore();
   cout << "Verify wheels centered" << endl;
-  GPIO::setTurn(+100);
+  gpio->setTurn(0.0f);
   cin.ignore();
 
   // Servo 2
   cout << "Verify camera turned full left" << endl;
-  GPIO::setCamera(-100);
+  gpio->setCamera(-90.0f);
   cin.ignore();
   cout << "Verify camera turned full right" << endl;
-  GPIO::setCamera(+100);
+  gpio->setCamera(+90.0f);
   cin.ignore();
   cout << "Verify camera centered" << endl;
-  GPIO::setCamera(+100);
+  gpio->setCamera(0);
   cin.ignore();
   
-  GPIO::disableHBridge();
+  gpio->disableHBridge();
+
+  // ADC reading battery
+  float lev = gpio->getBatteryLevel();
+  cout << "Battery reading at " << lev << "%" << endl;
   
   cout << "Closing GPIO: ";
-  GPIO::deinitialize();
+  gpio->deinitialize();
   cout << "Successful" << endl;
 
   return 1;
