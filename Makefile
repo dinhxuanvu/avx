@@ -1,30 +1,38 @@
+# Library include for OpenNI Primesense driver
 LIBNI=-lOpenNI2
+# Library includes necessary for OpenCV compilation
 LIBCV=`pkg-config opencv --cflags --libs`
+# Library includes for BeagleBone GPIO library
 LIBGPIO=-lBBBio
+# Default compiler
 CC=g++
+# Compile flags
 CFLAGS=-Wall
+# Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
+# Directory to place binary executables
 DIR_BIN=bin/
 
 
-all:mod_ImageProcessing mod_Test
+# Build all targets
+all : mod_ImageProcessing mod_Test
 
 ## Add test cases here
-test:all
+test : ImageBufferManager
 	./ImageBufferManager
 
 ######################################################
 ## mod_Test ##########################################
 ######################################################
-mod_Test: test_ImageBufferManager
-	./ImageBufferManager
+mod_Test: test_ImageBufferManager test_GPIO
 	
 test_ImageBufferManager: ImageBufferManager
 	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ mod_Test/$@.cpp
+	./$(DIR_BIN)/test_ImageBufferManager
 
-test_GPIO: GPIO
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ GPIO.o mod_Test/$@.cpp $(LINK)
-	
+test_GPIO: GPIO.o
+	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DIR_BIN)GPIO.o mod_Test/$@.cpp $(LINK)
+	./$(DIR_BIN)/test_GPIO
 
 ######################################################
 ## mod_ImageProcessing ###############################
@@ -41,8 +49,8 @@ SimpleRead: mod_ImageProcessing/SimpleRead.cpp
 ######################################################
 ## mod_GPIO ##########################################
 ######################################################
-GPIO: mod_GPIO/GPIO.cpp mod_GPIO/GPIO.h
-	$(CC) $(CFLAGS) -c mod_GPIO/$@.cpp $(LIBGPIO)
+GPIO.o: mod_GPIO/GPIO.cpp mod_GPIO/GPIO.h
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)GPIO.o mod_GPIO/GPIO.cpp $(LIBGPIO)
 
 ######################################################
 .PHONY: clean
