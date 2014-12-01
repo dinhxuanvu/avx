@@ -13,6 +13,12 @@ LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin/
 
+######################################################
+## Dependency Listings ###############################
+######################################################
+DEPEND_ImageBufferManager = mod_ImageProcessing/ImageBufferManager.cpp
+DEPEND_SimpleRead = mod_ImageProcessing/SimpleRead.cpp
+
 
 # Build all targets
 all : mod_ImageProcessing mod_Test
@@ -39,11 +45,11 @@ test_GPIO: GPIO.o
 ######################################################
 mod_ImageProcessing: ImageBufferManager
 
-ImageBufferManager: mod_ImageProcessing/ImageBufferManager.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ mod_ImageProcessing/$@.cpp
+ImageBufferManager: $(DEPEND_ImageBufferManager)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DEPEND_ImageBufferManager)
 	
-SimpleRead: mod_ImageProcessing/SimpleRead.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ mod_ImageProcessing/$@.cpp $(LINK)
+SimpleRead: $(DEPEND_SimpleRead)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DEPEND_SimpleRead) $(LINK)
 
 
 ######################################################
