@@ -51,6 +51,10 @@ ImageBufferManager: $(DEPEND_ImageBufferManager)
 SimpleRead: $(DEPEND_SimpleRead)
 	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DEPEND_SimpleRead) $(LINK)
 
+SimpleTimer: mod_ImageProcessing/SimpleTimer.cpp
+	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ mod_ImageProcessing/$@.cpp $(LINK)
+
+
 
 ######################################################
 ## mod_GPIO ##########################################
