@@ -16,7 +16,7 @@ DIR_BIN=bin
 
 
 # Build all targets
-all : ImageProcessing
+all : ImageProcessor
 
 ## Add test cases here
 test : BufferManager.o
@@ -49,6 +49,11 @@ SimpleRead: Camera/SimpleRead.cpp
 SimpleTimer: Camera/SimpleTimer.cpp
 	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleTimer.cpp $(LIBCV) $(LIBNI)
 
+######################################################
+## mod_ImageProcessor ################################
+######################################################
+ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp
 
 
 ######################################################
