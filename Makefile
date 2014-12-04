@@ -11,13 +11,14 @@ CFLAGS=-Wall
 # Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
-DIR_BIN=bin/
+DIR_BIN=bin
+
 
 ######################################################
 ## Dependency Listings ###############################
 ######################################################
-DEPEND_ImageBufferManager = mod_ImageProcessing/ImageBufferManager.cpp
-DEPEND_SimpleRead = mod_ImageProcessing/SimpleRead.cpp
+DEPEND_ImageBufferManager = ImageProcessing/ImageBufferManager.cpp
+DEPEND_SimpleRead = ImageProcessing/SimpleRead.cpp
 
 
 # Build all targets
@@ -33,12 +34,9 @@ test : ImageBufferManager
 mod_Test: test_ImageBufferManager test_GPIO
 	
 test_ImageBufferManager: ImageBufferManager
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ mod_Test/$@.cpp
+	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ ImageProcessing/$@.cpp
 	./$(DIR_BIN)/test_ImageBufferManager
 
-test_GPIO: GPIO.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DIR_BIN)GPIO.o mod_Test/$@.cpp $(LINK)
-	./$(DIR_BIN)/test_GPIO
 
 ######################################################
 ## mod_ImageProcessing ###############################
@@ -46,21 +44,25 @@ test_GPIO: GPIO.o
 mod_ImageProcessing: ImageBufferManager
 
 ImageBufferManager: $(DEPEND_ImageBufferManager)
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DEPEND_ImageBufferManager)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DEPEND_ImageBufferManager)
 	
 SimpleRead: $(DEPEND_SimpleRead)
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DEPEND_SimpleRead) $(LINK)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DEPEND_SimpleRead) $(LINK)
 
-SimpleTimer: mod_ImageProcessing/SimpleTimer.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ mod_ImageProcessing/$@.cpp $(LINK)
+SimpleTimer: ImageProcessing/SimpleTimer.cpp
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ ImageProcessing/$@.cpp $(LINK)
 
 
 
 ######################################################
 ## mod_GPIO ##########################################
 ######################################################
-GPIO.o: mod_GPIO/GPIO.cpp mod_GPIO/GPIO.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)GPIO.o mod_GPIO/GPIO.cpp $(LIBGPIO)
+GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/GPIO.o GPIO/GPIO.cpp $(LIBGPIO)
+
+test_GPIO: GPIO.o
+	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LINK)
+	./$(DIR_BIN)/test_GPIO
 
 ######################################################
 .PHONY: clean

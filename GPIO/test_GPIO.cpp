@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../mod_GPIO/GPIO.h"
+#include "GPIO.h"
 
 using namespace std;
 

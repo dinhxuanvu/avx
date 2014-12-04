@@ -1,4 +1,4 @@
-#include "../mod_ImageProcessing/ImageBufferManager.h"
+#include "ImageBufferManager.h"
 using namespace std;
 
 int main()
