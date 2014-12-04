@@ -29,18 +29,20 @@ ImageProcessor::ImageProcessor(int width, int height)
 void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 {
   // Instantiate OpenCV Mat wrapper around data buffer
-  Mat image(Size(this->height, this->width), CV_16U, dataBuffer);
+  Mat image(this->height, this->width, CV_16U, dataBuffer);
   Mat working;
   
   // Convert to 8 bits on working copy
   image.convertTo(working, CV_8U);
-
+  
   // Background subtraction
   // diff = |Image - background|
-  absdiff(this->calibrationImage,image,working);
-  
+  absdiff(this->calibrationImage,working,working);
+
   // Threshold background subtraction by 10
-  threshold(working, working, 10, 0, CV_THRESH_TOZERO);
+  threshold(working, working, 5, 0, CV_THRESH_TOZERO);
+
+  imshow("thresh",working);
 
   return;
 }
@@ -55,8 +57,8 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   Mat calibrationImage(this->height,this->width, CV_16U, dataBuffer);
 
   // Convert bit depth to 0 to 256
-  calibrationImage.convertTo(calibrationImage, CV_8U);
+  calibrationImage.convertTo(this->calibrationImage, CV_8U);
 
   // Copy data to calibration image store with class
-  calibrationImage.copyTo(this->calibrationImage);
+  //calibrationImage.copyTo(this->calibrationImage);
 }

@@ -55,6 +55,8 @@ SimpleTimer: Camera/SimpleTimer.cpp
 ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp
 
+test_ImageProcessor: ImageProcessor.o
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LINK)
 
 ######################################################
 ## mod_GPIO ##########################################
@@ -64,7 +66,6 @@ GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
 
 test_GPIO: GPIO.o
 	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LINK)
-	./$(DIR_BIN)/test_GPIO
 
 ######################################################
 .PHONY: clean
