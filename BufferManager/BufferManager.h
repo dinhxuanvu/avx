@@ -1,16 +1,15 @@
-#ifndef IMAGE_BUFFER_MANAGER_H_
-#define IMAGE_BUFFER_MANAGER_H_
+#ifndef BUFFER_MANAGER_H_
+#define BUFFER_MANAGER_H_
 
 #include <OpenNI2/OpenNI.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "ImageBufferManager.h"
 
 using namespace cv;
 using namespace openni;
 using namespace std;
 
-class ImageBufferManager
+class BufferManager
   {
     private:
       VideoFrameRef* mBuffers;
@@ -19,17 +18,17 @@ class ImageBufferManager
       int mWidth;
       int mHeight;
     public:
-      ImageBufferManager(int width, int height);
+      BufferManager(int width, int height);
       
       //Called from camera side
       VideoFrameRef getWriteBuffer();
       void writingToBufferComplete();
       
       //Called from Image processing side
-      Mat getReadBuffer();
+      uint16_t* getReadBuffer();
       void readingFromBufferComplete();
       
-      ~ImageBufferManager();	
+      ~BufferManager();	
   };
 
-#endif /* IMAGE_BUFFER_MANAGER_H_ */
+#endif /* BUFFER_MANAGER_H_ */

@@ -14,43 +14,40 @@ LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 DIR_BIN=bin
 
 
-######################################################
-## Dependency Listings ###############################
-######################################################
-DEPEND_ImageBufferManager = ImageProcessing/ImageBufferManager.cpp
-DEPEND_SimpleRead = ImageProcessing/SimpleRead.cpp
-
 
 # Build all targets
-all : mod_ImageProcessing mod_Test
+all : ImageProcessing
 
 ## Add test cases here
-test : ImageBufferManager
-	./ImageBufferManager
+test : BufferManager.o
+	./$(DIR_BIN)/test_BufferManager
+
 
 ######################################################
 ## mod_Test ##########################################
 ######################################################
-mod_Test: test_ImageBufferManager test_GPIO
-	
-test_ImageBufferManager: ImageBufferManager
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ ImageProcessing/$@.cpp
-	./$(DIR_BIN)/test_ImageBufferManager
 
 
 ######################################################
-## mod_ImageProcessing ###############################
+## mod_BufferManager ###############################
 ######################################################
-mod_ImageProcessing: ImageBufferManager
-
-ImageBufferManager: $(DEPEND_ImageBufferManager)
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DEPEND_ImageBufferManager)
+BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp
 	
-SimpleRead: $(DEPEND_SimpleRead)
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DEPEND_SimpleRead) $(LINK)
+test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBNI)
 
-SimpleTimer: ImageProcessing/SimpleTimer.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ ImageProcessing/$@.cpp $(LINK)
+	
+######################################################
+## mod_Camera ########################################
+######################################################
+Camera: SimpleRead
+
+SimpleRead: Camera/SimpleRead.cpp
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleRead.cpp $(LIBCV) $(LIBNI)
+
+SimpleTimer: Camera/SimpleTimer.cpp
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleTimer.cpp $(LIBCV) $(LIBNI)
 
 
 
@@ -61,11 +58,11 @@ GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/GPIO.o GPIO/GPIO.cpp $(LIBGPIO)
 
 test_GPIO: GPIO.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LINK)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LINK)
 	./$(DIR_BIN)/test_GPIO
 
 ######################################################
 .PHONY: clean
 clean:
-	rm -rf bin/*
+	rm -rf $(DIR_BIN)/*
 ######################################################

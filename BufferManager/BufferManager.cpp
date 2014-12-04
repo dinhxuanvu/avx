@@ -4,13 +4,13 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "ImageBufferManager.h"
+#include "BufferManager.h"
 
 using namespace cv;
 using namespace openni;
 using namespace std;
 
-ImageBufferManager::ImageBufferManager(int height, int width){
+BufferManager::BufferManager(int height, int width){
   this->mBuffers = new VideoFrameRef[3];
   this->mWidth = width;
   this->mHeight = height;
@@ -21,22 +21,21 @@ ImageBufferManager::ImageBufferManager(int height, int width){
 }
   
 //Called from camera side
-VideoFrameRef ImageBufferManager::getWriteBuffer(){
+VideoFrameRef BufferManager::getWriteBuffer(){
   VideoFrameRef dataBuffer = mBuffers[mWriteIndex];
   return dataBuffer;
 }
-void ImageBufferManager::writingToBufferComplete(){
+void BufferManager::writingToBufferComplete(){
   //TODO swap indexes thread safe
 }
   
   
   
 //Called from Image processing side
-Mat ImageBufferManager::getReadBuffer(){
+uint16_t* BufferManager::getReadBuffer(){
     uint16_t* dataBuffer = (uint16_t*)mBuffers[mReadIndex].getData();
-    Mat image(Size(this->mWidth, this->mHeight), CV_16U, dataBuffer, Mat::AUTO_STEP);
-    return image;
+    return dataBuffer;
  }
-void ImageBufferManager::readingFromBufferComplete(){
+void BufferManager::readingFromBufferComplete(){
   //TODO swap indexes thread safe
 }
