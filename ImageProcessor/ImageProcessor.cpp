@@ -40,7 +40,13 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   absdiff(this->calibrationImage,working,working);
 
   // Threshold background subtraction by 10
-  threshold(working, working, 5, 0, CV_THRESH_TOZERO);
+  threshold(working, working, 3, 0, CV_THRESH_TOZERO);
+
+  // Reset 0 values to max (far away)
+  floodFill(working, Point(2,2), 256);
+
+  // Draw a test rectangle
+  //rectangle(working, Point(40,40), Point(200,200), 128);
 
   imshow("thresh",working);
 
@@ -59,6 +65,4 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   // Convert bit depth to 0 to 256
   calibrationImage.convertTo(this->calibrationImage, CV_8U);
 
-  // Copy data to calibration image store with class
-  //calibrationImage.copyTo(this->calibrationImage);
 }

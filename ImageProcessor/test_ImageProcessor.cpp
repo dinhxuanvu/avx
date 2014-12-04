@@ -13,30 +13,32 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
+  // Open image files for frame and background
   Mat back = imread("media/background.png", 0);
-  Mat frame = imread("media/frame.png", 0);
+  Mat frame = imread("media/2frame.png", 0);
 
   int width = back.cols;
   int height = back.rows;
 
-  cout << width << endl << height << endl;
-
-  imshow("back",back);
+  // Display the frame to process
   imshow("frame",frame);
 
+  // Instantiate an iamge processor
   ImageProcessor proc(width, height);
 
+  // Convert to format to match Xtion feed
   back.convertTo(back, CV_16U);
-  frame.convertTo(frame, CV_16U);
-  
   uint16_t* backgroundData = (uint16_t*)(back.data);
+  frame.convertTo(frame, CV_16U);  
+  uint16_t* frameData = (uint16_t*)(frame.data);
 
+  // Pass sample background into calibration
   proc.calibrate( backgroundData );
 
-  uint16_t* frameData = (uint16_t*)(frame.data);
+  // Pass frame into be processed for obstacles
   proc.nextFrame( frameData );
-  cout << "test" << endl;
 
+  // Keep windows open
   waitKey();
 
   return 0;

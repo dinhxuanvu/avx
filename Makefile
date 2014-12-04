@@ -56,7 +56,7 @@ ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcesso
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp
 
 test_ImageProcessor: ImageProcessor.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LINK)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
 
 ######################################################
 ## mod_GPIO ##########################################
