@@ -9,7 +9,7 @@ CC=g++
 # Compile flags
 CFLAGS=-Wall
 # Link for all libraries needed
-LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
+LINK=$(LIBCV) $(LIBNI) $(LIBGPIO) -lboost_thread-mt
 # Directory to place binary executables
 DIR_BIN=bin
 
@@ -35,8 +35,8 @@ BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp
 	
 test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBNI)
-
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBNI) -lboost_thread -lboost_system 
+	./$(DIR_BIN)/$@
 	
 ######################################################
 ## mod_Camera ########################################

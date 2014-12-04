@@ -15,10 +15,8 @@ class BufferManager
       VideoFrameRef* mBuffers;
       int mReadIndex;
       int mWriteIndex;
-      int mWidth;
-      int mHeight;
     public:
-      BufferManager(int width, int height);
+      BufferManager();
       
       //Called from camera side
       VideoFrameRef getWriteBuffer();

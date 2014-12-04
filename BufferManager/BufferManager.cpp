@@ -10,10 +10,8 @@ using namespace cv;
 using namespace openni;
 using namespace std;
 
-BufferManager::BufferManager(int height, int width){
+BufferManager::BufferManager(){
   this->mBuffers = new VideoFrameRef[3];
-  this->mWidth = width;
-  this->mHeight = height;
   //TODO construct three VideoFrameRefs
   //VideoFrameRefs can't
   mReadIndex = 0;
