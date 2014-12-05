@@ -57,19 +57,19 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   findContours( working, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0,0) );
 
   // Approximate contours to polygons and get bounding rects
-  //vector<vector<Point> > contours_poly( contours.size() );
+  vector<vector<Point> > contours_poly( contours.size() );
   vector<Rect> boundRect( contours.size() );
 
   
   for(int i=contours.size()-1; i >=0; i--)
   {
-    vector<Point> cont;
-    approxPolyDP( Mat(contours[i]), cont, 3, true );
-    boundRect[i] = boundingRect( Mat(cont) );
+    approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
+    boundRect[i] = boundingRect( Mat(contours_poly[i]) );
     int area = boundRect[i].area();
     if((area < MIN_AREA) | (area > MAX_AREA))
     {
        contours.erase(contours.begin()+i);
+       contours_poly.erase(contours_poly.begin()+i);
        boundRect.erase(boundRect.begin()+i);
        continue;
     }
@@ -86,7 +86,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   for(unsigned int i=0; i< contours.size(); i++)
   {
     Scalar color = Scalar( rng.uniform(0,255), rng.uniform(0,255), rng.uniform(0,255) );
-    //drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+    drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
     rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   }
 
