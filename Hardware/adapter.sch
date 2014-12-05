@@ -1493,7 +1493,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <text x="87.376" y="127" size="3.048" layer="97">TFC Motor Shield</text>
 <text x="85.852" y="51.308" size="3.048" layer="97">Power Regulation</text>
 <text x="-47.244" y="127.254" size="3.048" layer="97">BeagleBone Black</text>
-<text x="104.14" y="-2.54" size="3.81" layer="97">W.A.L.L.E. Adapter Board</text>
+<text x="104.14" y="-2.54" size="3.81" layer="97">A.V.X. Adapter Board</text>
 <wire x1="-50.8" y1="40.64" x2="-25.4" y2="40.64" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="-25.4" y1="40.64" x2="-25.4" y2="5.08" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="-25.4" y1="5.08" x2="-50.8" y2="5.08" width="0.1524" layer="97" style="shortdash"/>
