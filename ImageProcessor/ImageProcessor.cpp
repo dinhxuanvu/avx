@@ -40,15 +40,36 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   absdiff(this->calibrationImage,working,working);
 
   // Threshold background subtraction by 10
-  threshold(working, working, 3, 0, CV_THRESH_TOZERO);
+  threshold(working, working, 3, 256, CV_THRESH_TOZERO);
 
   // Reset 0 values to max (far away)
   floodFill(working, Point(2,2), 256);
 
-  // Draw a test rectangle
-  //rectangle(working, Point(40,40), Point(200,200), 128);
+  // Find discrete object
+  double minVal;
+  Point min_loc;
+  Point add(10,10);
 
-  imshow("thresh",working);
+  // Color all distinct obstacles in image
+  int i;
+  for(i=0; i<10; i++)
+  {
+    // Get next min value
+    minMaxLoc(working, &minVal, NULL, &min_loc);
+
+    if((minVal > 200))
+      break;
+
+    // Fill it with a solid value
+    floodFill(working, min_loc, 250-i, 0, 50, 50);
+
+    rectangle(working, min_loc, min_loc+add, 201);
+
+    imshow("thresh",working);
+  }
+  waitKey();
+  cout << i << " total obstacles detected in frame." << endl;
+
 
   return;
 }
