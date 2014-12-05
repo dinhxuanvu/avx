@@ -15,13 +15,13 @@ int main(int argc, char** argv)
 
   // Open image files for frame and background
   Mat back = imread("media/background.png", 0);
-  Mat frame = imread("media/3frame.png", 0);
+  Mat frame = imread("media/2frame.png", 0);
 
   int width = back.cols;
   int height = back.rows;
 
   // Display the frame to process
-  imshow("frame",frame);
+  //imshow("frame",frame);
 
   // Instantiate an iamge processor
   ImageProcessor proc(width, height);

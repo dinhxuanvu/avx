@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <iostream>
+#include <stdlib.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -9,6 +10,12 @@
 
 using namespace cv;
 using namespace std;
+
+#define MIN_AREA      25
+#define MAX_AREA      ((this->width-4)*(this->height-4))
+#define BACK_THRESH   3
+
+RNG rng(12345);
 
 /*
  * Public constructor for image processor
@@ -40,36 +47,54 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   absdiff(this->calibrationImage,working,working);
 
   // Threshold background subtraction by 10
-  threshold(working, working, 3, 256, CV_THRESH_TOZERO);
+  threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY_INV);
 
-  // Reset 0 values to max (far away)
-  floodFill(working, Point(2,2), 256);
+  // Initialize lists for contours
+  vector<vector<Point> > contours;
+  vector<Vec4i> hierarchy;
 
-  // Find discrete object
-  double minVal;
-  Point min_loc;
-  Point add(10,10);
+  // Find outlines of boxes
+  findContours( working, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0,0) );
 
-  // Color all distinct obstacles in image
-  int i;
-  for(i=0; i<10; i++)
+  // Approximate contours to polygons and get bounding rects
+  //vector<vector<Point> > contours_poly( contours.size() );
+  vector<Rect> boundRect( contours.size() );
+
+  
+  for(int i=contours.size()-1; i >=0; i--)
   {
-    // Get next min value
-    minMaxLoc(working, &minVal, NULL, &min_loc);
-
-    if((minVal > 200))
-      break;
-
-    // Fill it with a solid value
-    floodFill(working, min_loc, 250-i, 0, 50, 50);
-
-    rectangle(working, min_loc, min_loc+add, 201);
-
-    imshow("thresh",working);
+    vector<Point> cont;
+    approxPolyDP( Mat(contours[i]), cont, 3, true );
+    boundRect[i] = boundingRect( Mat(cont) );
+    int area = boundRect[i].area();
+    if((area < MIN_AREA) | (area > MAX_AREA))
+    {
+       contours.erase(contours.begin()+i);
+       boundRect.erase(boundRect.begin()+i);
+       continue;
+    }
+    cout << i << ": Area (" << area << ") ";
+    cout << "Top (" << boundRect[i].tl().y << ") Left (" << boundRect[i].tl().x << ")";
+    cout << " Bottom (" << boundRect[i].br().y << ") Right (" << boundRect[i].br().x << ")" << endl;
   }
-  waitKey();
-  cout << i << " total obstacles detected in frame." << endl;
 
+  cout << contours.size() << " total obstacles detected in frame." << endl;
+
+  Mat drawing;
+  image.convertTo(drawing, CV_8U);
+  cvtColor(drawing,drawing, CV_GRAY2RGB);
+  for(unsigned int i=0; i< contours.size(); i++)
+  {
+    Scalar color = Scalar( rng.uniform(0,255), rng.uniform(0,255), rng.uniform(0,255) );
+    //drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+    rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
+  }
+
+  namedWindow("Contours", CV_WINDOW_AUTOSIZE );
+  imshow("Contours", drawing);
+
+
+  waitKey();
 
   return;
 }
