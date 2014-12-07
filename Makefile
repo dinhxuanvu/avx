@@ -36,7 +36,10 @@ BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
 	
 test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
 	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBNI) -lboost_thread -lboost_system 
-	./$(DIR_BIN)/$@
+
+test_BufferManager_threads:test_BufferManager
+	./$(DIR_BIN)/test_BufferManager
+	
 	
 ######################################################
 ## mod_Camera ########################################

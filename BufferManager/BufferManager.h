@@ -5,6 +5,9 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <iostream>
+#include <boost/thread/mutex.hpp>
+
 using namespace cv;
 using namespace openni;
 using namespace std;
@@ -15,8 +18,12 @@ class BufferManager
       VideoFrameRef* mBuffers;
       int mReadIndex;
       int mWriteIndex;
+      int mFreeIndex;
+      boost::mutex mLock;
+      
     public:
       BufferManager();
+      void printIndexes();
       
       //Called from camera side
       VideoFrameRef getWriteBuffer();

@@ -6,6 +6,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "BufferManager.h"
 
+#include <boost/thread/mutex.hpp>
+
 using namespace cv;
 using namespace openni;
 using namespace std;
@@ -16,6 +18,7 @@ BufferManager::BufferManager(){
   //VideoFrameRefs can't
   mReadIndex = 0;
   mWriteIndex = 1;
+  mFreeIndex = 2;
 }
   
 //Called from camera side
@@ -24,7 +27,15 @@ VideoFrameRef BufferManager::getWriteBuffer(){
   return dataBuffer;
 }
 void BufferManager::writingToBufferComplete(){
+  mLock.lock();
+  
+  int temp = mWriteIndex;
+  mWriteIndex = mFreeIndex;
+  mFreeIndex = temp;
+  //cout<<"now writing:"<<mWriteIndex<<endl;
+  
   //TODO swap indexes thread safe
+  mLock.unlock();
 }
   
   
@@ -35,5 +46,36 @@ uint16_t* BufferManager::getReadBuffer(){
     return dataBuffer;
  }
 void BufferManager::readingFromBufferComplete(){
+  mLock.lock();
+  
+  int temp = mReadIndex;
+  mReadIndex = mFreeIndex;
+  mFreeIndex = temp;
+  
+  //cout<<"now reading:"<<mReadIndex<<endl;
   //TODO swap indexes thread safe
+  mLock.unlock();
 }
+void BufferManager::printIndexes(){
+  //mLock.lock();
+  if (mReadIndex == mWriteIndex){
+    cout<<"Error in Threads"<<endl;
+  }
+  //cout<<"R:"<<mReadIndex<<" W:"<<mWriteIndex<<endl;
+  //mLock.unlock();
+}
+BufferManager::~BufferManager(){
+  cout<<"BufferManager destroyed."<<endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
