@@ -11,9 +11,10 @@
 using namespace cv;
 using namespace std;
 
-#define MIN_AREA      25
+#define MIN_AREA      300
 #define MAX_AREA      ((this->width-4)*(this->height-4))
 #define BACK_THRESH   3
+#define EDGE_ERODE    4
 
 RNG rng(12345);
 
@@ -45,9 +46,22 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   // Background subtraction
   // diff = |Image - background|
   absdiff(this->calibrationImage,working,working);
+  
+  // Find edges where objects overlap
+  Mat edges;
+  // Canny detector
+  Canny( working, edges, 6, 18, 3 );
+  // Invert edge image for mask operation
+  bitwise_not(edges,edges);
+  // Dilation of edge image
+  Mat element = getStructuringElement( MORPH_RECT, Size(EDGE_ERODE,EDGE_ERODE) );
+  erode(edges,edges,element);
 
-  // Threshold background subtraction by 10
-  threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY_INV);
+  // Threshold background subtraction
+  threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY);
+
+  // Split threshold image at edges for overlapping images
+  working = working.mul(edges);
 
   // Initialize lists for contours
   vector<vector<Point> > contours;
@@ -60,12 +74,13 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   vector<vector<Point> > contours_poly( contours.size() );
   vector<Rect> boundRect( contours.size() );
 
-  
+  // Loop through contours that are found
+  // Remove too small or too large
   for(int i=contours.size()-1; i >=0; i--)
   {
     approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
     boundRect[i] = boundingRect( Mat(contours_poly[i]) );
-    int area = boundRect[i].area();
+    double area = contourArea(contours_poly[i]);
     if((area < MIN_AREA) | (area > MAX_AREA))
     {
        contours.erase(contours.begin()+i);
@@ -80,6 +95,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   cout << contours.size() << " total obstacles detected in frame." << endl;
 
+  // Create a new drawing with the original image and the countors in color
   Mat drawing;
   image.convertTo(drawing, CV_8U);
   cvtColor(drawing,drawing, CV_GRAY2RGB);
@@ -93,7 +109,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   namedWindow("Contours", CV_WINDOW_AUTOSIZE );
   imshow("Contours", drawing);
 
-
+  // Wait for input to close
   waitKey();
 
   return;
