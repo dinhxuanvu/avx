@@ -56,7 +56,7 @@ SimpleTimer: Camera/SimpleTimer.cpp
 ## mod_ImageProcessor ################################
 ######################################################
 ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags`
 
 test_ImageProcessor: ImageProcessor.o
 	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
