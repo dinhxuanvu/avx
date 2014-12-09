@@ -9,7 +9,7 @@ CC=g++
 # Compile flags
 CFLAGS=-Wall
 # Link for all libraries needed
-LINK=$(LIBCV) $(LIBNI) $(LIBGPIO) -lboost_thread-mt
+LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin
 
@@ -65,10 +65,10 @@ test_ImageProcessor: ImageProcessor.o
 ## mod_GPIO ##########################################
 ######################################################
 GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/GPIO.o GPIO/GPIO.cpp $(LIBGPIO)
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/GPIO.o GPIO/GPIO.cpp
 
 test_GPIO: GPIO.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LINK)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 
 ######################################################
 .PHONY: clean
