@@ -6,26 +6,37 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "ImageProcessor.h"
+#include "Hazard.h"
 
 using namespace cv;
 using namespace std;
+
+void printHazards(HazardList* h_p)
+{
+  cout << "Current hazards (" << h_p->size() << "):" << endl;
+  for(HazardList::iterator it= h_p->begin(); it != h_p->end(); ++it)
+  {
+    cout << "Haz " << it->id << "= center (" << it->theta << "," << it->phi << ")" << " depth " << it->depth << "mm";
+    cout << " width: " << it->width << " height: " << it->height << endl;
+  }
+}
 
 int main(int argc, char** argv)
 {
 
   // Open image files for frame and background
   Mat back = imread("media/background.png", 0);
-  Mat frame = imread("media/3frame.png", 0);
+  Mat frame = imread("media/2frame.png", 0);
   Mat frame3 = imread("media/overlap_frame.png",0);
 
   int width = back.cols;
   int height = back.rows;
 
-  // Display the frame to process
-  //imshow("frame",frame);
+  HazardList* hazards_p = new HazardList;
 
+  cout << "Size: " << hazards_p->size() << endl;
   // Instantiate an iamge processor
-  ImageProcessor proc(width, height);
+  ImageProcessor proc(width, height, hazards_p);
 
   // Convert to format to match Xtion feed
   back.convertTo(back, CV_16U);
@@ -41,11 +52,13 @@ int main(int argc, char** argv)
 
   // Pass frame into be processed for obstacles
   proc.nextFrame( frameData );
+  printHazards(hazards_p);
+  waitKey();
 
   proc.nextFrame( frame3Data );
-
-  // Keep windows open
+  printHazards(hazards_p);
   waitKey();
 
   return 0;
 }
+
