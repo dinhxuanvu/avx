@@ -32,10 +32,10 @@ test : BufferManager.o
 ## mod_BufferManager ###############################
 ######################################################
 BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp `pkg-config opencv --cflags` 
 	
 test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBNI) -lboost_thread -lboost_system 
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBCV) $(LIBNI) -lboost_thread -lboost_system 
 
 test_BufferManager_threads:test_BufferManager
 	./$(DIR_BIN)/test_BufferManager
@@ -56,7 +56,7 @@ SimpleTimer: Camera/SimpleTimer.cpp
 ## mod_ImageProcessor ################################
 ######################################################
 ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags`
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
 
 test_ImageProcessor: ImageProcessor.o
 	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
