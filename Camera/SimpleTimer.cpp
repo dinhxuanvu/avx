@@ -28,6 +28,8 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include <ctime>
+#include <unistd.h>
+#include <sys/time.h>
 
 #define SAMPLE_READ_WAIT_TIMEOUT 2000 //2000ms
 
@@ -52,7 +54,9 @@ int main()
 		return 2;
 	}
 
-	VideoStream depth;
+
+  VideoStream depth;
+
 
 	if (device.getSensorInfo(SENSOR_DEPTH) != NULL)
 	{
@@ -63,6 +67,27 @@ int main()
 			return 3;
 		}
 	}
+
+    const openni::SensorInfo* sinfo = device.getSensorInfo(openni::SENSOR_DEPTH); // select index=4 640x480, 30 fps, 1mm
+    const openni::Array< openni::VideoMode>& modesDepth = sinfo->getSupportedVideoModes();
+    for (int i = 0; i<modesDepth.getSize(); i++) {
+        printf("%i: %ix%i, %i fps, %i format\n", i, modesDepth[i].getResolutionX(), modesDepth[i].getResolutionY(),
+            modesDepth[i].getFps(), modesDepth[i].getPixelFormat()); //PIXEL_FORMAT_DEPTH_1_MM = 100, PIXEL_FORMAT_DEPTH_100_UM
+    }
+    rc = depth.setVideoMode(modesDepth[2]);
+    //VideoMode depth_videoMode = depth.getVideoMode(); 
+    //depth_videoMode.setResolution(320, 240);
+    //depth_videoMode.setFps(60);
+    //depth.setVideoMode(depth_videoMode);
+
+
+
+
+
+
+	
+
+
 
 	rc = depth.start();
 	if (rc != STATUS_OK)
@@ -76,8 +101,9 @@ int main()
   Mat frame;
 
   // Loop until keyboard press to end execution
-  clock_t begin = clock();
-  int frames = 30;
+  timeval begin;
+  gettimeofday(&begin,0);
+  int frames = 60;
 	for (int i=0;i<frames;i++)
 	{
 		int changedStreamDummy;
@@ -117,14 +143,15 @@ int main()
     frame.convertTo(frame, CV_8U);
 	}
 
-  clock_t end = clock();
+  timeval end;
+  gettimeofday(&end,0);
 
 	depth.stop();
 	depth.destroy();
 	device.close();
 	OpenNI::shutdown();
 
-  double fps = (frames / (double(end-begin) / CLOCKS_PER_SEC));
+  double fps = (frames / (double(end.tv_sec-begin.tv_sec)));
 
   cout << "It ran " << frames << " frames at " << fps << " fps." << endl;
 
