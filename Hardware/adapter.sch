@@ -1499,8 +1499,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-25.4" y1="5.08" x2="-50.8" y2="5.08" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="-50.8" y1="5.08" x2="-50.8" y2="40.64" width="0.1524" layer="97" style="shortdash"/>
 <text x="-48.514" y="37.338" size="2.032" layer="97">Compass (I2C)</text>
-<text x="-34.798" y="25.908" size="1.27" layer="97">SDA</text>
-<text x="-34.798" y="28.194" size="1.27" layer="97">SCL</text>
+<text x="-34.798" y="28.448" size="1.27" layer="97">SDA</text>
+<text x="-34.798" y="30.734" size="1.27" layer="97">SCL</text>
 <wire x1="137.16" y1="15.24" x2="187.96" y2="15.24" width="0.1524" layer="97" style="shortdash"/>
 <wire x1="187.96" y1="15.24" x2="187.96" y2="58.42" width="0.1524" layer="97" style="shortdash"/>
 <text x="139.192" y="51.308" size="3.048" layer="97">Extra GPIO</text>
@@ -1639,9 +1639,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </net>
 <net name="I2C1_SCL" class="0">
 <segment>
-<pinref part="COMPASS" gate="A" pin="2"/>
 <pinref part="U$1" gate="P9" pin="GPIO_4"/>
-<wire x1="-40.64" y1="27.94" x2="-2.54" y2="27.94" width="0.1524" layer="91"/>
+<pinref part="COMPASS" gate="A" pin="1"/>
+<wire x1="-12.7" y1="27.94" x2="-2.54" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="-40.64" y1="30.48" x2="-12.7" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="-12.7" y1="30.48" x2="-12.7" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="3.3V" class="0">
@@ -1794,13 +1796,13 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </net>
 <net name="I2C1_SDA" class="0">
 <segment>
-<pinref part="COMPASS" gate="A" pin="3"/>
-<wire x1="-40.64" y1="25.4" x2="-22.86" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="-22.86" y1="25.4" x2="-22.86" y2="-15.24" width="0.1524" layer="91"/>
+<wire x1="-22.86" y1="27.94" x2="-22.86" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="-22.86" y1="-15.24" x2="48.26" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="-15.24" x2="48.26" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="P9" pin="GPIO_5"/>
 <wire x1="48.26" y1="27.94" x2="38.1" y2="27.94" width="0.1524" layer="91"/>
+<pinref part="COMPASS" gate="A" pin="2"/>
+<wire x1="-40.64" y1="27.94" x2="-22.86" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="LED1" class="0">

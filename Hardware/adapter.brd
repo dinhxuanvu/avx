@@ -758,18 +758,47 @@ Please make sure your boards conform to these design rules.</description>
 <via x="27.6225" y="60.6425" extent="1-16" drill="0.5"/>
 <contactref element="REG" pad="2"/>
 <contactref element="REG" pad="4"/>
+<via x="51.816" y="25.4" extent="1-16" drill="0.5"/>
+<via x="74.168" y="25.4" extent="1-16" drill="0.5"/>
+<via x="75.184" y="18.288" extent="1-16" drill="0.5"/>
+<via x="51.816" y="18.288" extent="1-16" drill="0.5"/>
+<via x="62.992" y="22.352" extent="1-16" drill="0.5"/>
+<via x="38.608" y="16.256" extent="1-16" drill="0.5"/>
+<via x="42.672" y="21.336" extent="1-16" drill="0.5"/>
+<via x="42.672" y="16.256" extent="1-16" drill="0.5"/>
+<via x="37.084" y="26.67" extent="1-16" drill="0.5"/>
+<via x="36.068" y="24.638" extent="1-16" drill="0.5"/>
+<via x="77.216" y="37.592" extent="1-16" drill="0.5"/>
+<via x="71.12" y="44.704" extent="1-16" drill="0.5"/>
+<via x="66.04" y="36.576" extent="1-16" drill="0.5"/>
+<via x="81.026" y="55.626" extent="1-16" drill="0.5"/>
+<via x="85.852" y="57.15" extent="1-16" drill="0.5"/>
+<via x="78.232" y="6.096" extent="1-16" drill="0.5"/>
+<via x="82.296" y="6.096" extent="1-16" drill="0.5"/>
+<via x="68.072" y="20.32" extent="1-16" drill="0.5"/>
+<via x="68.072" y="25.4" extent="1-16" drill="0.5"/>
+<via x="57.912" y="19.304" extent="1-16" drill="0.5"/>
+<via x="56.896" y="24.384" extent="1-16" drill="0.5"/>
+<via x="31.496" y="55.88" extent="1-16" drill="0.5"/>
+<via x="36.576" y="55.88" extent="1-16" drill="0.5"/>
+<via x="32.004" y="22.606" extent="1-16" drill="0.5"/>
+<via x="32.004" y="17.018" extent="1-16" drill="0.5"/>
+<via x="44.704" y="52.832" extent="1-16" drill="0.5"/>
+<via x="40.64" y="46.736" extent="1-16" drill="0.5"/>
+<via x="35.56" y="46.736" extent="1-16" drill="0.5"/>
+<via x="42.672" y="54.864" extent="1-16" drill="0.5"/>
+<via x="67.056" y="49.784" extent="1-16" drill="0.5"/>
+<via x="59.944" y="44.704" extent="1-16" drill="0.5"/>
+<via x="52.832" y="44.704" extent="1-16" drill="0.5"/>
 </signal>
 <signal name="I2C1_SCL">
-<contactref element="COMPASS" pad="2"/>
 <contactref element="U$1" pad="P9.17"/>
 <wire x1="49.53" y1="10.795" x2="50.8" y2="12.065" width="0.3556" layer="1"/>
 <wire x1="50.8" y1="12.065" x2="50.8" y2="13.97" width="0.3556" layer="1"/>
 <wire x1="50.8" y1="13.97" x2="52.07" y2="15.24" width="0.3556" layer="1"/>
-<wire x1="52.07" y1="15.24" x2="80.01" y2="15.24" width="0.3556" layer="1"/>
-<wire x1="80.01" y1="15.24" x2="82.55" y2="17.78" width="0.3556" layer="1"/>
-<wire x1="82.55" y1="17.78" x2="82.55" y2="20.32" width="0.3556" layer="1"/>
-<wire x1="82.55" y1="20.32" x2="83.82" y2="21.59" width="0.3556" layer="1"/>
-<wire x1="83.82" y1="21.59" x2="85.09" y2="21.59" width="0.3556" layer="1"/>
+<wire x1="52.07" y1="15.24" x2="81.28" y2="15.24" width="0.3556" layer="1"/>
+<contactref element="COMPASS" pad="1"/>
+<wire x1="81.28" y1="15.24" x2="85.09" y2="19.05" width="0.3556" layer="1"/>
 </signal>
 <signal name="3.3V">
 <contactref element="U$1" pad="P9.3"/>
@@ -929,15 +958,13 @@ Please make sure your boards conform to these design rules.</description>
 <signal name="N$83">
 </signal>
 <signal name="I2C1_SDA">
-<contactref element="COMPASS" pad="3"/>
 <contactref element="U$1" pad="P9.18"/>
 <wire x1="51.1175" y1="16.51" x2="79.375" y2="16.51" width="0.3556" layer="1"/>
-<wire x1="79.375" y1="16.51" x2="81.28" y2="18.415" width="0.3556" layer="1"/>
-<wire x1="81.28" y1="18.415" x2="81.28" y2="21.9075" width="0.3556" layer="1"/>
-<wire x1="81.28" y1="21.9075" x2="83.5025" y2="24.13" width="0.3556" layer="1"/>
-<wire x1="83.5025" y1="24.13" x2="85.09" y2="24.13" width="0.3556" layer="1"/>
 <wire x1="51.1175" y1="16.51" x2="49.53" y2="14.9225" width="0.3556" layer="1"/>
 <wire x1="49.53" y1="14.9225" x2="49.53" y2="13.335" width="0.3556" layer="1"/>
+<contactref element="COMPASS" pad="2"/>
+<wire x1="79.375" y1="16.51" x2="84.455" y2="21.59" width="0.3556" layer="1"/>
+<wire x1="84.455" y1="21.59" x2="85.09" y2="21.59" width="0.3556" layer="1"/>
 </signal>
 <signal name="LED1">
 <contactref element="U$1" pad="P8.18"/>
