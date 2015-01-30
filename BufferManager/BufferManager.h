@@ -15,7 +15,7 @@ using namespace std;
 class BufferManager
   {
     private:
-      VideoFrameRef* mBuffers;
+      VideoFrameRef** mBuffers;
       int mReadIndex;
       int mWriteIndex;
       int mFreeIndex;
@@ -26,11 +26,11 @@ class BufferManager
       void printIndexes();
       
       //Called from camera side
-      VideoFrameRef getWriteBuffer();
+      VideoFrameRef* getWriteBuffer();
       void writingToBufferComplete();
       
       //Called from Image processing side
-      uint16_t* getReadBuffer();
+      const uint16_t* getReadBuffer();
       void readingFromBufferComplete();
       
       ~BufferManager();	

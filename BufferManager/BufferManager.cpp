@@ -13,17 +13,25 @@ using namespace openni;
 using namespace std;
 
 BufferManager::BufferManager(){
-  this->mBuffers = new VideoFrameRef[3];
+  this->mBuffers = new VideoFrameRef*[3];
+
   //TODO construct three VideoFrameRefs
   //VideoFrameRefs can't
+  mBuffers[0] = new VideoFrameRef;
+  mBuffers[1] = new VideoFrameRef;
+  mBuffers[2] = new VideoFrameRef;
+  cout << "Buff0:" << mBuffers[0]<<endl;
+  cout << "Buff1" << mBuffers[1]<<endl;
+  cout << "Buff2" << mBuffers[2]<<endl;
+  cin.ignore();
   mReadIndex = 0;
   mWriteIndex = 1;
   mFreeIndex = 2;
 }
   
 //Called from camera side
-VideoFrameRef BufferManager::getWriteBuffer(){
-  VideoFrameRef dataBuffer = mBuffers[mWriteIndex];
+VideoFrameRef* BufferManager::getWriteBuffer(){
+  VideoFrameRef* dataBuffer = mBuffers[mWriteIndex];
   return dataBuffer;
 }
 void BufferManager::writingToBufferComplete(){
@@ -32,7 +40,8 @@ void BufferManager::writingToBufferComplete(){
   int temp = mWriteIndex;
   mWriteIndex = mFreeIndex;
   mFreeIndex = temp;
-  //cout<<"now writing:"<<mWriteIndex<<endl;
+  cout << "Writing:" << mBuffers[mWriteIndex] <<endl;
+  cout<<"now writing:"<<mWriteIndex<<endl;
   
   //TODO swap indexes thread safe
   mLock.unlock();
@@ -41,8 +50,15 @@ void BufferManager::writingToBufferComplete(){
   
   
 //Called from Image processing side
-uint16_t* BufferManager::getReadBuffer(){
-    uint16_t* dataBuffer = (uint16_t*)mBuffers[mReadIndex].getData();
+const uint16_t* BufferManager::getReadBuffer(){
+    printf("Doing get read buffer:%d\n",mReadIndex);
+    VideoFrameRef* ref = mBuffers[mReadIndex];
+    cout << "Reading:" << ref <<endl;
+
+    //ref->getData();
+    printf("Getting the element worked\n");
+    const uint16_t* dataBuffer = (const uint16_t*)ref->getData();
+    printf("Doing get read buffer done\n");
     return dataBuffer;
  }
 void BufferManager::readingFromBufferComplete(){
@@ -65,6 +81,10 @@ void BufferManager::printIndexes(){
   //mLock.unlock();
 }
 BufferManager::~BufferManager(){
+  //free(mBuffers[0]);
+  //free(mBuffers[1]);
+  //free(mBuffers[2]);
+  free(mBuffers);
   cout<<"BufferManager destroyed."<<endl;
 }
 
