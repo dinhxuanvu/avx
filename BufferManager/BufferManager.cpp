@@ -23,7 +23,7 @@ BufferManager::BufferManager(){
   cout << "Buff0:" << mBuffers[0]<<endl;
   cout << "Buff1" << mBuffers[1]<<endl;
   cout << "Buff2" << mBuffers[2]<<endl;
-  cin.ignore();
+  //cin.ignore();
   mReadIndex = 0;
   mWriteIndex = 1;
   mFreeIndex = 2;
@@ -40,8 +40,8 @@ void BufferManager::writingToBufferComplete(){
   int temp = mWriteIndex;
   mWriteIndex = mFreeIndex;
   mFreeIndex = temp;
-  cout << "Writing:" << mBuffers[mWriteIndex] <<endl;
-  cout<<"now writing:"<<mWriteIndex<<endl;
+  //cout << "Writing:" << mBuffers[mWriteIndex] <<endl;
+  //cout<<"now writing:"<<mWriteIndex<<endl;
   
   //TODO swap indexes thread safe
   mLock.unlock();
@@ -51,14 +51,14 @@ void BufferManager::writingToBufferComplete(){
   
 //Called from Image processing side
 const uint16_t* BufferManager::getReadBuffer(){
-    printf("Doing get read buffer:%d\n",mReadIndex);
+    //printf("Doing get read buffer:%d\n",mReadIndex);
     VideoFrameRef* ref = mBuffers[mReadIndex];
-    cout << "Reading:" << ref <<endl;
+    //cout << "Reading:" << ref <<endl;
 
-    //ref->getData();
-    printf("Getting the element worked\n");
+    ref->getData();
+    //printf("Getting the element worked\n");
     const uint16_t* dataBuffer = (const uint16_t*)ref->getData();
-    printf("Doing get read buffer done\n");
+    //printf("Doing get read buffer done\n");
     return dataBuffer;
  }
 void BufferManager::readingFromBufferComplete(){

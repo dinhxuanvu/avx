@@ -7,7 +7,7 @@
 
 using namespace std;
 void run_cameraThread(int threadID, int delay, BufferManager* man);
-Status initCamera(VideoStream* depth);
+Status initCamera(VideoStream* depth, Device* device);
 void run_processingThread(int threadID, int delay, BufferManager* man);
 void run_test(int threadID, int delay, BufferManager* man);
 
@@ -18,7 +18,7 @@ int main()
   // Start thread
   printf("Start camera thread\n");
   boost::thread testThread1(&run_cameraThread, 1, 1, &man);
-  boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+  //run_cameraThread(1,1,&man);
   printf("Start processign thead\n");
   boost::thread testThread2(&run_processingThread, 2, 1, &man);
   //boost::thread testThread3(&run_test, 3, 0, &man);
@@ -44,18 +44,21 @@ void run_cameraThread(int threadID, int delay, BufferManager* man){
   int counter = 0;	
   try
   {
+    int h,w;
+    Device device;
     VideoStream depth;
-    Status rc = initCamera(&depth);
+    Status rc = initCamera(&depth,&device);
     if (rc != STATUS_OK){
         printf("Camera init failed\n");
     }
+    Mat frame;
     for(;;)
 	    {
         //cout << "Thread"<< threadID <<" iteration " << ++counter << " Press Enter to stop" << endl;
         Status rc;
-        printf("Start reading frame\n");
+        //printf("Start reading frame\n");
         VideoFrameRef* vfr = man->getWriteBuffer();
-        printf("End reading frame\n");
+        //printf("End reading frame\n");
         rc = depth.readFrame(vfr);
         if (rc != STATUS_OK)
 		    {
@@ -75,7 +78,7 @@ void run_cameraThread(int threadID, int delay, BufferManager* man){
   }
 }
 
-Status initCamera(VideoStream* depth)
+Status initCamera(VideoStream* depth, Device* device)
 {
   Status rc = OpenNI::initialize();
 	if (rc != STATUS_OK)
@@ -84,17 +87,17 @@ Status initCamera(VideoStream* depth)
 		return rc;
 	}
 
-	Device device;
-	rc = device.open(ANY_DEVICE);
+	
+	rc = device->open(ANY_DEVICE);
 	if (rc != STATUS_OK)
 	{
 		printf("Couldn't open device\n%s\n", OpenNI::getExtendedError());
 		return rc;
 	}
 
-	if (device.getSensorInfo(SENSOR_DEPTH) != NULL)
+	if (device->getSensorInfo(SENSOR_DEPTH) != NULL)
 	{
-		rc = depth->create(device, SENSOR_DEPTH);
+		rc = depth->create(*device, SENSOR_DEPTH);
 		if (rc != STATUS_OK)
 		{
 			printf("Couldn't create depth stream\n%s\n", OpenNI::getExtendedError());
@@ -121,6 +124,7 @@ Status initCamera(VideoStream* depth)
 
 
 void run_processingThread(int threadID, int delay, BufferManager* man){
+  boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
   printf("Processing thead started\n");
   //Tell the buffer manager we want a new buffer, not the empty one that was waiting for us
   man->readingFromBufferComplete();
@@ -132,17 +136,17 @@ void run_processingThread(int threadID, int delay, BufferManager* man){
     try
     {
       //cout << "Thread"<< threadID <<" iteration " << ++counter << " Press Enter to stop" << endl;
-      printf("About to get buffer\n");
+      //printf("About to get buffer\n");
       const uint16_t* imgBuf = man->getReadBuffer();
-	    printf("Buffer gotten\n");
+	    //printf("Buffer gotten\n");
 			//h = vfr.getHeight(); w = vfr.getWidth();
-      h = 320;
-      w = 240;
+      w = 320;
+      h = 240;
       frame.create(h,w,CV_16U);
-      printf("Mat created\n");
+      //printf("Mat created\n");
       // Copy from OpenNI frame to OpenCV frame?
       memcpy(frame.data, imgBuf, h*w*sizeof(uint16_t));
-      printf("Memory copied into Mat\n");
+      //printf("Memory copied into Mat\n");
       frame = frame * .064;
 
 		  // Convert from 16 bit to 8 bit
@@ -151,7 +155,7 @@ void run_processingThread(int threadID, int delay, BufferManager* man){
    
   
       minMaxLoc(frame, &min, &max);
-      printf("Loop Min:%f Max:%f\n",min,max);
+      //printf("Loop Min:%f Max:%f\n",min,max);
 		  //bitwise_not(frame,frame);
 
       // Display in a window
