@@ -2,6 +2,7 @@
 #include "Camera/Camera.h"
 #include "ImageProcessor/ImageProcessor.h"
 #include "ImageProcessor/Hazard.h"
+#include "macros.h"
 #include <stdio.h>
 #include <iostream>
 
@@ -25,8 +26,8 @@ int main()
 
   boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
   boost::thread processingThread(&run_processingThread, 2, 0, &man, &processor);
-  char ch;
-  cin.get(ch);
+
+  while(1){}
 
   // Ask thread to stop
   cameraThread.interrupt();
@@ -63,6 +64,13 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
   printf("Processing thead started\n");
   //Tell the buffer manager we want a new buffer, not the empty one that was waiting for us
   man->readingFromBufferComplete();
+
+  uint16_t* imgBuf = man->getReadBuffer();
+  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+  processor->calibrate(imgBuf);
+
+  man->readingFromBufferComplete();
+
 	for(;;)
 	{  
     try

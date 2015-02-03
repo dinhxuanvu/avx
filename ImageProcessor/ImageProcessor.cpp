@@ -140,6 +140,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   namedWindow("Contours", CV_WINDOW_AUTOSIZE );
   imshow("Contours", drawing);
+  waitKey(20);
 
   return;
 }
