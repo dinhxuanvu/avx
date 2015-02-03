@@ -25,7 +25,7 @@ int main()
   ImageProcessor processor(camera.getWidth(), camera.getHeight(), hazards_p);
 
   boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
-  boost::thread processingThread(&run_processingThread, 2, 0, &man, &processor);
+  boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor);
 
   while(1){}
 

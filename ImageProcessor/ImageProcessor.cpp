@@ -49,11 +49,17 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   Mat working;
   
   // Convert to 8 bits on working copy
+
+  image *= 0.064;
   image.convertTo(working, CV_8U);
 
   // Background subtraction
   // diff = |Image - background|
   absdiff(this->calibrationImage,working,working);
+
+
+  namedWindow("Contours",0);
+  imshow("Contours", working);
   
   // Find edges where objects overlap
   Mat edges;
@@ -138,8 +144,9 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   }
 
-  namedWindow("Contours", CV_WINDOW_AUTOSIZE );
-  imshow("Contours", drawing);
+  namedWindow("Con",0);
+  imshow("Con", drawing);
+
   waitKey(20);
 
   return;
@@ -155,6 +162,11 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   Mat calibrationImage(this->height,this->width, CV_16U, dataBuffer);
 
   // Convert bit depth to 0 to 256
+  calibrationImage *= 0.064;
   calibrationImage.convertTo(this->calibrationImage, CV_8U);
+
+  namedWindow("Calibration");
+  imshow("Calibration", this->calibrationImage);
+  waitKey();
 
 }
