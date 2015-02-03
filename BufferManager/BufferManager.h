@@ -30,7 +30,7 @@ class BufferManager
       void writingToBufferComplete();
       
       //Called from Image processing side
-      const uint16_t* getReadBuffer();
+      uint16_t* getReadBuffer();
       void readingFromBufferComplete();
       
       ~BufferManager();	

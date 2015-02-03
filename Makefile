@@ -6,51 +6,49 @@ LIBCV=`pkg-config opencv --cflags --libs`
 LIBGPIO=-lBBBio
 # Default compiler
 CC=g++
+
+DEBUG=1
 # Compile flags
-CFLAGS=-Wall
+CFLAGS=-Wall -DDEBUG=$(DEBUG)
 # Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin
 
-DEBUG=0
-
 # Build all targets
-all : ImageProcessor
+all : Main
+	sudo ./$(DIR_BIN)/avx
 
-## Add test cases here
-test : BufferManager.o
-	./$(DIR_BIN)/test_BufferManager
-
-
+######################################################
+## Main program ######################################
+######################################################
+Main: Main.cpp ImageProcessor.o BufferManager.o Camera.o
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/avx  $(DIR_BIN)/ImageProcessor.o $(DIR_BIN)/BufferManager.o $(DIR_BIN)/Camera.o $@.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
-
+## Add custom make targets for testing here
 
 ######################################################
-## mod_BufferManager ###############################
+## mod_BufferManager #################################
 ######################################################
 BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp `pkg-config opencv --cflags` 
 	
 test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
 	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBCV) $(LIBNI) -lboost_thread -lboost_system 
-
-test_BufferManager_threads:test_BufferManager
-	./$(DIR_BIN)/test_BufferManager
-	
 	
 ######################################################
 ## mod_Camera ########################################
 ######################################################
-Camera: SimpleRead
+Camera.o: Camera/Camera.cpp Camera/Camera.h
+	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ Camera/Camera.cpp $(LIBNI)
 
-SimpleRead: Camera/SimpleRead.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleRead.cpp $(LIBCV) $(LIBNI)
+#SimpleRead: Camera/SimpleRead.cpp
+#	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleRead.cpp $(LIBCV) $(LIBNI)
 
-SimpleTimer: Camera/SimpleTimer.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleTimer.cpp $(LIBCV) $(LIBNI)
+#SimpleTimer: Camera/SimpleTimer.cpp
+#	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleTimer.cpp $(LIBCV) $(LIBNI)
 
 ######################################################
 ## mod_ImageProcessor ################################
@@ -59,7 +57,7 @@ ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcesso
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
 
 test_ImageProcessor: ImageProcessor.o
-	$(CC) $(CFLAGS) -DDEBUG=$(DEBUG) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
+	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
 
 ######################################################
 ## mod_GPIO ##########################################

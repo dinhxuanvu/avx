@@ -50,14 +50,14 @@ void BufferManager::writingToBufferComplete(){
   
   
 //Called from Image processing side
-const uint16_t* BufferManager::getReadBuffer(){
+uint16_t* BufferManager::getReadBuffer(){
     //printf("Doing get read buffer:%d\n",mReadIndex);
     VideoFrameRef* ref = mBuffers[mReadIndex];
     //cout << "Reading:" << ref <<endl;
 
     ref->getData();
     //printf("Getting the element worked\n");
-    const uint16_t* dataBuffer = (const uint16_t*)ref->getData();
+    uint16_t* dataBuffer = (uint16_t*)ref->getData();
     //printf("Doing get read buffer done\n");
     return dataBuffer;
  }
