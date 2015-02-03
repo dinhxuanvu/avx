@@ -13,7 +13,7 @@ LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin
 
-
+DEBUG=0
 
 # Build all targets
 all : ImageProcessor
@@ -59,7 +59,7 @@ ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcesso
 	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
 
 test_ImageProcessor: ImageProcessor.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
+	$(CC) $(CFLAGS) -DDEBUG=$(DEBUG) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
 
 ######################################################
 ## mod_GPIO ##########################################
