@@ -14,4 +14,5 @@ struct Hazard {
 
 typedef std::vector<Hazard> HazardList;
 
+
 #endif /* HAZARD_H */

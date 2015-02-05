@@ -65,17 +65,30 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
   //Tell the buffer manager we want a new buffer, not the empty one that was waiting for us
   man->readingFromBufferComplete();
 
-  uint16_t* imgBuf = man->getReadBuffer();
-  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
-  processor->calibrate(imgBuf);
+  // Calibrate the camera with 5 images
+  LOG_MESSAGE("CALIBRATING");
+  for(int i=1; i<20; i++)
+  {  
+    try
+    {
+      uint16_t* imgBuf = man->getReadBuffer();
+      processor->calibrate(imgBuf);
+      boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
+      man->readingFromBufferComplete();
+    }
+    catch(boost::thread_interrupted&)
+    {
+        cout << "Thread "<<threadID<<" is stopped" << endl;
+        return;
+    }
+  }
 
-  man->readingFromBufferComplete();
-
+  LOG_MESSAGE("PROCESSING");
+  // Process frames for object detection
 	for(;;)
 	{  
     try
     {
-      //printf("About to get buffer\n");
       uint16_t* imgBuf = man->getReadBuffer();
       processor->nextFrame(imgBuf);
       man->readingFromBufferComplete();

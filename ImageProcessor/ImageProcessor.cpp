@@ -8,16 +8,20 @@
 
 #include "ImageProcessor.h"
 #include "Hazard.h"
+#include "../macros.h"
 
 using namespace cv;
 using namespace std;
 
-#define MIN_AREA      300
+#define MIN_DEPTH     400
+#define MIN_AREA      200
 #define MAX_AREA      ((this->width-4)*(this->height-4))
-#define BACK_THRESH   3
-#define EDGE_ERODE    4
+#define BACK_THRESH   10
+#define CANNY_PARAM   35
+#define EDGE_ERODE    6
 #define CAM_VIEW_W    58.0f
 #define CAM_VIEW_H    45.0f
+#define CONVERT_CONST 0.064f
 
 RNG rng(12345);
 
@@ -29,11 +33,17 @@ ImageProcessor::ImageProcessor(int width, int height, HazardList* haz_p)
   // Store local width and height
   this->width = width;
   this->height = height;
+  this->calCount = 0;
   // Hold pointer to hazards list
   this->hazards = haz_p;
 
   // Instantiate empty OpenCV Mat
   this->calibrationImage = Mat(this->height,this->width,CV_8U);
+}
+
+bool compareByLength(const Hazard &a, const Hazard &b)
+{
+    return a.depth < b.depth;
 }
 
 /*
@@ -56,15 +66,13 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   // Background subtraction
   // diff = |Image - background|
   absdiff(this->calibrationImage,working,working);
-
-
-  namedWindow("Contours",0);
-  imshow("Contours", working);
   
   // Find edges where objects overlap
   Mat edges;
   // Canny detector
-  Canny( working, edges, 6, 18, 3 );
+  int ratio = 3;
+  int lowThreshold = CANNY_PARAM;
+  Canny( working, edges, lowThreshold, lowThreshold*ratio, 3 );
   // Invert edge image for mask operation
   bitwise_not(edges,edges);
   // Dilation of edge image
@@ -98,7 +106,12 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     boundRect[i] = boundingRect( Mat(contours_poly[i]) );
     // Calculate area of contour
     double area = contourArea(contours_poly[i]);
-    if((area < MIN_AREA) | (area > MAX_AREA))
+
+    // Depth calculator for box
+    Scalar ddepth = mean(image(boundRect[i]));
+    int depth = (int)ddepth[0]/CONVERT_CONST;
+
+    if((area < MIN_AREA) | (area > MAX_AREA) | (depth < MIN_DEPTH))
     {
       // Remove from countors of too small or large
       contours.erase(contours.begin()+i);
@@ -116,11 +129,6 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     double h     = (boundRect[i].height * CAM_VIEW_H / this->height);
     double theta = ((boundRect[i].tl().x + (boundRect[i].width/2.0f)) * CAM_VIEW_W) / this->width - 0.5 * CAM_VIEW_W;
     double phi   = -((boundRect[i].tl().y + (boundRect[i].height/2.0f)) * CAM_VIEW_H) / this->height + 0.5 * CAM_VIEW_H;
-
-    // Depth calculator for box
-    Scalar ddepth = mean(image(boundRect[i]));
-
-    int depth = (int)ddepth[0];
 
     // Create and add into hazards list
     Hazard thisHaz = {
@@ -149,6 +157,11 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   waitKey(20);
 
+  CLEAR_SCREEN;
+  LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
+  sort(this->hazards->begin(), this->hazards->end(), compareByLength);
+  ImageProcessor::printHazards(this->hazards);
+
   return;
 }
 
@@ -159,14 +172,13 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 void ImageProcessor::calibrate(uint16_t* dataBuffer)
 {
   // Create Mat wrapper
-  Mat calibrationImage(this->height,this->width, CV_16U, dataBuffer);
+  Mat nextCalibration(this->height,this->width, CV_16U, dataBuffer);
 
   // Convert bit depth to 0 to 256
-  calibrationImage *= 0.064;
-  calibrationImage.convertTo(this->calibrationImage, CV_8U);
+  nextCalibration *= CONVERT_CONST;
+  nextCalibration.convertTo(nextCalibration, CV_8U);
 
-  namedWindow("Calibration");
-  imshow("Calibration", this->calibrationImage);
-  waitKey();
-
+  // Average calibration image into existing calibration
+  this->calCount++;
+  this->calibrationImage = this->calibrationImage*(1.0f-1.0f/this->calCount) + nextCalibration*(1.0f/this->calCount);
 }
