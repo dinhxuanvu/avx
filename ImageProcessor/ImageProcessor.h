@@ -11,6 +11,7 @@ class ImageProcessor
     ImageProcessor(int width, int height, HazardList*);
     void nextFrame(uint16_t*);
     void calibrate(uint16_t*);
+	void calibrate2(uint16_t*);
     static void printHazards(HazardList* h_p)
 	{
 	  LOG_ERROR("Current hazards: (%lu):\n", h_p->size());

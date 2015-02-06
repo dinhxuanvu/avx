@@ -13,17 +13,18 @@
 using namespace cv;
 using namespace std;
 
-#define MIN_DEPTH     400
-#define MIN_AREA      200
-#define MAX_AREA      ((this->width-4)*(this->height-4))
-#define BACK_THRESH   10
-#define CANNY_PARAM   35
-#define EDGE_ERODE    6
-#define CAM_VIEW_W    58.0f
-#define CAM_VIEW_H    45.0f
-#define CONVERT_CONST 0.064f
+#define MIN_DEPTH           400
+#define MIN_AREA            200
+#define MAX_AREA            ((this->width-4)*(this->height-4))
+#define BACK_THRESH         10
+#define CANNY_PARAM         35
+#define EDGE_ERODE          6
+#define CAM_VIEW_W          58.0f
+#define CAM_VIEW_H          45.0f
+#define CONVERT_CONST       0.064f
+#define CALIBRATION_POINTS  1200
 
-RNG rng(12345);
+RNG rng(1234);
 
 /*
  * Public constructor for image processor
@@ -41,6 +42,9 @@ ImageProcessor::ImageProcessor(int width, int height, HazardList* haz_p)
   this->calibrationImage = Mat(this->height,this->width,CV_8U);
 }
 
+/* 
+ * Custom comparison method for sorting Hazards list by depth
+ */
 bool compareByLength(const Hazard &a, const Hazard &b)
 {
     return a.depth < b.depth;
@@ -56,12 +60,15 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   // Instantiate OpenCV Mat wrapper around data buffer
   Mat image(this->height, this->width, CV_16U, dataBuffer);
-  Mat working;
+  Mat working, working2;
   
   // Convert to 8 bits on working copy
 
-  image *= 0.064;
+  image *= CONVERT_CONST;
   image.convertTo(working, CV_8U);
+  threshold(working, working2, 1, 1, CV_THRESH_BINARY_INV);
+  multiply(this->calibrationImage,working2,working2);
+  working += working2;
 
   // Background subtraction
   // diff = |Image - background|
@@ -181,4 +188,57 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   // Average calibration image into existing calibration
   this->calCount++;
   this->calibrationImage = this->calibrationImage*(1.0f-1.0f/this->calCount) + nextCalibration*(1.0f/this->calCount);
+}
+
+/*
+ * Calibrate the image processor with a plane estimatoin
+ * based off of the background image.
+ */
+void ImageProcessor::calibrate2(uint16_t* dataBuffer)
+{
+  // Create Mat wrapper
+  Mat nextCalibration(this->height,this->width, CV_16U, dataBuffer);
+
+  // Convert bit depth to 0 to 256
+  nextCalibration *= CONVERT_CONST;
+  nextCalibration.convertTo(nextCalibration, CV_8U);
+
+  // Prepare matrices for the data
+  int max = CALIBRATION_POINTS;
+  Mat res(3, 1, DataType<float>::type);
+  Mat matX(max, 3, DataType<float>::type);
+  Mat matZ(max, 1, DataType<float>::type);
+  int row, col;
+
+  // Fill in the matrix with the data
+  for(int i=0; i<max; i++)
+  {
+    row = rng.uniform(0.05*this->height,0.95*this->height);
+    col = rng.uniform(0.05*this->width,0.95*this->width);
+    unsigned char val = nextCalibration.at<unsigned char>(row,col);
+
+    matX.at<float>(i,0) = col;
+    matX.at<float>(i,1) = row;
+    matX.at<float>(i,2) = val;
+    matZ.at<float>(i,0) = 1;
+  }
+
+  // Solve the equation
+  solve(matX, matZ, res, DECOMP_SVD);
+
+  float A = res.at<float>(0,0);
+  float B = res.at<float>(1,0);
+  float C = res.at<float>(2,0);
+
+  LOG_MESSAGE("Plane Params: %f, %f, %f", A, B, C);
+
+  // Plane generation
+  for(int row=0; row < this->height; row++)
+  {
+    for(int col=0; col < this->width; col++)
+    {
+      unsigned char val = (-col*A - row*B + 1)/C;
+      this->calibrationImage.at<unsigned char>(row, col) = val;
+    }
+  }
 }
