@@ -17,13 +17,15 @@ DIR_BIN=bin
 
 # Build all targets
 all : Main
-	sudo ./$(DIR_BIN)/avx
+	sudo ./bin/avx
+
+compile : Main
 
 ######################################################
 ## Main program ######################################
 ######################################################
-Main: Main.cpp ImageProcessor.o BufferManager.o Camera.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/avx  $(DIR_BIN)/ImageProcessor.o $(DIR_BIN)/BufferManager.o $(DIR_BIN)/Camera.o $@.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
+Main: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o
+	$(CC) $(CFLAGS) -o bin/avx  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o $@.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
@@ -32,17 +34,17 @@ Main: Main.cpp ImageProcessor.o BufferManager.o Camera.o
 ######################################################
 ## mod_BufferManager #################################
 ######################################################
-BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp `pkg-config opencv --cflags` 
+bin/BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
+	$(CC) $(CFLAGS) -c -o $@ BufferManager/BufferManager.cpp `pkg-config opencv --cflags` 
 	
-test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBCV) $(LIBNI) -lboost_thread -lboost_system 
+test_BufferManager: bin/BufferManager.o BufferManager/test_BufferManager.cpp
+	$(CC) $(CFLAGS) -o bin/$@ bin/BufferManager.o BufferManager/$@.cpp $(LIBCV) $(LIBNI) -lboost_thread -lboost_system 
 	
 ######################################################
 ## mod_Camera ########################################
 ######################################################
-Camera.o: Camera/Camera.cpp Camera/Camera.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ Camera/Camera.cpp $(LIBNI)
+bin/Camera.o: Camera/Camera.cpp Camera/Camera.h
+	$(CC) $(CFLAGS) -c -o $@ Camera/Camera.cpp $(LIBNI)
 
 #SimpleRead: Camera/SimpleRead.cpp
 #	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleRead.cpp $(LIBCV) $(LIBNI)
@@ -53,23 +55,23 @@ Camera.o: Camera/Camera.cpp Camera/Camera.h
 ######################################################
 ## mod_ImageProcessor ################################
 ######################################################
-ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
+bin/ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
+	$(CC) $(CFLAGS) -c -o $@ ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
 
 test_ImageProcessor: ImageProcessor.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
+	$(CC) $(CFLAGS) -o bin/$@ bin/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
 
 ######################################################
 ## mod_GPIO ##########################################
 ######################################################
-GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/GPIO.o GPIO/GPIO.cpp
+bin/GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
+	$(CC) $(CFLAGS) -c -o $@ GPIO/GPIO.cpp
 
-test_GPIO: GPIO.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+test_GPIO: bin/GPIO.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 
 ######################################################
 .PHONY: clean
 clean:
-	rm -rf $(DIR_BIN)/*
+	rm -rf bin/*
 ######################################################

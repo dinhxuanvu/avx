@@ -27,11 +27,11 @@ int main()
   boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
   boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor);
 
-  while(1){}
+  //while(1){}
 
   // Ask thread to stop
-  cameraThread.interrupt();
-  processingThread.interrupt();
+  //cameraThread.interrupt();
+  //processingThread.interrupt();
 
   // Join - wait when thread actually exits
   cameraThread.join();
@@ -41,7 +41,7 @@ int main()
 }
 
 void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera){
-  int counter = 0;	
+  printf("Camera thead started\n");
   try
   {
     for(;;)
@@ -67,12 +67,12 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
 
   // Calibrate the camera with 5 images
   LOG_MESSAGE("CALIBRATING");
-  for(int i=1; i<20; i++)
+  for(int i=1; i<1; i++)
   {  
     try
     {
       uint16_t* imgBuf = man->getReadBuffer();
-      processor->calibrate(imgBuf);
+      processor->calibrate2(imgBuf);
       boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
       man->readingFromBufferComplete();
     }
@@ -89,10 +89,11 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
 	{  
     try
     {
+      printf("About to getReadBuffer\n");
       uint16_t* imgBuf = man->getReadBuffer();
       processor->nextFrame(imgBuf);
       man->readingFromBufferComplete();
-      boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
+      //boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
     }
     catch(boost::thread_interrupted&)
     {

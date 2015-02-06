@@ -183,7 +183,7 @@ void run_test(int threadID, int delay, BufferManager* man){
 	{  
     try
     {
-      man->printIndexes();
+      //man->printIndexes();
       
       boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
     }

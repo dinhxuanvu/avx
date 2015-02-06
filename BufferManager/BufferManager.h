@@ -16,6 +16,7 @@ class BufferManager
   {
     private:
       VideoFrameRef** mBuffers;
+      boost::mutex* mBufferHasNewData;
       int mReadIndex;
       int mWriteIndex;
       int mFreeIndex;
@@ -23,7 +24,6 @@ class BufferManager
       
     public:
       BufferManager();
-      void printIndexes();
       
       //Called from camera side
       VideoFrameRef* getWriteBuffer();
