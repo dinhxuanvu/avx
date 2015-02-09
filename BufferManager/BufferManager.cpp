@@ -12,7 +12,8 @@ using namespace cv;
 using namespace openni;
 using namespace std;
 
-BufferManager::BufferManager(){
+BufferManager::BufferManager()
+{
   this->mBuffers = new VideoFrameRef*[3];
   //TODO construct three VideoFrameRefs
   //VideoFrameRefs can't
@@ -34,21 +35,22 @@ BufferManager::BufferManager(){
 }
   
 //Called from camera side
-VideoFrameRef* BufferManager::getWriteBuffer(){
+VideoFrameRef* BufferManager::getWriteBuffer()
+{
   VideoFrameRef* dataBuffer = mBuffers[mWriteIndex];
   return dataBuffer;
 }
-void BufferManager::writingToBufferComplete(){  
+
+void BufferManager::writingToBufferComplete()
+{  
   mLock.lock();
   int temp = mWriteIndex;
   mWriteIndex = mFreeIndex;
   mFreeIndex = temp;
   //cout << "Writing:" << mBuffers[mWriteIndex] <<endl;
   //cout<<"now writing:"<<mWriteIndex<<endl;
-  printf("UnLocking for camera write\n");
   //this->mBufferHasNewData->lock();
   this->mBufferHasNewData->unlock();
-  printf("Unlocking for camera done\n");
   //TODO swap indexes thread safe
   mLock.unlock();
 }
@@ -56,8 +58,8 @@ void BufferManager::writingToBufferComplete(){
   
   
 //Called from Image processing side
-uint16_t* BufferManager::getReadBuffer(){
-    printf("Doing get read buffer:%d\n",mReadIndex);    
+uint16_t* BufferManager::getReadBuffer()
+{   
     //this->mBufferHasNewData->lock();
     //printf("Doing get read buffer:%d\n",readIndex);
     VideoFrameRef* ref = mBuffers[mReadIndex];
@@ -68,7 +70,8 @@ uint16_t* BufferManager::getReadBuffer(){
     uint16_t* dataBuffer = (uint16_t*)ref->getData();
     //printf("Doing get read buffer done\n");
     return dataBuffer;
- }
+}
+
 void BufferManager::readingFromBufferComplete(){
   mLock.lock();
   
@@ -77,10 +80,8 @@ void BufferManager::readingFromBufferComplete(){
   mFreeIndex = temp;
   mLock.unlock();
 
-  printf("Locking for new data\n");
   //this->mBufferHasNewData->unlock();
   this->mBufferHasNewData->lock();
-  printf("Unlocking for new data\n");
   //cout<<"now reading:"<<mReadIndex<<endl;
   //TODO swap indexes thread safe
   

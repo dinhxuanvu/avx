@@ -13,16 +13,17 @@
 using namespace cv;
 using namespace std;
 
-#define MIN_DEPTH           400
-#define MIN_AREA            200
-#define MAX_AREA            ((this->width-4)*(this->height-4))
-#define BACK_THRESH         10
-#define CANNY_PARAM         35
+#define BACK_THRESH         25
+#define CANNY_PARAM         20
 #define EDGE_ERODE          6
 #define CAM_VIEW_W          58.0f
 #define CAM_VIEW_H          45.0f
+#define MIN_AREA            100
+#define MAX_AREA            99999999
+#define MIN_DEPTH           450
+#define MAX_DEPTH           2000
 #define CONVERT_CONST       0.064f
-#define CALIBRATION_POINTS  1200
+#define CALIBRATION_POINTS  2000
 
 RNG rng(1234);
 
@@ -66,6 +67,10 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   image *= CONVERT_CONST;
   image.convertTo(working, CV_8U);
+
+  // Don't count any 0 or 255 values
+  threshold(working, working2, 254, 1, CV_THRESH_BINARY_INV);
+  working = working.mul(working2);
   threshold(working, working2, 1, 1, CV_THRESH_BINARY_INV);
   multiply(this->calibrationImage,working2,working2);
   working += working2;
@@ -91,6 +96,9 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   // Split threshold image at edges for overlapping images
   working = working.mul(edges);
+
+  namedWindow("W",0);
+  imshow("W", working);
 
   // Initialize lists for contours
   vector<vector<Point> > contours;
@@ -118,7 +126,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     Scalar ddepth = mean(image(boundRect[i]));
     int depth = (int)ddepth[0]/CONVERT_CONST;
 
-    if((area < MIN_AREA) | (area > MAX_AREA) | (depth < MIN_DEPTH))
+    if((area < MIN_AREA) | (area > MAX_AREA) | (depth < MIN_DEPTH) | (depth > MAX_DEPTH))
     {
       // Remove from countors of too small or large
       contours.erase(contours.begin()+i);
@@ -151,10 +159,10 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   // Create a new drawing with the original image and the countors in color
   Mat drawing;
   image.convertTo(drawing, CV_8U);
-  cvtColor(drawing,drawing, CV_GRAY2RGB);
+  cvtColor(drawing, drawing, CV_GRAY2RGB);
   for(unsigned int i=0; i< contours.size(); i++)
   {
-    Scalar color = Scalar( rng.uniform(0,255), rng.uniform(0,255), rng.uniform(0,255) );
+    Scalar color = Scalar( 0, 0, 255 );
     drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
     rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   }
@@ -162,7 +170,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   namedWindow("Con",0);
   imshow("Con", drawing);
 
-  waitKey(20);
+  waitKey(1);
 
   CLEAR_SCREEN;
   LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
@@ -173,32 +181,14 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 }
 
 /*
- * Calibrate the image processor with a background image
- * Stored for all future reads and used as background.
+ * Calibrate the image processor with a plane estimatoin
+ * based off of the background image.
  */
 void ImageProcessor::calibrate(uint16_t* dataBuffer)
 {
   // Create Mat wrapper
   Mat nextCalibration(this->height,this->width, CV_16U, dataBuffer);
-
-  // Convert bit depth to 0 to 256
-  nextCalibration *= CONVERT_CONST;
-  nextCalibration.convertTo(nextCalibration, CV_8U);
-
-  // Average calibration image into existing calibration
-  this->calCount++;
-  this->calibrationImage = this->calibrationImage*(1.0f-1.0f/this->calCount) + nextCalibration*(1.0f/this->calCount);
-}
-
-/*
- * Calibrate the image processor with a plane estimatoin
- * based off of the background image.
- */
-void ImageProcessor::calibrate2(uint16_t* dataBuffer)
-{
-  // Create Mat wrapper
-  Mat nextCalibration(this->height,this->width, CV_16U, dataBuffer);
-
+  Mat working;
   // Convert bit depth to 0 to 256
   nextCalibration *= CONVERT_CONST;
   nextCalibration.convertTo(nextCalibration, CV_8U);
@@ -213,8 +203,8 @@ void ImageProcessor::calibrate2(uint16_t* dataBuffer)
   // Fill in the matrix with the data
   for(int i=0; i<max; i++)
   {
-    row = rng.uniform(0.05*this->height,0.95*this->height);
-    col = rng.uniform(0.05*this->width,0.95*this->width);
+    row = rng.uniform(0.4*this->height,1.0*this->height);
+    col = rng.uniform(0.1*this->width,0.9*this->width);
     unsigned char val = nextCalibration.at<unsigned char>(row,col);
 
     matX.at<float>(i,0) = col;
@@ -237,8 +227,20 @@ void ImageProcessor::calibrate2(uint16_t* dataBuffer)
   {
     for(int col=0; col < this->width; col++)
     {
-      unsigned char val = (-col*A - row*B + 1)/C;
-      this->calibrationImage.at<unsigned char>(row, col) = val;
+      int val = (-col*A - row*B + 1)/C;
+      if(val > 255) val = 255;
+      if(val < 0) val = 0;
+      this->calibrationImage.at<unsigned char>(row, col) = (unsigned char)val;
     }
   }
+
+
+  threshold(nextCalibration, working, 1, 1, CV_THRESH_BINARY_INV);
+  multiply(working,this->calibrationImage,working);
+  nextCalibration += working;
+
+  namedWindow("Calibration2",0);
+  imshow("Calibration2", nextCalibration);
+
+  waitKey(20);
 }

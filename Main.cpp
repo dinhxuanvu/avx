@@ -40,7 +40,8 @@ int main()
   return 0;
 }
 
-void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera){
+void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera)
+{
   printf("Camera thead started\n");
   try
   {
@@ -59,7 +60,8 @@ void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camer
   }
 }
 
-void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor){
+void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor)
+{
   boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
   printf("Processing thead started\n");
   //Tell the buffer manager we want a new buffer, not the empty one that was waiting for us
@@ -67,13 +69,12 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
 
   // Calibrate the camera with 5 images
   LOG_MESSAGE("CALIBRATING");
-  for(int i=1; i<1; i++)
+  for(int i=0; i<1; i++)
   {  
     try
     {
       uint16_t* imgBuf = man->getReadBuffer();
-      processor->calibrate2(imgBuf);
-      boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
+      processor->calibrate(imgBuf);
       man->readingFromBufferComplete();
     }
     catch(boost::thread_interrupted&)
@@ -89,11 +90,9 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
 	{  
     try
     {
-      printf("About to getReadBuffer\n");
       uint16_t* imgBuf = man->getReadBuffer();
       processor->nextFrame(imgBuf);
       man->readingFromBufferComplete();
-      //boost::this_thread::sleep(boost::posix_time::milliseconds(delay));
     }
     catch(boost::thread_interrupted&)
     {
