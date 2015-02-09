@@ -1,6 +1,10 @@
 #ifndef MACROS_H
 #define MACROS_H
 
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+
 #define RESET	  	"\033[0m"
 #define BLACK	  	"\033[30m"
 #define RED 		"\033[31m"

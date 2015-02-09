@@ -58,8 +58,17 @@ bin/Camera.o: Camera/Camera.cpp Camera/Camera.h
 bin/ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
 	$(CC) $(CFLAGS) -c -o $@ ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
 
-test_ImageProcessor: ImageProcessor.o
+test_ImageProcessor: bin/ImageProcessor.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
+
+######################################################
+## mod_PathPlanner ################################
+######################################################
+bin/PathPlanner.o: PathPlanner/PathPlanner.cpp PathPlanner/PathPlanner.h
+	$(CC) $(CFLAGS) -c -o $@ PathPlanner/PathPlanner.cpp
+
+test_PathPlanner: bin/PathPlanner.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o PathPlanner/$@.cpp
 
 ######################################################
 ## mod_GPIO ##########################################

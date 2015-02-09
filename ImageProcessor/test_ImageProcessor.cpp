@@ -12,16 +12,6 @@
 using namespace cv;
 using namespace std;
 
-void printHazards(HazardList* h_p)
-{
-  LOG_ERROR("Current hazards: (%lu):\n", h_p->size());
-  for(HazardList::iterator it= h_p->begin(); it != h_p->end(); ++it)
-  {
-    LOG_MESSAGE("Haz %d = center (%f,%f), depth: %dmm width: %f, height: %f\n", \
-              it->id, it->theta, it->phi, it->depth, it->width, it->height);
-  }
-}
-
 int main(int argc, char** argv)
 {
 

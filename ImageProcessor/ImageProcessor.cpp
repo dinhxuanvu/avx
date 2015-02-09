@@ -1,13 +1,9 @@
-#include <stdio.h>
-#include <iostream>
-#include <stdlib.h>
-
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "ImageProcessor.h"
-#include "Hazard.h"
+#include "../Hazard.h"
 #include "../macros.h"
 
 using namespace cv;
@@ -41,14 +37,6 @@ ImageProcessor::ImageProcessor(int width, int height, HazardList* haz_p)
 
   // Instantiate empty OpenCV Mat
   this->calibrationImage = Mat(this->height,this->width,CV_8U);
-}
-
-/* 
- * Custom comparison method for sorting Hazards list by depth
- */
-bool compareByLength(const Hazard &a, const Hazard &b)
-{
-    return a.depth < b.depth;
 }
 
 /*
@@ -175,7 +163,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   CLEAR_SCREEN;
   LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
   sort(this->hazards->begin(), this->hazards->end(), compareByLength);
-  ImageProcessor::printHazards(this->hazards);
+  printHazards(this->hazards);
 
   return;
 }

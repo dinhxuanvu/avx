@@ -1,7 +1,7 @@
 #include "GPIO.h"
 #include <stdlib.h>
-#include <iostream>
 #include <BBBio_lib/BBBiolib.h>
+#include "../macros.h"
 
 using namespace std;
 
