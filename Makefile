@@ -71,6 +71,15 @@ test_PathPlanner: bin/PathPlanner.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o PathPlanner/$@.cpp
 
 ######################################################
+## mod_Control ################################
+######################################################
+bin/Control.o: Control/Control.cpp Control/Control.h
+	$(CC) $(CFLAGS) -c -o $@ Control/Control.cpp
+
+test_Control: bin/Control.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/Control.o Control/$@.cpp
+
+######################################################
 ## mod_GPIO ##########################################
 ######################################################
 bin/GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
