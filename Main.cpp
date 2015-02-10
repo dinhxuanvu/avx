@@ -18,15 +18,17 @@ int main()
   BufferManager man;
   
   // Start thread
-  printf("Start threads\n");
+  printf("Start threads please\n");
   Camera camera;
 
   HazardList* hazards_p = new HazardList;
+  printf("Threads 1\n");
   ImageProcessor processor(camera.getWidth(), camera.getHeight(), hazards_p);
-
+  printf("Threads 2\n");
   boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
+  printf("Threads 3\n");
   boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor);
-
+  printf("Threads 4\n");
   //while(1){}
 
   // Ask thread to stop
@@ -34,8 +36,11 @@ int main()
   //processingThread.interrupt();
 
   // Join - wait when thread actually exits
-  cameraThread.join();
   processingThread.join();
+  printf("Thread killed\n");
+  cameraThread.join();
+  printf("Thread killed\n");
+  //processingThread.join();
   printf("Main: Program Ending ended");
   return 0;
 }
@@ -62,7 +67,8 @@ void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camer
 
 void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor)
 {
-  boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+  //Wait for the camera to fill the buffers
+  boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   printf("Processing thead started\n");
   //Tell the buffer manager we want a new buffer, not the empty one that was waiting for us
   man->readingFromBufferComplete();
@@ -83,7 +89,8 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
         return;
     }
   }
-
+  LOG_MESSAGE("CALIBRATING DONE");
+  man->readingFromBufferComplete(); //LOG_MESSAGE("CALIBRATING DONE");
   LOG_MESSAGE("PROCESSING");
   // Process frames for object detection
 	for(;;)

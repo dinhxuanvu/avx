@@ -14,6 +14,7 @@ using namespace std;
 #define MAX_DEPTH           2000
 #define CONVERT_CONST       0.064f
 #define CALIBRATION_POINTS  2000
+#define SHOW_WINDOWS        0
 
 RNG rng(1234);
 
@@ -148,11 +149,11 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
     rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   }
-
-  namedWindow("Con",0);
-  imshow("Con", drawing);
-
-  waitKey(1);
+  if (SHOW_WINDOWS){
+    namedWindow("Con",0);
+    imshow("Con", drawing);
+    waitKey(1);
+  }
 
   CLEAR_SCREEN;
   LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
@@ -220,9 +221,9 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   threshold(nextCalibration, working, 1, 1, CV_THRESH_BINARY_INV);
   multiply(working,this->calibrationImage,working);
   nextCalibration += working;
-
-  namedWindow("Calibration2",0);
-  imshow("Calibration2", nextCalibration);
-
-  waitKey(20);
+  if (SHOW_WINDOWS){
+    namedWindow("Calibration2",0);
+    imshow("Calibration2", nextCalibration);
+    waitKey(20);
+  }
 }

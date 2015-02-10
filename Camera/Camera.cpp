@@ -8,21 +8,23 @@ Camera::Camera()
 	if (rc != STATUS_OK)
 	{
 		printf("Initialize failed\n%s\n", OpenNI::getExtendedError());
+		exit(1);
 	}
-
-	
+	printf("OpenNI OK...\n");
 	rc = this->device.open(ANY_DEVICE);
 	if (rc != STATUS_OK)
 	{
 		printf("Couldn't open device\n%s\n", OpenNI::getExtendedError());
+		exit(1);
 	}
-
+	printf("Device OK...\n");
 	if (this->device.getSensorInfo(SENSOR_DEPTH) != NULL)
 	{
 		rc = this->depthStream.create(this->device, SENSOR_DEPTH);
 		if (rc != STATUS_OK)
 		{
 			printf("Couldn't create depth stream\n%s\n", OpenNI::getExtendedError());
+			exit(1);
 		}
 	}
   VideoMode depth_videoMode = this->depthStream.getVideoMode(); 
@@ -34,7 +36,7 @@ Camera::Camera()
 	{
 		printf("Couldn't start the depth stream\n%s\n", OpenNI::getExtendedError());
 	}
-	printf("Depth Stream OK\n");
+	printf("Depth  OK...\n");
 }
 
 int Camera::getHeight()

@@ -16,16 +16,16 @@ LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 DIR_BIN=bin
 
 # Build all targets
-all : Main
+all: bin/avx
 	sudo ./bin/avx
 
-compile : Main
+compile: bin/avx
 
 ######################################################
 ## Main program ######################################
 ######################################################
-Main: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o
-	$(CC) $(CFLAGS) -o bin/avx  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o $@.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
+bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o
+	$(CC) $(CFLAGS) -o $@  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
