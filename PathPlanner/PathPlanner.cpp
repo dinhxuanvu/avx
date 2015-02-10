@@ -1,6 +1,4 @@
 #include "PathPlanner.h"
-#include "../Hazard.h"
-#include "../macros.h"
 
 using namespace std;
 
@@ -29,6 +27,7 @@ float PathPlanner::getDirection()
   float hazDir = 0.0f;
 
   //INSERT COMPLICATED STUFF HERE
+  
 
   // Linear combination of those offset by angle
   dir = (0.5*heading + 0.5*(hazDir+camAngle));

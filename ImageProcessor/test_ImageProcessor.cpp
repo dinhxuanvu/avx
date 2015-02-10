@@ -6,7 +6,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "ImageProcessor.h"
-#include "Hazard.h"
+#include "../Hazard.h"
 #include "../macros.h"
 
 using namespace cv;
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
   uint16_t* frame3Data = (uint16_t*)(frame3.data);
 
   // Pass sample background into calibration
-  proc.calibrate2( backgroundData );
+  proc.calibrate( backgroundData );
 
   // Pass frame into be processed for obstacles
   proc.nextFrame( frameData );
