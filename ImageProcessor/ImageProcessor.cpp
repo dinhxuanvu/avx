@@ -3,17 +3,18 @@
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESH         25
-#define CANNY_PARAM         20
-#define EDGE_ERODE          6
+#define BACK_THRESH         18
+#define CANNY_PARAM         9
+#define EDGE_ERODE          5
+#define EDGE_BLUR           5
 #define CAM_VIEW_W          58.0f
 #define CAM_VIEW_H          45.0f
-#define MIN_AREA            100
+#define MIN_AREA            200
 #define MAX_AREA            99999999
 #define MIN_DEPTH           450
-#define MAX_DEPTH           2000
+#define MAX_DEPTH           1800
 #define CONVERT_CONST       0.064f
-#define CALIBRATION_POINTS  2000
+#define CALIBRATION_POINTS  25000
 
 RNG rng(1234);
 
@@ -66,21 +67,23 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   // Canny detector
   int ratio = 3;
   int lowThreshold = CANNY_PARAM;
-  Canny( working, edges, lowThreshold, lowThreshold*ratio, 3 );
+  GaussianBlur( working, edges, Size( EDGE_BLUR, EDGE_BLUR ), 0, 0 );
+  Canny( edges, edges, lowThreshold, lowThreshold*ratio, 3 );
   // Invert edge image for mask operation
   bitwise_not(edges,edges);
   // Dilation of edge image
   Mat element = getStructuringElement( MORPH_RECT, Size(EDGE_ERODE,EDGE_ERODE) );
   erode(edges,edges,element);
 
+
+  namedWindow("W",0);
+  imshow("W", edges);
+
   // Threshold background subtraction
   threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY);
 
   // Split threshold image at edges for overlapping images
   working = working.mul(edges);
-
-  namedWindow("W",0);
-  imshow("W", working);
 
   // Initialize lists for contours
   vector<vector<Point> > contours;
@@ -185,7 +188,7 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   // Fill in the matrix with the data
   for(int i=0; i<max; i++)
   {
-    row = rng.uniform(0.4*this->height,1.0*this->height);
+    row = rng.uniform(0.35*this->height,1.0*this->height);
     col = rng.uniform(0.1*this->width,0.9*this->width);
     unsigned char val = nextCalibration.at<unsigned char>(row,col);
 
