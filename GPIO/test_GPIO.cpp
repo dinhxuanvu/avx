@@ -27,12 +27,8 @@ int testGPIOunits(void)
   cout << "Successful" << endl;
   // Status LEDs
   cout << "Testing battery LEDs" << endl;
-  for(int per=10; per<100; per+=10)
-  {
-    gpio->setBatteryLEDs(per);
-    cout << "\tBattery level: " << per << endl;
-    cin.ignore();
-  }
+  gpio->updateBattery();
+  cin.ignore();
   cout << "Battery testing complete" << endl;
 
   // Motors currently match
@@ -59,10 +55,10 @@ int testGPIOunits(void)
   gpio->enableHBridge();
 
   cout << "Verify wheels turned full left" << endl;
-  gpio->setTurn(-1.0f);
+  gpio->setTurn(-90.0f);
   cin.ignore();
   cout << "Verify wheels turned full right" << endl;
-  gpio->setTurn(+1.0f);
+  gpio->setTurn(+90.0f);
   cin.ignore();
   cout << "Verify wheels centered" << endl;
   gpio->setTurn(0.0f);
@@ -80,10 +76,6 @@ int testGPIOunits(void)
   cin.ignore();
   
   gpio->disableHBridge();
-
-  // ADC reading battery
-  float lev = gpio->getBatteryLevel();
-  cout << "Battery reading at " << lev << "%" << endl;
   
   cout << "Closing GPIO: ";
   gpio->deinitialize();

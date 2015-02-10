@@ -13,10 +13,12 @@
 #define SERVO_PWM       BBBIO_PWMSS2  // Channel A = turn, Channel B = Camera
 #define SERVO_FREQ      50.0f           // 50 Hz
 
+// TURN DUTY CYCLES
 #define TURN_LEFT       2.7f
 #define TURN_CENTER     4.425f
 #define TURN_RIGHT      6.5f
 
+// CAMERA DUTY CYCLES
 #define CAM_LEFT        2.7f
 #define CAM_CENTER      4.425f
 #define CAM_RIGHT       6.5f
@@ -40,6 +42,14 @@ class GPIO
     GPIO(void);
 
     int setMotor(int, float, float);
+    
+    /* setBattery - sets battery level by 4 LEDs on motor-board
+     * Param: percent (float 0.0 to 1.0)
+     */
+    int setBatteryLEDs(float);
+
+    /* getBatteryLevel - gets the battery level as a percentage */
+    float getBatteryLevel(void);
   public:
     /* get the instance of the GPIO b/c of singleton */
     static GPIO *instance();
@@ -53,16 +63,11 @@ class GPIO
     /* Disable the H-Bridge on the motor board */
     int disableHBridge(void);
 
-    /* setBattery - sets battery level by 4 LEDs on motor-board
-     * Param: percent (uint8 from 0 to 100)
-     */
-    int setBatteryLEDs(float);
-
-    /* getBatteryLevel - gets the battery level as a percentage */
-    float getBatteryLevel(void);
+    /* Get battery level from sensor and update leds */
+    int updateBattery(void);
 
     /* setTurn - sets the turning servo angle
-     * param: float angle - [-1,1] range */
+     * param: float angle - [-90,90] range */
     int setTurn(float);
 
     /* setCamera - sets the camera angle

@@ -81,7 +81,7 @@ int GPIO::disableHBridge(void)
 }
 
 /* setBattery - sets battery level by 4 LEDs on motor-board
- * Param: percent (uint8 from 0 to 100)
+ * Param: percent (float 0.0 to 1.0)
  */
 int GPIO::setBatteryLEDs(float percent)
 {
@@ -92,13 +92,13 @@ int GPIO::setBatteryLEDs(float percent)
   pin_low(8,LED_BAT4);
 
   // Based on level light up LEDs
-  if(percent > 5)
+  if(percent > 0.05)
     pin_high(8,LED_BAT1);
-  if(percent > 25)
+  if(percent > 0.25)
     pin_high(8,LED_BAT2);
-  if(percent > 50)
+  if(percent > 0.50)
     pin_high(8,LED_BAT3);
-  if(percent > 75)
+  if(percent > 0.75)
     pin_high(8,LED_BAT4);
 
   return 1;
@@ -117,11 +117,22 @@ float GPIO::getBatteryLevel(void)
   return level;
 }
 
+/* Get battery level from sensor and update leds */
+int GPIO::updateBattery(void)
+{
+  float bat = this->getBatteryLevel();
+  this->setBatteryLEDs(bat);
+  return 1;
+}
+
 /* setTurn - sets the turning servo angle
- * param: float angle - [-1,1] range */
+ * param: float angle - [-90,90] range */
 int GPIO::setTurn(float angle)
 {
   float new_duty;
+
+  // Scale by degress
+  angle = angle/90;
 
   // Check bounds
   if(angle > 1)
