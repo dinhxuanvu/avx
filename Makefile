@@ -31,8 +31,9 @@ all: bin/avx
 
 compile: bin/avx
 
-play: compile
+play:
 	@echo "HERE WE GO"
+  sudo ./bin/test_GPIO
 
 ######################################################
 ## Main program ######################################
