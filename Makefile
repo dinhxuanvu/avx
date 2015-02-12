@@ -8,18 +8,31 @@ LIBGPIO=-lBBBio
 CC=g++
 
 DEBUG=1
+
+HOST=$(shell hostname)
+
+ifeq ($(HOST), walle)
+	DISPLAY=0
+else
+	DISPLAY=1
+endif
+
 # Compile flags
-CFLAGS=-Wall -DDEBUG=$(DEBUG)
+CFLAGS=-Wall -DDEBUG=$(DEBUG) -DDISPLAY=$(DISPLAY)
 # Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin
+
 
 # Build all targets
 all: bin/avx
 	sudo ./bin/avx
 
 compile: bin/avx
+
+play: compile
+	@echo "HERE WE GO"
 
 ######################################################
 ## Main program ######################################
