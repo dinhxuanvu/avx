@@ -25,6 +25,7 @@ int testGPIOunits(void)
   cout << "Initializing GPIO: ";
   GPIO *gpio = GPIO::instance();
   cout << "Successful" << endl;
+  cin.ignore();
   // Status LEDs
   cout << "Testing battery LEDs" << endl;
   gpio->updateBattery();
@@ -35,8 +36,9 @@ int testGPIOunits(void)
   cout << "Testing H-Bridge PWM outputs" << endl;
   gpio->enableHBridge();
 
-  gpio->setSpeed(0.5f);
+  gpio->setSpeed(0.05f);
   cout << "Verify P9.22 and P9.14 are at 5% duty cycle, 2000Hz" << endl;
+  cin.ignore();
   gpio->setSpeed(0.50f);
   cin.ignore();
   cout << "Verify P9.22 and P9.14 are at 50% duty cycle, 2000Hz" << endl;

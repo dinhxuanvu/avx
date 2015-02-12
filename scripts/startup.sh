@@ -1,8 +1,15 @@
 #!/bin/bash
-git pull
-sudo sh -c 'echo 65 > /sys/class/gpio/export'
 (
-cd ~/develop/scripts/overlay
+cd /home/driver/develop/
+su driver -c 'git pull'
+)
+echo "test"
+echo 65 > /sys/class/gpio/export
+(
+cd /home/driver/develop/scripts/overlay
 make overlay
 )
+(
+cd /home/driver/develop/
 make play
+)
