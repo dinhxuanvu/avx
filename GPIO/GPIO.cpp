@@ -35,6 +35,8 @@ GPIO::GPIO(void)
   BBBIO_ADCTSC_module_ctrl(BBBIO_ADC_WORK_MODE_TIMER_INT, 160);
   // Setup the analog input sampling
   BBBIO_ADCTSC_channel_ctrl(BAT_SENSE, BBBIO_ADC_STEP_MODE_SW_CONTINUOUS, 0, 1, BBBIO_ADC_STEP_AVG_2, batBuff, 1);
+
+  this->setBatteryLEDs(1.0);
 }
 
 // Disable the hbridge and free the IO library
@@ -121,6 +123,7 @@ float GPIO::getBatteryLevel(void)
 int GPIO::updateBattery(void)
 {
   float bat = this->getBatteryLevel();
+  LOG_MESSAGE("Battery level: %f\n",bat);
   this->setBatteryLEDs(bat);
   return 1;
 }
@@ -210,7 +213,7 @@ int GPIO::setSpeed(float speed)
   cout << "Level A: " << duty[0] << endl << "Level B:" << duty[1] << endl;
 
   // Set each motor with new duty cycles
-  //setMotor(MOTOR_A_PWM, duty[0], duty[1]);
+  setMotor(MOTOR_A_PWM, duty[0], duty[1]);
   setMotor(MOTOR_B_PWM, duty[0], duty[1]);
 
   return 1;

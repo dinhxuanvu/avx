@@ -8,24 +8,38 @@ LIBGPIO=-lBBBio
 CC=g++
 
 DEBUG=1
+
+HOST=$(shell hostname)
+
+ifeq ($(HOST), walle)
+	DISPLAY=0
+else
+	DISPLAY=1
+endif
+
 # Compile flags
-CFLAGS=-Wall -DDEBUG=$(DEBUG)
+CFLAGS=-Wall -DDEBUG=$(DEBUG) -DDISPLAY=$(DISPLAY)
 # Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin
 
+
 # Build all targets
-all : Main
+all: bin/avx
 	sudo ./bin/avx
 
-compile : Main
+compile: bin/avx
+
+play:
+	@echo "HERE WE GO"
+	sudo ./bin/test_GPIO
 
 ######################################################
 ## Main program ######################################
 ######################################################
-Main: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o
-	$(CC) $(CFLAGS) -o bin/avx  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o $@.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
+bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o
+	$(CC) $(CFLAGS) -o $@  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
