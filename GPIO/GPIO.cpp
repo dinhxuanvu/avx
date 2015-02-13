@@ -96,17 +96,17 @@ int GPIO::setBatteryLEDs(float percent)
   // Based on level light up LEDs
   if(percent > 0.05)
     pin_high(8,LED_BAT1);
-  if(percent > 0.25)
+  if(percent > 0.2)
     pin_high(8,LED_BAT2);
-  if(percent > 0.50)
+  if(percent > 0.4)
     pin_high(8,LED_BAT3);
-  if(percent > 0.75)
+  if(percent > 0.65)
     pin_high(8,LED_BAT4);
 
   return 1;
 }
 
-/* getBatteryLevel - gets the battery level as a percentage */
+/* getBatteryLevel - gets the battery level as a decimal (0.0 to 1.0)*/
 float GPIO::getBatteryLevel(void)
 {
   // Enable the anaglog input
@@ -116,6 +116,13 @@ float GPIO::getBatteryLevel(void)
   float level = ((float)batBuff[0] * 0.001613f - 4.121f) ;
   // Disable the channel input until next read
   BBBIO_ADCTSC_channel_disable(BAT_SENSE);
+
+  // Restrict to [0,1]
+  if(level > 1)
+    level = 1;
+  if(level < 0)
+    level = 0;
+
   return level;
 }
 
@@ -133,6 +140,9 @@ int GPIO::updateBattery(void)
 int GPIO::setTurn(float angle)
 {
   float new_duty;
+
+  // Update the battery whenever we turn
+  this->updateBattery();
 
   // Scale by degress
   angle = angle/90;
