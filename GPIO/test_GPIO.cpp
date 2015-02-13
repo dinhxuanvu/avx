@@ -11,7 +11,18 @@ int main(void)
   int status = 1;
   cout << "Welcome to WALLE testing." << endl;
 
-  status &= testGPIOunits();
+  //status &= testGPIOunits();
+
+  GPIO *gpio = GPIO::instance();
+  cout << "Successful" << endl;
+  // Status LEDs
+  while(1)
+  {
+    cout << "Testing battery LEDs" << endl;
+    gpio->updateBattery();
+    cin.ignore();
+  }
+  cout << "Battery testing complete" << endl;
 
   if(status)
     cout << "All tests were successful" << endl;
