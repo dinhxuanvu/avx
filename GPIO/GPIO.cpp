@@ -111,8 +111,8 @@ float GPIO::getBatteryLevel(void)
   BBBIO_ADCTSC_channel_enable(BAT_SENSE);
   // Make one reading from the ADC
   BBBIO_ADCTSC_work(1);
-  float level = ((float)batBuff[0] / 27.3f);
-  // Disable the channel input until next rea
+  float level = ((float)batBuff[0] * 0.001613f - 4.121f) ;
+  // Disable the channel input until next read
   BBBIO_ADCTSC_channel_disable(BAT_SENSE);
   return level;
 }
