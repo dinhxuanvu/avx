@@ -2,7 +2,10 @@
 #define IMAGEPROCESSOR_H
 
 #include <opencv2/core/core.hpp>
-#include "Hazard.h"
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include "../Hazard.h"
+#include "../macros.h"
 
 class ImageProcessor
 {
@@ -17,6 +20,7 @@ class ImageProcessor
     HazardList* hazards;
 
     cv::Mat calibrationImage;
+    int calCount;
 };
 
 #endif /* IMAGEPROCESSOR_H */

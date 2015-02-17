@@ -6,20 +6,11 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "ImageProcessor.h"
-#include "Hazard.h"
+#include "../Hazard.h"
+#include "../macros.h"
 
 using namespace cv;
 using namespace std;
-
-void printHazards(HazardList* h_p)
-{
-  cout << "Current hazards (" << h_p->size() << "):" << endl;
-  for(HazardList::iterator it= h_p->begin(); it != h_p->end(); ++it)
-  {
-    cout << "Haz " << it->id << "= center (" << it->theta << "," << it->phi << ")" << " depth " << it->depth << "mm";
-    cout << " width: " << it->width << " height: " << it->height << endl;
-  }
-}
 
 int main(int argc, char** argv)
 {
@@ -34,7 +25,7 @@ int main(int argc, char** argv)
 
   HazardList* hazards_p = new HazardList;
 
-  cout << "Size: " << hazards_p->size() << endl;
+  LOG_WARNING("Size: %lu\n",hazards_p->size());
   // Instantiate an iamge processor
   ImageProcessor proc(width, height, hazards_p);
 

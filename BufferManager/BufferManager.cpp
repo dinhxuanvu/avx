@@ -12,28 +12,45 @@ using namespace cv;
 using namespace openni;
 using namespace std;
 
-BufferManager::BufferManager(){
-  this->mBuffers = new VideoFrameRef[3];
+BufferManager::BufferManager()
+{
+  this->mBuffers = new VideoFrameRef*[3];
   //TODO construct three VideoFrameRefs
   //VideoFrameRefs can't
+  mBuffers[0] = new VideoFrameRef;
+  mBuffers[1] = new VideoFrameRef;
+  mBuffers[2] = new VideoFrameRef;
+  cout << "Buff0:" << mBuffers[0]<<endl;
+  cout << "Buff1" << mBuffers[1]<<endl;
+  cout << "Buff2" << mBuffers[2]<<endl;
+  //cin.ignore();
   mReadIndex = 0;
   mWriteIndex = 1;
   mFreeIndex = 2;
+
+  this->mBufferHasNewData = new boost::mutex;// = new boost::mutex*[3];
+  //mBufferHasNewData[0] = new boost::mutex;
+  //mBufferHasNewData[1] = new boost::mutex;
+  //mBufferHasNewData[2] = new boost::mutex;
 }
   
 //Called from camera side
-VideoFrameRef BufferManager::getWriteBuffer(){
-  VideoFrameRef dataBuffer = mBuffers[mWriteIndex];
+VideoFrameRef* BufferManager::getWriteBuffer()
+{
+  VideoFrameRef* dataBuffer = mBuffers[mWriteIndex];
   return dataBuffer;
 }
-void BufferManager::writingToBufferComplete(){
+
+void BufferManager::writingToBufferComplete()
+{  
   mLock.lock();
-  
   int temp = mWriteIndex;
   mWriteIndex = mFreeIndex;
   mFreeIndex = temp;
+  //cout << "Writing:" << mBuffers[mWriteIndex] <<endl;
   //cout<<"now writing:"<<mWriteIndex<<endl;
-  
+  //this->mBufferHasNewData->lock();
+  this->mBufferHasNewData->unlock();
   //TODO swap indexes thread safe
   mLock.unlock();
 }
@@ -41,30 +58,37 @@ void BufferManager::writingToBufferComplete(){
   
   
 //Called from Image processing side
-uint16_t* BufferManager::getReadBuffer(){
-    uint16_t* dataBuffer = (uint16_t*)mBuffers[mReadIndex].getData();
+uint16_t* BufferManager::getReadBuffer()
+{   
+    //this->mBufferHasNewData->lock();
+    //printf("Doing get read buffer:%d\n",readIndex);
+    VideoFrameRef* ref = mBuffers[mReadIndex];
+    //cout << "Reading:" << ref <<endl;
+
+    //ref->getData();
+    //printf("Getting the element worked\n");
+    uint16_t* dataBuffer = (uint16_t*)ref->getData();
+    //printf("Doing get read buffer done\n");
     return dataBuffer;
- }
+}
+
 void BufferManager::readingFromBufferComplete(){
   mLock.lock();
   
   int temp = mReadIndex;
   mReadIndex = mFreeIndex;
   mFreeIndex = temp;
-  
+  mLock.unlock();
+
+  //this->mBufferHasNewData->unlock();
+  this->mBufferHasNewData->lock();
   //cout<<"now reading:"<<mReadIndex<<endl;
   //TODO swap indexes thread safe
-  mLock.unlock();
-}
-void BufferManager::printIndexes(){
-  //mLock.lock();
-  if (mReadIndex == mWriteIndex){
-    cout<<"Error in Threads"<<endl;
-  }
-  //cout<<"R:"<<mReadIndex<<" W:"<<mWriteIndex<<endl;
-  //mLock.unlock();
+  
 }
 BufferManager::~BufferManager(){
+
+  free(mBuffers);
   cout<<"BufferManager destroyed."<<endl;
 }
 

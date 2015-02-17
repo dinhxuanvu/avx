@@ -6,72 +6,104 @@ LIBCV=`pkg-config opencv --cflags --libs`
 LIBGPIO=-lBBBio
 # Default compiler
 CC=g++
+
+DEBUG=1
+
+HOST=$(shell hostname)
+
+ifeq ($(HOST), walle)
+	DISPLAY=0
+else
+	DISPLAY=1
+endif
+
 # Compile flags
-CFLAGS=-Wall
+CFLAGS=-Wall -DDEBUG=$(DEBUG) -DDISPLAY=$(DISPLAY)
 # Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
 DIR_BIN=bin
 
 
-
 # Build all targets
-all : ImageProcessor
+all: bin/avx
+	sudo ./bin/avx
 
-## Add test cases here
-test : BufferManager.o
-	./$(DIR_BIN)/test_BufferManager
+compile: bin/avx
 
+play:
+	@echo "HERE WE GO"
+	sudo ./bin/test_GPIO
 
+######################################################
+## Main program ######################################
+######################################################
+bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o
+	$(CC) $(CFLAGS) -o $@  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
-
+## Add custom make targets for testing here
 
 ######################################################
-## mod_BufferManager ###############################
+## mod_BufferManager #################################
 ######################################################
-BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/$@ BufferManager/BufferManager.cpp `pkg-config opencv --cflags` 
+bin/BufferManager.o: BufferManager/BufferManager.cpp BufferManager/BufferManager.h
+	$(CC) $(CFLAGS) -c -o $@ BufferManager/BufferManager.cpp `pkg-config opencv --cflags` 
 	
-test_BufferManager: BufferManager.o BufferManager/test_BufferManager.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/BufferManager.o BufferManager/$@.cpp $(LIBCV) $(LIBNI) -lboost_thread -lboost_system 
-
-test_BufferManager_threads:test_BufferManager
-	./$(DIR_BIN)/test_BufferManager
-	
+test_BufferManager: bin/BufferManager.o BufferManager/test_BufferManager.cpp
+	$(CC) $(CFLAGS) -o bin/$@ bin/BufferManager.o BufferManager/$@.cpp $(LIBCV) $(LIBNI) -lboost_thread -lboost_system 
 	
 ######################################################
 ## mod_Camera ########################################
 ######################################################
-Camera: SimpleRead
+bin/Camera.o: Camera/Camera.cpp Camera/Camera.h
+	$(CC) $(CFLAGS) -c -o $@ Camera/Camera.cpp $(LIBNI)
 
-SimpleRead: Camera/SimpleRead.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleRead.cpp $(LIBCV) $(LIBNI)
+#SimpleRead: Camera/SimpleRead.cpp
+#	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleRead.cpp $(LIBCV) $(LIBNI)
 
-SimpleTimer: Camera/SimpleTimer.cpp
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleTimer.cpp $(LIBCV) $(LIBNI)
+#SimpleTimer: Camera/SimpleTimer.cpp
+#	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ Camera/SimpleTimer.cpp $(LIBCV) $(LIBNI)
 
 ######################################################
 ## mod_ImageProcessor ################################
 ######################################################
-ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/ImageProcessor.o ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
+bin/ImageProcessor.o: ImageProcessor/ImageProcessor.cpp ImageProcessor/ImageProcessor.h
+	$(CC) $(CFLAGS) -c -o $@ ImageProcessor/ImageProcessor.cpp `pkg-config opencv --cflags` 
 
-test_ImageProcessor: ImageProcessor.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
+test_ImageProcessor: bin/ImageProcessor.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/ImageProcessor.o ImageProcessor/$@.cpp $(LIBCV)
+
+######################################################
+## mod_PathPlanner ################################
+######################################################
+bin/PathPlanner.o: PathPlanner/PathPlanner.cpp PathPlanner/PathPlanner.h
+	$(CC) $(CFLAGS) -c -o $@ PathPlanner/PathPlanner.cpp
+
+test_PathPlanner: bin/PathPlanner.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o PathPlanner/$@.cpp
+
+######################################################
+## mod_Control ################################
+######################################################
+bin/Control.o: Control/Control.cpp Control/Control.h
+	$(CC) $(CFLAGS) -c -o $@ Control/Control.cpp
+
+test_Control: bin/Control.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/Control.o Control/$@.cpp
 
 ######################################################
 ## mod_GPIO ##########################################
 ######################################################
-GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
-	$(CC) $(CFLAGS) -c -o $(DIR_BIN)/GPIO.o GPIO/GPIO.cpp
+bin/GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
+	$(CC) $(CFLAGS) -c -o $@ GPIO/GPIO.cpp
 
-test_GPIO: GPIO.o
-	$(CC) $(CFLAGS) -o $(DIR_BIN)/$@ $(DIR_BIN)/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+test_GPIO: bin/GPIO.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 
 ######################################################
 .PHONY: clean
 clean:
-	rm -rf $(DIR_BIN)/*
+	rm -rf bin/*
 ######################################################

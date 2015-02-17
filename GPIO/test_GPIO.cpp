@@ -11,7 +11,18 @@ int main(void)
   int status = 1;
   cout << "Welcome to WALLE testing." << endl;
 
-  status &= testGPIOunits();
+  //status &= testGPIOunits();
+
+  GPIO *gpio = GPIO::instance();
+  cout << "Successful" << endl;
+  // Status LEDs
+  while(1)
+  {
+    cout << "Testing battery LEDs" << endl;
+    gpio->updateBattery();
+    cin.ignore();
+  }
+  cout << "Battery testing complete" << endl;
 
   if(status)
     cout << "All tests were successful" << endl;
@@ -25,22 +36,20 @@ int testGPIOunits(void)
   cout << "Initializing GPIO: ";
   GPIO *gpio = GPIO::instance();
   cout << "Successful" << endl;
+  cin.ignore();
   // Status LEDs
   cout << "Testing battery LEDs" << endl;
-  for(int per=10; per<100; per+=10)
-  {
-    gpio->setBatteryLEDs(per);
-    cout << "\tBattery level: " << per << endl;
-    cin.ignore();
-  }
+  gpio->updateBattery();
+  cin.ignore();
   cout << "Battery testing complete" << endl;
 
   // Motors currently match
   cout << "Testing H-Bridge PWM outputs" << endl;
   gpio->enableHBridge();
 
-  gpio->setSpeed(0.5f);
+  gpio->setSpeed(0.05f);
   cout << "Verify P9.22 and P9.14 are at 5% duty cycle, 2000Hz" << endl;
+  cin.ignore();
   gpio->setSpeed(0.50f);
   cin.ignore();
   cout << "Verify P9.22 and P9.14 are at 50% duty cycle, 2000Hz" << endl;
@@ -59,10 +68,10 @@ int testGPIOunits(void)
   gpio->enableHBridge();
 
   cout << "Verify wheels turned full left" << endl;
-  gpio->setTurn(-1.0f);
+  gpio->setTurn(-90.0f);
   cin.ignore();
   cout << "Verify wheels turned full right" << endl;
-  gpio->setTurn(+1.0f);
+  gpio->setTurn(+90.0f);
   cin.ignore();
   cout << "Verify wheels centered" << endl;
   gpio->setTurn(0.0f);
@@ -80,10 +89,6 @@ int testGPIOunits(void)
   cin.ignore();
   
   gpio->disableHBridge();
-
-  // ADC reading battery
-  float lev = gpio->getBatteryLevel();
-  cout << "Battery reading at " << lev << "%" << endl;
   
   cout << "Closing GPIO: ";
   gpio->deinitialize();

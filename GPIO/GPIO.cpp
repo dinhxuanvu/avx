@@ -1,7 +1,7 @@
 #include "GPIO.h"
 #include <stdlib.h>
-#include <iostream>
 #include <BBBio_lib/BBBiolib.h>
+#include "../macros.h"
 
 using namespace std;
 
@@ -35,6 +35,8 @@ GPIO::GPIO(void)
   BBBIO_ADCTSC_module_ctrl(BBBIO_ADC_WORK_MODE_TIMER_INT, 160);
   // Setup the analog input sampling
   BBBIO_ADCTSC_channel_ctrl(BAT_SENSE, BBBIO_ADC_STEP_MODE_SW_CONTINUOUS, 0, 1, BBBIO_ADC_STEP_AVG_2, batBuff, 1);
+
+  this->setBatteryLEDs(1.0);
 }
 
 // Disable the hbridge and free the IO library
@@ -81,7 +83,7 @@ int GPIO::disableHBridge(void)
 }
 
 /* setBattery - sets battery level by 4 LEDs on motor-board
- * Param: percent (uint8 from 0 to 100)
+ * Param: percent (float 0.0 to 1.0)
  */
 int GPIO::setBatteryLEDs(float percent)
 {
@@ -92,36 +94,58 @@ int GPIO::setBatteryLEDs(float percent)
   pin_low(8,LED_BAT4);
 
   // Based on level light up LEDs
-  if(percent > 5)
+  if(percent > 0.05)
     pin_high(8,LED_BAT1);
-  if(percent > 25)
+  if(percent > 0.2)
     pin_high(8,LED_BAT2);
-  if(percent > 50)
+  if(percent > 0.4)
     pin_high(8,LED_BAT3);
-  if(percent > 75)
+  if(percent > 0.65)
     pin_high(8,LED_BAT4);
 
   return 1;
 }
 
-/* getBatteryLevel - gets the battery level as a percentage */
+/* getBatteryLevel - gets the battery level as a decimal (0.0 to 1.0)*/
 float GPIO::getBatteryLevel(void)
 {
   // Enable the anaglog input
   BBBIO_ADCTSC_channel_enable(BAT_SENSE);
   // Make one reading from the ADC
   BBBIO_ADCTSC_work(1);
-  float level = ((float)batBuff[0] / 27.3f);
-  // Disable the channel input until next rea
+  float level = ((float)batBuff[0] * 0.001613f - 4.121f) ;
+  // Disable the channel input until next read
   BBBIO_ADCTSC_channel_disable(BAT_SENSE);
+
+  // Restrict to [0,1]
+  if(level > 1)
+    level = 1;
+  if(level < 0)
+    level = 0;
+
   return level;
 }
 
+/* Get battery level from sensor and update leds */
+int GPIO::updateBattery(void)
+{
+  float bat = this->getBatteryLevel();
+  LOG_MESSAGE("Battery level: %f\n",bat);
+  this->setBatteryLEDs(bat);
+  return 1;
+}
+
 /* setTurn - sets the turning servo angle
- * param: float angle - [-1,1] range */
+ * param: float angle - [-90,90] range */
 int GPIO::setTurn(float angle)
 {
   float new_duty;
+
+  // Update the battery whenever we turn
+  this->updateBattery();
+
+  // Scale by degress
+  angle = angle/90;
 
   // Check bounds
   if(angle > 1)
@@ -199,7 +223,7 @@ int GPIO::setSpeed(float speed)
   cout << "Level A: " << duty[0] << endl << "Level B:" << duty[1] << endl;
 
   // Set each motor with new duty cycles
-  //setMotor(MOTOR_A_PWM, duty[0], duty[1]);
+  setMotor(MOTOR_A_PWM, duty[0], duty[1]);
   setMotor(MOTOR_B_PWM, duty[0], duty[1]);
 
   return 1;
