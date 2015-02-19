@@ -77,7 +77,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   Mat element = getStructuringElement( MORPH_RECT, Size(EDGE_ERODE,EDGE_ERODE) );
   erode(edges,edges,element);
 
-#if DISPLAY
+#if DISPLAY_WINDOWS
   namedWindow("W",0);
   imshow("W", edges);
 #endif
@@ -144,7 +144,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   }
   //cout << contours.size() << " total obstacles detected in frame." << endl;
 
-#if DISPLAY
+#if DISPLAY_WINDOWS
   // Create a new drawing with the original image and the countors in color
   Mat drawing;
   image.convertTo(drawing, CV_8U);
@@ -225,7 +225,8 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   threshold(nextCalibration, working, 1, 1, CV_THRESH_BINARY_INV);
   multiply(working,this->calibrationImage,working);
   nextCalibration += working;
-#if DISPLAY
+#if DISPLAY_WINDOWS
+  LOG_MESSAGE("About to start calibration display");
   namedWindow("Calibration2",0);
   imshow("Calibration2", nextCalibration);
   waitKey(20);

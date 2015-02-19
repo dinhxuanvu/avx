@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  Positioning* pos = new Positioning();
+  Positioning pos = new Positioning();
   while(1)
   {
     cout << pos->getHeading() << endl;

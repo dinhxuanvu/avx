@@ -1,14 +1,10 @@
 #include "BufferManager/BufferManager.h"
 #include "Camera/Camera.h"
 #include "ImageProcessor/ImageProcessor.h"
-#include "PathPlanner/PathPlanner.h"
-#include "PathPlanner/BBB_I2C.h"
-#include "PathPlanner/HMC5883L.h"
 #include "Hazard.h"
 #include "macros.h"
 #include <stdio.h>
 #include <iostream>
-
 #include <OpenNI2/OpenNI.h>
 #include <boost/thread.hpp>
 

@@ -50,11 +50,11 @@ float Positioning::getHeading()
     float declinationAngle = -0.200712864;
     heading += declinationAngle;
     
-    // Correct for when signs are reversed.
+    // Correct for when signs are reversed->
     if(heading < 0)
         heading += 2*M_PI;
     
-    // Check for wrap due to addition of declination.
+    // Check for wrap due to addition of declination->
     if(heading > 2*M_PI)
         heading -= 2*M_PI;
     
