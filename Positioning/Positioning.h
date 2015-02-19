@@ -9,14 +9,13 @@ class Positioning
 {
   public:
     Positioning();
+    float getHeading();
+  private:
+    BBB_I2C i2c;
+    HMC5883L hmc;
     int getMagX();
     int getMagY();
     int getMagZ();
-    float getHeading();
-    
-  private:
-    BBB_I2C i2c;
-    HMC5883L hmc(i2c);
 };
 
 #endif /* POSITIONING_H */

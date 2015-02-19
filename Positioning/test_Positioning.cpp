@@ -9,14 +9,13 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  Positioning pos = new Positioning();
+  Positioning pos;
+
   while(1)
   {
-    cout << pos->getHeading() << endl;
-    std::system("sleep 1");
+    cout << "Val: " << pos.getHeading() << endl;
+    usleep(100000);
   }
-
-  free(pos);
 
   return 0;
 }

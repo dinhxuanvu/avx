@@ -1,14 +1,16 @@
 #include "Positioning.h"
+#include "BBB_I2C.h"
+#include "HMC5883L.h"
 
 using namespace std;
 
 /*
  * Public constructor for positioning module
  */
-Positioning::Positioning()
+Positioning::Positioning():
+hmc(i2c)
 {
-  // Initialize HMC5883L module
-  this->hmc.initialize();
+    this->hmc.initialize();
 }
 
 /*
@@ -16,7 +18,7 @@ Positioning::Positioning()
  */
 int Positioning::getMagX()
 {
-    return this->hmc.getMagnitudeX();
+  return this->hmc.getMagnitudeX();
 }
 
 
@@ -25,7 +27,7 @@ int Positioning::getMagX()
  */
 int Positioning::getMagY()
 {
-    return this->hmc.getMagnitudeY();
+  return this->hmc.getMagnitudeY();
 }
 
 
@@ -34,7 +36,7 @@ int Positioning::getMagY()
  */
 int Positioning::getMagZ()
 {
-    return this->hmc.getMagnitudeZ();
+  return this->hmc.getMagnitudeZ();
 }
 
 
@@ -43,8 +45,12 @@ int Positioning::getMagZ()
  */
 float Positioning::getHeading()
 {
+    int X = this->getMagX();
+    int Y = this->getMagY();
+    int Z = this->getMagZ();
+
     // Calculate heading
-    float heading = atan2((float)this->hmc.getMagnitudeY(), (float)this->hmc.getMagnitudeX());
+    float heading = atan2(Y, X);
     
     // Declineation Angle at Rochester (-11o30')
     float declinationAngle = -0.200712864;
