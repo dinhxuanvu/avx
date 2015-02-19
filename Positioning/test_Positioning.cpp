@@ -6,8 +6,6 @@
 #include "../macros.h"
 
 using namespace std;
-using namespace avx_bbb_i2c;
-using namespace avx_hmc5883l;
 
 int main(int argc, char** argv)
 {
