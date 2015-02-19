@@ -1,4 +1,4 @@
-#include "Positioning->h"
+#include "Positioning.h"
 
 using namespace std;
 
@@ -11,7 +11,7 @@ Positioning::Positioning()
   this->i2c = new BBB_I2C();
 
   // Pass i2c to HMC
-  this->hmc = new HMC5883L(this->i2c);
+  this->hmc = new HMC5883L(*(this->i2c));
 
   // Initialize HMC5883L module
   this->hmc->initialize();
@@ -53,7 +53,7 @@ float Positioning::getHeading()
     float heading = atan2((float)this->hmc->getMagnitudeY(), (float)this->hmc->getMagnitudeX());
     
     // Declineation Angle at Rochester (-11o30')
-    float declinationAngle = -0->200712864;
+    float declinationAngle = -0.200712864;
     heading += declinationAngle;
     
     // Correct for when signs are reversed->
