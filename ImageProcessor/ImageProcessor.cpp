@@ -77,9 +77,10 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   Mat element = getStructuringElement( MORPH_RECT, Size(EDGE_ERODE,EDGE_ERODE) );
   erode(edges,edges,element);
 
-
+#if DISPLAY
   namedWindow("W",0);
   imshow("W", edges);
+#endif
 
   // Threshold background subtraction
   threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY);
@@ -143,6 +144,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   }
   //cout << contours.size() << " total obstacles detected in frame." << endl;
 
+#if DISPLAY
   // Create a new drawing with the original image and the countors in color
   Mat drawing;
   image.convertTo(drawing, CV_8U);
@@ -153,17 +155,15 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
     rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
   }
-  if (SHOW_WINDOWS){
-    namedWindow("Con",0);
-    imshow("Con", drawing);
-    waitKey(1);
-  }
+  namedWindow("Con",0);
+  imshow("Con", drawing);
+  waitKey(1);
+#endif
 
   CLEAR_SCREEN;
   LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
   sort(this->hazards->begin(), this->hazards->end(), compareByLength);
   printHazards(this->hazards);
-
   return;
 }
 
@@ -225,9 +225,9 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   threshold(nextCalibration, working, 1, 1, CV_THRESH_BINARY_INV);
   multiply(working,this->calibrationImage,working);
   nextCalibration += working;
-  if (SHOW_WINDOWS){
-    namedWindow("Calibration2",0);
-    imshow("Calibration2", nextCalibration);
-    waitKey(20);
-  }
+#if DISPLAY
+  namedWindow("Calibration2",0);
+  imshow("Calibration2", nextCalibration);
+  waitKey(20);
+#endif
 }
