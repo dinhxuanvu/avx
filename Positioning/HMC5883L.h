@@ -79,40 +79,36 @@
 
 #define RDY_BIT 0x00
 #define LOCK_BIT 0x01
-using namespace avx_bbb_i2c;
-
-namespace avx_hmc5883l {
     
-    class HMC5883L {
-    public:
-        HMC5883L(uint8_t DEV_ADD);
-        HMC5883L(BBB_I2C &i2c);
-        virtual ~HMC5883L();
-        
-        void initialize();
-        void setSamplesAvarage(uint8_t avarage);
-        uint8_t getSamplesAvarage();
-        void setOutputRate(uint8_t rate);
-        uint8_t getOutputRate();
-        void setMeasurementMode(uint8_t mode);
-        uint8_t getMeasurementMode();
-        void setMeasurementGain(uint8_t gain);
-        uint8_t getMeasurementGain();
-        void setOperationMode(uint8_t mode);
-        uint8_t getOperationMode();
-        int16_t getMagnitudeX();
-        int16_t getMagnitudeY();
-        int16_t getMagnitudeZ();
-        uint8_t getRDYStatus();
-        uint8_t getLockStatus();
-        uint8_t getIDA();
-        uint8_t getIDB();
-        uint8_t getIDC();
-        
-    private:
-        BBB_I2C i2c;
-        uint8_t DEV_ADD;
-    };
-}
+class HMC5883L {
+public:
+    HMC5883L(uint8_t DEV_ADD);
+    HMC5883L(BBB_I2C &i2c);
+    virtual ~HMC5883L();
+    
+    void initialize();
+    void setSamplesAvarage(uint8_t avarage);
+    uint8_t getSamplesAvarage();
+    void setOutputRate(uint8_t rate);
+    uint8_t getOutputRate();
+    void setMeasurementMode(uint8_t mode);
+    uint8_t getMeasurementMode();
+    void setMeasurementGain(uint8_t gain);
+    uint8_t getMeasurementGain();
+    void setOperationMode(uint8_t mode);
+    uint8_t getOperationMode();
+    int16_t getMagnitudeX();
+    int16_t getMagnitudeY();
+    int16_t getMagnitudeZ();
+    uint8_t getRDYStatus();
+    uint8_t getLockStatus();
+    uint8_t getIDA();
+    uint8_t getIDB();
+    uint8_t getIDC();
+    
+private:
+    BBB_I2C i2c;
+    uint8_t DEV_ADD;
+};
 #endif	/* HMC5883L_H */
 

@@ -85,6 +85,21 @@ test_PathPlanner: bin/PathPlanner.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o PathPlanner/$@.cpp
 
 ######################################################
+## mod_Positioning ################################
+######################################################
+bin/Positioning.o: Positioning/Positioning.cpp Positioning/Positioning.h
+	$(CC) $(CFLAGS) -c -o $@ Positioning/Positioning.cpp
+
+test_Positioning: bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o Positioning/$@.cpp
+
+bin/BBB_I2C.o: Positioning/BBB_I2C.cpp
+	$(CC) $(CFLAGS) -c -o $@ Positioning/BBB_I2C.cpp
+	
+bin/HMC5883L.o: Positioning/HMC5883L.cpp
+	$(CC) $(CFLAGS) -c -o $@ Positioning/HMC5883L.cpp
+
+######################################################
 ## mod_Control ################################
 ######################################################
 bin/Control.o: Control/Control.cpp Control/Control.h
