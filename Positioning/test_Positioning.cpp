@@ -9,10 +9,10 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-  Positioning* pos = new Positioning();
+  Positioning pos = new Positioning();
   while(1)
   {
-    cout << pos->getHeading() << endl;
+    cout << pos.getHeading() << endl;
     std::system("sleep 1");
   }
 
