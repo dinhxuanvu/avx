@@ -14,7 +14,7 @@ Positioning::Positioning()
   this->hmc = new HMC5883L(*(this->i2c));
 
   // Initialize HMC5883L module
-  //this->hmc->initialize();
+  this->hmc->initialize();
 }
 
 /*
