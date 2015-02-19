@@ -24,7 +24,7 @@ float PathPlanner::getDirection()
   // Get camera angle
   float camAngle = 0.0f;
   // Get heading from Positioning module
-  float heading = this->position->getHeading();;
+  float heading = this->position->getHeading();
   // Calculate clear direction from hazards list
   float hazDir = 0.0f;
 
