@@ -1,8 +1,6 @@
 #include "Positioning.h"
 
 using namespace std;
-using namespace avx_bbb_i2c;
-using namespace avx_hmc5883l;
 
 /*
  * Public constructor for positioning module
