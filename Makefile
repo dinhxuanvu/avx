@@ -12,13 +12,13 @@ DEBUG=1
 HOST=$(shell hostname)
 
 ifeq ($(HOST), walle)
-	DISPLAY=0
+	DISPLAY_WINDOWS=0
 else
-	DISPLAY=1
+	DISPLAY_WINDOWS=1
 endif
 
 # Compile flags
-CFLAGS=-Wall -DDEBUG=$(DEBUG) -DDISPLAY=$(DISPLAY)
+CFLAGS=-Wall -DDEBUG=$(DEBUG) -DDISPLAY_WINDOWS=$(DISPLAY_WINDOWS)
 # Link for all libraries needed
 LINK=$(LIBCV) $(LIBNI) $(LIBGPIO)
 # Directory to place binary executables
