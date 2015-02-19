@@ -19,8 +19,8 @@
 #include <stdlib.h>
 #include "HMC5883L.h"
 
-using namespace avx_bbb_i2c;
-using namespace avx_hmc5883l;
+//using namespace avx_bbb_i2c;
+//using namespace avx_hmc5883l;
 
 int main(int argc, char **argv) {
     
