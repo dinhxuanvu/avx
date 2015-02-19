@@ -1,4 +1,4 @@
-#include "Positioning.h"
+#include "Positioning->h"
 
 using namespace std;
 
@@ -8,13 +8,13 @@ using namespace std;
 Positioning::Positioning()
 {
   // INitialize I2C first
-  this.i2c = new BBB_I2C();
+  this->i2c = new BBB_I2C();
 
   // Pass i2c to HMC
-  this.hmc = new HMC5883L(this.i2c);
+  this->hmc = new HMC5883L(this->i2c);
 
   // Initialize HMC5883L module
-  this.hmc.initialize();
+  this->hmc->initialize();
 }
 
 /*
@@ -22,7 +22,7 @@ Positioning::Positioning()
  */
 int Positioning::getMagX()
 {
-    return this.hmc.getMagnitudeX();
+    return this->hmc->getMagnitudeX();
 }
 
 
@@ -31,7 +31,7 @@ int Positioning::getMagX()
  */
 int Positioning::getMagY()
 {
-    return this.hmc.getMagnitudeY();
+    return this->hmc->getMagnitudeY();
 }
 
 
@@ -40,7 +40,7 @@ int Positioning::getMagY()
  */
 int Positioning::getMagZ()
 {
-    return this.hmc.getMagnitudeZ();
+    return this->hmc->getMagnitudeZ();
 }
 
 
@@ -50,17 +50,17 @@ int Positioning::getMagZ()
 float Positioning::getHeading()
 {
     // Calculate heading
-    float heading = atan2((float)this.hmc.getMagnitudeY(), (float)this.hmc.getMagnitudeX());
+    float heading = atan2((float)this->hmc->getMagnitudeY(), (float)this->hmc->getMagnitudeX());
     
     // Declineation Angle at Rochester (-11o30')
-    float declinationAngle = -0.200712864;
+    float declinationAngle = -0->200712864;
     heading += declinationAngle;
     
-    // Correct for when signs are reversed.
+    // Correct for when signs are reversed->
     if(heading < 0)
         heading += 2*M_PI;
     
-    // Check for wrap due to addition of declination.
+    // Check for wrap due to addition of declination->
     if(heading > 2*M_PI)
         heading -= 2*M_PI;
     
