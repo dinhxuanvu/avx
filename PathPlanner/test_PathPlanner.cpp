@@ -11,7 +11,7 @@ int main(int argc, char** argv)
   
   HazardList* haz_p = new HazardList;
 
-  PathPlanner pp(haz_p,100.0f);
+  PathPlanner pp(haz_p);
 
   int i = 0;
   for(i=0; i< 100; i++)

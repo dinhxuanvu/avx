@@ -15,8 +15,8 @@ class PathPlanner
     HazardList* hazards;
     Positioning* position;
 
-	void localMapping();
-	float bestPath();
+	void localMapping(HazXYList& hazXY);
+	float bestPath(HazXYList& hazXY);
 };
 
 #endif /* PATHPLANNER_H */

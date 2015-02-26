@@ -16,22 +16,25 @@ PathPlanner::PathPlanner(HazardList* haz_p)
 #endif
 }
 
-void PathPlanner::localMapping(HazXYList hazXY)
+void PathPlanner::localMapping(HazXYList& hazXY)
 {
   for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
   {
-    int r = it->depth;
+    double r = (double)it->depth;
     double theta = it->theta-90;
     double width = 2*tan(it->width * M_PI / 360.0)*r;
-    // Left point
+    // Center point
     double x = r*cos(theta * M_PI / 180.0);
     double y = r*sin(theta * M_PI / 180.0);
+    HazXY thisHaz = { x,y,width };
+    hazXY.push_back( thisHaz );
   }
 }
 
-float PathPlanner::bestPath(HazXYList hazXY)
+float PathPlanner::bestPath(HazXYList& hazXY)
 {
   // Paul here
+  return 0.0f;
 }
 
 /*
@@ -48,14 +51,17 @@ float PathPlanner::getDirection()
 
   // Get heading from Positioning module
 #if DISPLAY_WINDOWS
-  float heading = -26.0f;
+  float headingDisp = -26.0f;
 #else
-  float heading = this->position->getHeading();
+  float headingDisp = this->position->getHeadingOffset();
 #endif
+  headingDisp -= camAngle;
 
   HazXYList hazXY;
   this->localMapping(hazXY);
   dir = this->bestPath(hazXY);
+
+  dir += camAngle;
 
   return dir;
 }

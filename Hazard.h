@@ -16,9 +16,9 @@ struct Hazard {
 typedef std::vector<Hazard> HazardList;
 
 struct HazXY {
-  int x;
-  int y;
-  int r;
+  double x;
+  double y;
+  double r;
 };
 
 typedef std::vector<HazXY> HazXYList;
