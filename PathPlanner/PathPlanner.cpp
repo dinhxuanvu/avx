@@ -1,9 +1,6 @@
 #include "PathPlanner.h"
 
-#if DISPLAY_WINDOWS
-#include <opencv2/core/core.hpp>
 #include <math.h>
-
 
 using namespace std;
 
@@ -27,8 +24,8 @@ void PathPlanner::localMapping(HazXYList hazXY)
     double theta = it->theta-90;
     double width = 2*tan(it->width * M_PI / 360.0)*r;
     // Left point
-    double x = r*cos(theta * M_PI / 180.0)+X_OFFSET;
-    double y = r*sin(theta * M_PI / 180.0)+Y_OFFSET;
+    double x = r*cos(theta * M_PI / 180.0);
+    double y = r*sin(theta * M_PI / 180.0);
   }
 }
 
