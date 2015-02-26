@@ -1,5 +1,10 @@
 #include "PathPlanner.h"
 
+#if DISPLAY_WINDOWS
+#include <opencv2/core/core.hpp>
+#include <math.h>
+
+
 using namespace std;
 
 /*
@@ -9,8 +14,27 @@ PathPlanner::PathPlanner(HazardList* haz_p)
 {
   // Hold pointer to hazards list
   this->hazards = haz_p;
+#if DISPLAY_WINDOWS==0
   this->position = new Positioning();
+#endif
+}
 
+void PathPlanner::localMapping()
+{
+  for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
+  {
+    int r = it->depth;
+    double theta = it->theta-90;
+    double width = 2*tan(it->width * M_PI / 360.0)*r;
+    // Left point
+    double x = r*cos(theta * M_PI / 180.0)+X_OFFSET;
+    double y = r*sin(theta * M_PI / 180.0)+Y_OFFSET;
+  }
+}
+
+float PathPlanner::bestPath()
+{
+  // Paul here
 }
 
 /*
@@ -18,21 +42,22 @@ PathPlanner::PathPlanner(HazardList* haz_p)
  * Returns turn angle which can be passed to GPIO
  */ 
 float PathPlanner::getDirection()
-{ 
+{
   // Always go straight for now.
-  float dir = 0.0f;
+  float dir;
+
   // Get camera angle
   float camAngle = 0.0f;
+
   // Get heading from Positioning module
+#if DISPLAY_WINDOWS
+  float heading = -26.0f;
+#else
   float heading = this->position->getHeading();
-  // Calculate clear direction from hazards list
-  float hazDir = 0.0f;
+#endif
 
-  //INSERT COMPLICATED STUFF HERE
-  
-
-  // Linear combination of those offset by angle
-  dir = (0.5*heading + 0.5*(hazDir+camAngle));
+  this->localMapping();
+  dir = this->bestPath();
 
   return dir;
 }

@@ -81,8 +81,8 @@ test_ImageProcessor: bin/ImageProcessor.o
 bin/PathPlanner.o: PathPlanner/PathPlanner.cpp PathPlanner/PathPlanner.h
 	$(CC) $(CFLAGS) -c -o $@ PathPlanner/PathPlanner.cpp
 
-test_PathPlanner: bin/PathPlanner.o
-	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o PathPlanner/$@.cpp
+test_PathPlanner: bin/PathPlanner.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o PathPlanner/$@.cpp
 
 ######################################################
 ## mod_Positioning ################################

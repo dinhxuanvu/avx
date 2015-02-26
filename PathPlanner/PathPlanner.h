@@ -14,6 +14,9 @@ class PathPlanner
   private:
     HazardList* hazards;
     Positioning* position;
+
+	void localMapping();
+	float bestPath();
 };
 
 #endif /* PATHPLANNER_H */
