@@ -11,6 +11,16 @@ Positioning::Positioning():
 hmc(i2c)
 {
     this->hmc.initialize();
+    this->target = 0;
+}
+
+/*
+ * Calibrate positionign module by setting current direction as desired heading
+ */
+void Positioning::setTarget()
+{
+    float heading = this->getHeading();
+    this->target = heading;
 }
 
 /*
@@ -47,7 +57,7 @@ float Positioning::getHeading()
 {
     int X = this->getMagX();
     int Y = this->getMagY();
-    int Z = this->getMagZ();
+    this->getMagZ();
 
     // Calculate heading
     float heading = atan2(Y, X);
@@ -68,4 +78,14 @@ float Positioning::getHeading()
     heading = heading * 180/M_PI;
     
     return heading;
+}
+
+/*
+ * Get's the displacement between the current heading from magno 
+ * and the desired heading during calibration.
+ */
+float Positioning::getHeadingOffset()
+{
+    float current = this->getHeading();
+    return current - this->target;
 }
