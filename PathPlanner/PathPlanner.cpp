@@ -19,7 +19,7 @@ PathPlanner::PathPlanner(HazardList* haz_p)
 #endif
 }
 
-void PathPlanner::localMapping()
+void PathPlanner::localMapping(HazXYList hazXY)
 {
   for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
   {
@@ -32,7 +32,7 @@ void PathPlanner::localMapping()
   }
 }
 
-float PathPlanner::bestPath()
+float PathPlanner::bestPath(HazXYList hazXY)
 {
   // Paul here
 }
@@ -56,8 +56,9 @@ float PathPlanner::getDirection()
   float heading = this->position->getHeading();
 #endif
 
-  this->localMapping();
-  dir = this->bestPath();
+  HazXYList hazXY;
+  this->localMapping(hazXY);
+  dir = this->bestPath(hazXY);
 
   return dir;
 }
