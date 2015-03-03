@@ -15,14 +15,6 @@ struct Hazard {
 
 typedef std::vector<Hazard> HazardList;
 
-struct HazXY {
-  double x;
-  double y;
-  double r;
-};
-
-typedef std::vector<HazXY> HazXYList;
-
 /* 
  * Custom comparison method for sorting Hazards list by depth
  */
