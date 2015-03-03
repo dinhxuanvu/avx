@@ -13,8 +13,10 @@ HOST=$(shell hostname)
 
 ifeq ($(HOST), walle)
 	DISPLAY_WINDOWS=0
+	HARDWARE=1
 else
 	DISPLAY_WINDOWS=1
+	HARDWARE=0
 endif
 
 # Compile flags
@@ -111,8 +113,15 @@ test_Control: bin/Control.o
 ######################################################
 ## mod_GPIO ##########################################
 ######################################################
-bin/GPIO.o: GPIO/GPIO.cpp GPIO/GPIO.h
-	$(CC) $(CFLAGS) -c -o $@ GPIO/GPIO.cpp
+
+ifeq ($HARDWARE,1)
+GPIO_SRC = GPIO/GPIO.cpp
+else
+GPIO_SRC = GPIO/GPIO_soft.cpp
+endif
+
+bin/GPIO.o: $(GPIO_SRC) GPIO/GPIO.h
+	$(CC) $(CFLAGS) -c -o $@ $(GPIO_SRC)
 
 test_GPIO: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
