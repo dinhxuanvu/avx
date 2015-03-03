@@ -33,6 +33,17 @@ void PathPlanner::localMapping(HazXYList& hazXY)
 
 float PathPlanner::bestPath(HazXYList& hazXY)
 {
+  //Calcuate the potential of each obsticle.
+  for(HazXYList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
+  {
+    double x = it->x;
+    double y = it->y;
+    double r = it->r;
+    double distanceToHazard = sqrt(x*x + y*y) - r;
+    
+    
+
+  }
   // Paul here
   return 0.0f;
 }

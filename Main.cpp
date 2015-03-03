@@ -7,10 +7,11 @@
 #include <iostream>
 #include <OpenNI2/OpenNI.h>
 #include <boost/thread.hpp>
+#include "PathPlanner/PathPlanner.h"
 
 using namespace std;
 void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera);
-void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor);
+void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor, PathPlanner* planner);
 
 int main()
 {
@@ -20,13 +21,14 @@ int main()
   printf("Start threads please\n");
   Camera camera;
 
-  HazardList* hazards_p = new HazardList;
+  HazardList hazards_p;
+  PathPlanner planner(&hazards_p);
   printf("Threads 1\n");
-  ImageProcessor processor(camera.getWidth(), camera.getHeight(), hazards_p);
+  ImageProcessor processor(camera.getWidth(), camera.getHeight(), &hazards_p);
   printf("Threads 2\n");
   boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
   printf("Threads 3\n");
-  boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor);
+  boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor, &planner);
   printf("Threads 4\n");
   //while(1){}
 
@@ -64,7 +66,7 @@ void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camer
   }
 }
 
-void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor)
+void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor, PathPlanner* planner)
 {
   //Wait for the camera to fill the buffers
   boost::this_thread::sleep(boost::posix_time::milliseconds(100));
@@ -92,13 +94,14 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
   man->readingFromBufferComplete(); //LOG_MESSAGE("CALIBRATING DONE");
   LOG_MESSAGE("PROCESSING");
   // Process frames for object detection
-	for(;;)
+  for(;;)
 	{  
     try
     {
       uint16_t* imgBuf = man->getReadBuffer();
       processor->nextFrame(imgBuf);
       man->readingFromBufferComplete();
+      float path = planner->getDirection();
     }
     catch(boost::thread_interrupted&)
     {
