@@ -38,8 +38,8 @@ play:
 ######################################################
 ## Main program ######################################
 ######################################################
-bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o
-	$(CC) $(CFLAGS) -o $@  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV)
+bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o bin/Control.o bin/GPIO.o
+	$(CC) $(CFLAGS) -o $@  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o bin/Control.o bin/GPIO.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV) $(LIBGPIO)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
@@ -78,11 +78,11 @@ test_ImageProcessor: bin/ImageProcessor.o
 ######################################################
 ## mod_PathPlanner ################################
 ######################################################
-bin/PathPlanner.o: PathPlanner/PathPlanner.cpp PathPlanner/PathPlanner.h
-	$(CC) $(CFLAGS) -c -o $@ PathPlanner/PathPlanner.cpp
+bin/PathPlanner.o: PathPlanner/PathPlanner.cpp PathPlanner/PathPlanner.h 
+	$(CC) $(CFLAGS) -c -o $@ PathPlanner/PathPlanner.cpp -lboost_thread -lboost_system
 
 test_PathPlanner: bin/PathPlanner.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o
-	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o PathPlanner/$@.cpp
+	$(CC) $(CFLAGS) -o bin/$@ bin/PathPlanner.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o PathPlanner/$@.cpp -lboost_thread -lboost_system
 
 ######################################################
 ## mod_Positioning ################################
