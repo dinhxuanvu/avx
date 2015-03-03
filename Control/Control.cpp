@@ -9,7 +9,7 @@ Control::Control()
 {
   this->gpio = GPIO::instance();
 
-  gpio->enableHBridge();
+  this->gpio->enableHBridge();
 }
 
 /*
@@ -27,10 +27,39 @@ Control::~Control()
  */
 void Control::update(float angle)
 {
-  // Set both servos to same angle
-  this->gpio->setTurn(angle);
-  this->gpio->setCamera(angle);
+	float turn = this->turnPID(angle);
+	float speed = this->speedPID(turn);
 
-  this->gpio->setSpeed(0.5f);
-  this->gpio->updateBattery();
+  // Set both servos to same angle
+  this->gpio->setTurn(turn);
+  this->gpio->setCamera(turn);
+  // Set speed based on turn
+  this->gpio->setSpeed(speed);
+  // Update battery status
+	this->gpio->updateBattery();
+}
+
+/*
+ * Get the speed based on the turning direction
+ */
+float Control::speedPID(float turn)
+{
+  float speed;
+  if(abs(turn) < 10)
+  	speed = 1.0f;
+  else if(abs(turn) < 20)
+  	speed = 0.6f;
+  else
+  	speed = 0.3f;
+
+  return speed;
+}
+
+/*
+ * Get the turn direction based on best heading angle
+ */
+float Control::turnPID(float angle)
+{
+  float turn = 0.0f;
+  return turn;
 }

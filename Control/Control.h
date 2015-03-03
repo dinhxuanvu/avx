@@ -2,17 +2,18 @@
 #define CONTROL_H
 
 #include "../GPIO/GPIO.h"
-#include "../Hazard.h"
 #include "../macros.h"
 
 class Control
 {
   public:
     Control();
-	~Control();
-	void update(float angle);
+    ~Control();
+    void update(float angle);
   private:
-  	GPIO *gpio;
+    GPIO *gpio;
+    float turnPID(float angle);
+    float speedPID(float turn);
 };
 
 #endif /* CONTROL_H */
