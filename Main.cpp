@@ -1,6 +1,7 @@
 #include "BufferManager/BufferManager.h"
 #include "Camera/Camera.h"
 #include "ImageProcessor/ImageProcessor.h"
+#include "Control/Control.h"
 #include "Hazard.h"
 #include "macros.h"
 #include <stdio.h>
