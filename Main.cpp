@@ -11,42 +11,6 @@
 #include "PathPlanner/PathPlanner.h"
 
 using namespace std;
-void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera);
-void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor, PathPlanner* planner);
-
-int main()
-{
-  BufferManager man;
-  
-  // Start thread
-  printf("Start threads please\n");
-  Camera camera;
-
-  HazardList hazards_p;
-  PathPlanner planner(&hazards_p);
-  Control control();
-  printf("Threads 1\n");
-  ImageProcessor processor(camera.getWidth(), camera.getHeight(), &hazards_p);
-  printf("Threads 2\n");
-  boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
-  printf("Threads 3\n");
-  boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor, &planner, &control);
-  printf("Threads 4\n");
-  //while(1){}
-
-  // Ask thread to stop
-  //cameraThread.interrupt();
-  //processingThread.interrupt();
-
-  // Join - wait when thread actually exits
-  processingThread.join();
-  printf("Thread killed\n");
-  cameraThread.join();
-  printf("Thread killed\n");
-  //processingThread.join();
-  printf("Main: Program Ending ended");
-  return 0;
-}
 
 void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera)
 {
@@ -113,3 +77,37 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
     }
 	}
 }
+int main()
+{
+  BufferManager man;
+  
+  // Start thread
+  printf("Start threads please\n");
+  Camera camera;
+
+  HazardList hazards_p;
+  PathPlanner planner(&hazards_p);
+  Control control;
+  printf("Threads 1\n");
+  ImageProcessor processor(camera.getWidth(), camera.getHeight(), &hazards_p);
+  printf("Threads 2\n");
+  boost::thread cameraThread(&run_cameraThread, 1, 0, &man, &camera);
+  printf("Threads 3\n");
+  boost::thread processingThread(&run_processingThread, 2, 100, &man, &processor, &planner, &control);
+  printf("Threads 4\n");
+  //while(1){}
+
+  // Ask thread to stop
+  //cameraThread.interrupt();
+  //processingThread.interrupt();
+
+  // Join - wait when thread actually exits
+  processingThread.join();
+  printf("Thread killed\n");
+  cameraThread.join();
+  printf("Thread killed\n");
+  //processingThread.join();
+  printf("Main: Program Ending ended");
+  return 0;
+}
+

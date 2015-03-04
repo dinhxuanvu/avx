@@ -34,7 +34,7 @@ void PathPlanner::localMapping()
 
 float PathPlanner::bestPath()
 {
-  int numRays = 30;
+  int numRays = 35;
   vector<double> histogram(numRays,0); 
   system("clear");
   for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
@@ -56,7 +56,7 @@ float PathPlanner::bestPath()
     printf("Angle %0.0f=%0.0f\n",angle,histogram[angleIndex]);
 
   }
-  boost::this_thread::sleep(boost::posix_time::milliseconds(150));
+  //boost::this_thread::sleep(boost::posix_time::milliseconds(150));
   // Paul here
   return 0.0f;
 }

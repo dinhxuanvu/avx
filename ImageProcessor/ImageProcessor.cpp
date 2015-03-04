@@ -159,11 +159,11 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   imshow("Con", drawing);
   waitKey(1);
 #endif
-
-  CLEAR_SCREEN;
+  if (0){
   LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
   sort(this->hazards->begin(), this->hazards->end(), compareByLength);
   printHazards(this->hazards);
+  }
   return;
 }
 
