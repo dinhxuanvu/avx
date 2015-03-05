@@ -24,6 +24,7 @@ cd tmp
 # Build OpenNI2
 git clone https://github.com/occipital/openni2
 cd openni2/
+# Edit Makefiles to make -mfloat-abi to hard
 make
 sudo mkdir /usr/local/include/OpenNI2
 sudo cp -r Include/* /usr/local/include/OpenNI2

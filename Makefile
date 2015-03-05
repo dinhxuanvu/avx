@@ -11,7 +11,7 @@ DEBUG=1
 
 HOST=$(shell hostname)
 
-ifeq ($(HOST), walle)
+ifeq ($(HOST), arm)
 	DISPLAY_WINDOWS=0
 	HARDWARE=1
 else
