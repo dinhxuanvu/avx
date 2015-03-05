@@ -33,7 +33,7 @@ all: bin/avx
 
 compile: bin/avx
 
-play:
+play: test_GPIO
 	@echo "HERE WE GO"
 	sudo ./bin/test_GPIO
 
@@ -114,7 +114,7 @@ test_Control: bin/Control.o
 ## mod_GPIO ##########################################
 ######################################################
 
-ifeq ($HARDWARE,1)
+ifeq ($(HARDWARE),1)
 GPIO_SRC = GPIO/GPIO.cpp
 else
 GPIO_SRC = GPIO/GPIO_soft.cpp
@@ -125,6 +125,10 @@ bin/GPIO.o: $(GPIO_SRC) GPIO/GPIO.h
 
 test_GPIO: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+
+updateBat: bin/GPIO.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+
 
 ######################################################
 .PHONY: clean
