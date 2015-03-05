@@ -1,5 +1,5 @@
 #include "PathPlanner.h"
-
+#include <boost/thread.hpp>
 #include <math.h>
 
 using namespace std;
@@ -15,8 +15,8 @@ PathPlanner::PathPlanner(HazardList* haz_p)
   this->position = new Positioning();
 #endif
 }
-
-void PathPlanner::localMapping(HazXYList& hazXY)
+/*
+void PathPlanner::localMapping()
 {
   for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
   {
@@ -30,23 +30,38 @@ void PathPlanner::localMapping(HazXYList& hazXY)
     hazXY.push_back( thisHaz );
   }
 }
+*/
 
-float PathPlanner::bestPath(HazXYList& hazXY)
+float PathPlanner::bestPath()
 {
-  //Calcuate the potential of each obsticle.
-  for(HazXYList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
+  int numRays = 35;
+  vector<double> histogram(numRays,0); 
+  system("clear");
+  for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
   {
-    double x = it->x;
-    double y = it->y;
-    double r = it->r;
-    double distanceToHazard = sqrt(x*x + y*y) - r;
-    
-    
+    double angle = angleIndex*90/numRays - 45;
+    //Calcuate the potential of each obsticle.
+    for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
+    {
+      double theta = it->theta;
+      double angularWidth = it->width;
+      if (theta - 0.5*angularWidth <= angle && theta + 0.5*angularWidth >= angle){
+         double depth = it->depth;
+         histogram[angleIndex] = histogram[angleIndex] + depth*depth;
+      } else
+      {
+        //printf("Neg:%0.0f Angle:%0.0f Pos:%0.0f\n" ,theta - 0.5*angularWidth, angle ,theta + 0.5*angularWidth);
+      }
+    }
+    printf("Angle %0.0f=%0.0f\n",angle,histogram[angleIndex]);
 
   }
+  //boost::this_thread::sleep(boost::posix_time::milliseconds(150));
   // Paul here
   return 0.0f;
 }
+
+
 
 /*
  * Get the best direction to go based on hazards.
@@ -68,9 +83,9 @@ float PathPlanner::getDirection()
 #endif
   headingDisp -= camAngle;
 
-  HazXYList hazXY;
-  this->localMapping(hazXY);
-  dir = this->bestPath(hazXY);
+  //HazXYList hazXY;
+  //this->localMapping();
+  dir = this->bestPath();
 
   dir += camAngle;
 
