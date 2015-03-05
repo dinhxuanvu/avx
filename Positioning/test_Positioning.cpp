@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 
   while(1)
   {
-    cout << "Val: " << pos.getHeading() << endl;
+    cout << "Val: " << pos.getHeadingOffset() << endl;
     usleep(100000);
   }
 
