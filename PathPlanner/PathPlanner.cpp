@@ -86,7 +86,7 @@ float PathPlanner::bestPath()
   }
   float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
   printf("Turn %0.0f\n",maxAngle);
-  boost::this_thread::sleep(boost::posix_time::milliseconds(150));
+  //boost::this_thread::sleep(boost::posix_time::milliseconds(150));
   // Paul here
   return maxAngle;
 }
