@@ -3,6 +3,8 @@
 #include <math.h>
 
 using namespace std;
+#define CAM_VIEW_W   58.0f
+#define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
 
 /*
  * Public constructor for path planning module
@@ -34,31 +36,59 @@ void PathPlanner::localMapping()
 
 float PathPlanner::bestPath()
 {
-  int numRays = 35;
-  vector<double> histogram(numRays,0); 
   system("clear");
+  int numRays = 30;
+  float servoCompensatedCompasHeading = 0.0f;
+  int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
+  printf("TargetIndex:%d Angle:%0.0f\n",targetIndex, targetIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W);
+  vector<double> histogram(numRays,0); 
+  
   for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
   {
-    double angle = angleIndex*90/numRays - 45;
+    double angle = angleIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W;
+    double carWidthMM = 100;
     //Calcuate the potential of each obsticle.
     for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
     {
       double theta = it->theta;
       double angularWidth = it->width;
+      double depth = it->depth;
+      double carAngularWidthAtDepth = 2*tan(carWidthMM/(2*depth));
       if (theta - 0.5*angularWidth <= angle && theta + 0.5*angularWidth >= angle){
-         double depth = it->depth;
-         histogram[angleIndex] = histogram[angleIndex] + depth*depth;
+         histogram[angleIndex] = histogram[angleIndex] - 10000*1.0f/depth;
+      } else if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
+         histogram[angleIndex] = histogram[angleIndex] - 10000*0.5f/depth;
       } else
+
       {
         //printf("Neg:%0.0f Angle:%0.0f Pos:%0.0f\n" ,theta - 0.5*angularWidth, angle ,theta + 0.5*angularWidth);
       }
     }
-    printf("Angle %0.0f=%0.0f\n",angle,histogram[angleIndex]);
-
+    histogram[angleIndex] += CAM_VIEW_W - abs(angleIndex - targetIndex);
   }
-  //boost::this_thread::sleep(boost::posix_time::milliseconds(150));
+  int maxIndex = 0;
+  for(int histIndex = 0 ; histIndex < numRays ; ++histIndex)
+  {
+    if (histogram[histIndex] > histogram[maxIndex]){
+      maxIndex = histIndex;
+    }
+    double angle = histIndex*CAM_VIEW_W/((float)numRays) - HALF_CAM_VIEW_W;
+    int counter = 0;
+    for(int compareIndex = 0 ; compareIndex < numRays ; ++compareIndex)
+    {
+      if (histogram[histIndex] <= histogram[compareIndex])
+      {
+        counter++;
+      }
+    }
+    //printf("Angle %-5.1f=%d\n",angle,counter);//histogram[angleIndex]);
+    printf("Angle %-5.1f=%0.0f\n",angle,histogram[histIndex]);
+  }
+  float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
+  printf("Turn %0.0f\n",maxAngle);
+  boost::this_thread::sleep(boost::posix_time::milliseconds(150));
   // Paul here
-  return 0.0f;
+  return maxAngle;
 }
 
 

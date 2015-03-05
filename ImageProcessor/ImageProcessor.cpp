@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESH         18
+#define BACK_THRESH         20
 #define CANNY_PARAM         9
 #define EDGE_ERODE          5
 #define EDGE_BLUR           5
@@ -78,8 +78,8 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   erode(edges,edges,element);
 
 #if DISPLAY_WINDOWS
-  namedWindow("W",0);
-  imshow("W", edges);
+  //namedWindow("W",0);
+  //imshow("W", edges);
 #endif
 
   // Threshold background subtraction
@@ -159,6 +159,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   imshow("Con", drawing);
   waitKey(1);
 #endif
+  //CLEAR_SCREEN;
   if (0){
   LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
   sort(this->hazards->begin(), this->hazards->end(), compareByLength);
@@ -227,8 +228,8 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   nextCalibration += working;
 #if DISPLAY_WINDOWS
   LOG_MESSAGE("About to start calibration display");
-  namedWindow("Calibration2",0);
-  imshow("Calibration2", nextCalibration);
+  //namedWindow("Calibration2",0);
+  //imshow("Calibration2", nextCalibration);
   waitKey(20);
 #endif
 }
