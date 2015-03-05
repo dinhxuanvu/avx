@@ -10,10 +10,12 @@ class Control
     Control();
     ~Control();
     void update(float angle);
+    float getTurn();
   private:
     GPIO *gpio;
     float turnPID(float angle);
     float speedPID(float turn);
+    float turn;
 };
 
 #endif /* CONTROL_H */
