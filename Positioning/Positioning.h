@@ -1,7 +1,6 @@
 #ifndef POSITIONING_H
 #define POSITIONING_H
 
-#include "../Hazard.h"
 #include "../macros.h"
 #include "HMC5883L.h"
 

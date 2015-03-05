@@ -130,7 +130,7 @@ float GPIO::getBatteryLevel(void)
 int GPIO::updateBattery(void)
 {
   float bat = this->getBatteryLevel();
-  LOG_MESSAGE("Battery level: %f\n",bat);
+  LOG_MESSAGE("Battery level: %0.2f\n",bat*100.0f);
   this->setBatteryLEDs(bat);
   return 1;
 }
