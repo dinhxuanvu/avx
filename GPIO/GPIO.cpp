@@ -53,7 +53,7 @@ int GPIO::deinitialize(void)
 int GPIO::setMotor(int motor, float duty1, float duty2)
 {
   // Update value
-  BBBIO_PWMSS_Setting(motor, MOTOR_FREQ, duty1, duty2);
+  BBBIO_PWMSS_Setting(motor, MOTOR_FREQ, duty2, duty1);
   // Re-enable after update
   BBBIO_ehrPWM_Enable(motor);
   return 1;
@@ -136,7 +136,7 @@ int GPIO::updateBattery(void)
 }
 
 /* setTurn - sets the turning servo angle
- * param: float angle - [-90,90] range */
+ * param: float angle - [-36,36] range */
 int GPIO::setTurn(float angle)
 {
   float new_duty;
@@ -145,7 +145,7 @@ int GPIO::setTurn(float angle)
   this->updateBattery();
 
   // Scale by degress
-  angle = angle/90;
+  angle = angle/36.0f;
 
   // Check bounds
   if(angle > 1)
@@ -175,7 +175,7 @@ int GPIO::setCamera(float angle)
   float new_duty;
 
   // Scale by degress
-  angle = angle/90;
+  angle = angle/45.0f;
 
   // Check bounds
   if(angle > 1)
@@ -219,6 +219,12 @@ int GPIO::setSpeed(float speed)
 
   // Set duty[0] for forward, duty[1] for backward.
   duty[index] = (MOTOR_MAX-MOTOR_MIN)*speed + MOTOR_MIN;
+
+  if(speed == 0)
+  {
+    duty[0] = 0.0f;
+    duty[1] = 0.0f;
+  }
 
   cout << "Level A: " << duty[0] << endl << "Level B:" << duty[1] << endl;
 

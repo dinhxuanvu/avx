@@ -12,18 +12,28 @@ int main(void)
   cout << "Welcome to WALLE testing." << endl;
 
   //status &= testGPIOunits();
-
+  cout << "Initializing GPIO: ";
   GPIO *gpio = GPIO::instance();
-  cout << "Successful" << endl;
-  // Status LEDs
-  while(1)
-  {
-    cout << "Testing battery LEDs" << endl;
-    gpio->updateBattery();
-    cin.ignore();
-  }
-  cout << "Battery testing complete" << endl;
 
+  gpio->setTurn(-36.0f);
+  cin.ignore();
+  cout << "Verify wheels turned full right" << endl;
+  gpio->setTurn(+36.0f);
+  cin.ignore();
+  cout << "Verify wheels centered" << endl;
+  gpio->setTurn(0.0f);
+  cin.ignore();
+  
+  gpio->enableHBridge();
+
+  gpio->setSpeed(0.0f);
+  cin.ignore();
+  gpio->setSpeed(0.2f);
+  cin.ignore();
+
+  gpio->disableHBridge();
+
+  // Status LEDs
   if(status)
     cout << "All tests were successful" << endl;
 
