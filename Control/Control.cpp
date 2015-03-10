@@ -54,13 +54,8 @@ void Control::update(float angle)
  */
 float Control::speedPID(float turn)
 {
-  float speed;
-  if(abs(turn) < 10)
-  	speed = 1.0f;
-  else if(abs(turn) < 20)
-  	speed = 0.6f;
-  else
-  	speed = 0.3f;
+  float turnD = abs(turn);
+  float speed = (turnD/36.0f)*0.1 + (1- (turnD/36.0f))*1.0;
 
   return speed;
 }
