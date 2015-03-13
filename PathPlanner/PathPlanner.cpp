@@ -3,7 +3,7 @@
 #include <math.h>
 
 using namespace std;
-#define CAM_VIEW_W   58.0f
+#define CAM_VIEW_W   56.0f
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
 
 /*
@@ -38,7 +38,7 @@ float PathPlanner::bestPath()
 {
   system("clear");
   int numRays = 30;
-  float servoCompensatedCompasHeading = 0.0f;
+  float servoCompensatedCompasHeading = 15.0f;//in degrees
   int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
   printf("TargetIndex:%d Angle:%0.0f\n",targetIndex, targetIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W);
   vector<double> histogram(numRays,0); 
@@ -54,17 +54,21 @@ float PathPlanner::bestPath()
       double angularWidth = it->width;
       double depth = it->depth;
       double carAngularWidthAtDepth = 2*tan(carWidthMM/(2*depth));
-      if (theta - 0.5*angularWidth <= angle && theta + 0.5*angularWidth >= angle){
-         histogram[angleIndex] = histogram[angleIndex] - 10000*1.0f/depth;
-      } else if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
-         histogram[angleIndex] = histogram[angleIndex] - 10000*0.5f/depth;
+      //if (theta - 0.5*angularWidth <= angle && theta + 0.5*angularWidth >= angle){
+      //   histogram[angleIndex] = histogram[angleIndex] - 10000*1.0f/depth;
+      //} else 
+
+      //Remove score for being with a car width of the obsticle
+      if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
+         histogram[angleIndex] = histogram[angleIndex] - 200000*(angularWidth/2.0f - abs(theta - angle))/(depth*CAM_VIEW_W);
       } else
 
       {
         //printf("Neg:%0.0f Angle:%0.0f Pos:%0.0f\n" ,theta - 0.5*angularWidth, angle ,theta + 0.5*angularWidth);
       }
     }
-    histogram[angleIndex] += CAM_VIEW_W - abs(angleIndex - targetIndex);
+    //Add some score for being close to the target
+    histogram[angleIndex] += CAM_VIEW_W - 100*abs(angleIndex - targetIndex)/CAM_VIEW_W;
   }
   int maxIndex = 0;
   for(int histIndex = 0 ; histIndex < numRays ; ++histIndex)
