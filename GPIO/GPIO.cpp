@@ -32,7 +32,7 @@ GPIO::GPIO(void)
   BBBIO_PWMSS_Setting(MOTOR_B_PWM,  MOTOR_FREQ,   0.0,  0.0);   // Clear settings
 
   // Setup ADC
-  BBBIO_ADCTSC_module_ctrl(BBBIO_ADC_WORK_MODE_TIMER_INT, 160);
+  BBBIO_ADCTSC_module_ctrl(BBBIO_ADC_WORK_MODE_BUSY_POLLING, 1);
   // Setup the analog input sampling
   BBBIO_ADCTSC_channel_ctrl(BAT_SENSE, BBBIO_ADC_STEP_MODE_SW_CONTINUOUS, 0, 1, BBBIO_ADC_STEP_AVG_2, batBuff, 1);
 
@@ -113,9 +113,9 @@ float GPIO::getBatteryLevel(void)
   BBBIO_ADCTSC_channel_enable(BAT_SENSE);
   // Make one reading from the ADC
   BBBIO_ADCTSC_work(1);
+  BBBIO_ADCTSC_channel_disable(BAT_SENSE);
   float level = ((float)batBuff[0] * 0.001613f - 4.121f) ;
   // Disable the channel input until next read
-  BBBIO_ADCTSC_channel_disable(BAT_SENSE);
 
   // Restrict to [0,1]
   if(level > 1)
