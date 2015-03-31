@@ -38,7 +38,13 @@ float PathPlanner::bestPath()
 {
   system("clear");
   int numRays = 30;
-  float servoCompensatedCompasHeading = 15.0f;//in degrees
+  float servoCompensatedCompasHeading;
+  #if DISPLAY_WINDOWS==0
+    servoCompensatedCompasHeading = this->position->getHeadingOffset();
+  #else
+    servoCompensatedCompasHeading = 15;
+  #endif
+
   int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
   printf("TargetIndex:%d Angle:%0.0f\n",targetIndex, targetIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W);
   vector<double> histogram(numRays,0); 
