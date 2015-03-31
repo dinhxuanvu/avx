@@ -30,7 +30,7 @@ Camera::Camera()
   VideoMode depth_videoMode = this->depthStream.getVideoMode(); 
   depth_videoMode.setResolution(CAMERA_WIDTH, CAMERA_HEIGHT);
   depth_videoMode.setFps(30);
-  //depth.setVideoMode(depth_videoMode);
+  this->depthStream.setVideoMode(depth_videoMode);
 	rc = this->depthStream.start();
 	if (rc != STATUS_OK)
 	{

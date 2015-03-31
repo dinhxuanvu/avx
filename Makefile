@@ -40,8 +40,8 @@ play: test_GPIO
 ######################################################
 ## Main program ######################################
 ######################################################
-bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o bin/Control.o bin/GPIO.o
-	$(CC) $(CFLAGS) -o $@  bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o bin/Control.o bin/GPIO.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV) $(LIBGPIO)
+bin/avx: Main.cpp bin/ImageProcessor.o bin/BufferManager.o bin/Camera.o bin/PathPlanner.o bin/Control.o bin/GPIO.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o 
+	$(CC) $(CFLAGS) -o $@  bin/*.o Main.cpp $(LIBNI) -lboost_thread -lboost_system $(LIBCV) $(LIBGPIO)
 ######################################################
 ## mod_Test ##########################################
 ######################################################
