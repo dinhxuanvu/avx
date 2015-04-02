@@ -66,7 +66,7 @@ float PathPlanner::bestPath()
 
       //Remove score for being with a car width of the obsticle
       if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
-         //histogram[angleIndex] = histogram[angleIndex] - 200000*(angularWidth/2.0f - abs(theta - angle))/(depth*CAM_VIEW_W);
+         histogram[angleIndex] = histogram[angleIndex] - 200000*(angularWidth/2.0f - abs(theta - angle))/(depth*CAM_VIEW_W);
       } else
 
       {
