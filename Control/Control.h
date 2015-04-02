@@ -1,8 +1,11 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include <queue>
 #include "../GPIO/GPIO.h"
 #include "../macros.h"
+
+using namespace std;
 
 class Control
 {
@@ -16,6 +19,9 @@ class Control
     float turnPID(float angle);
     float speedPID(float turn);
     float turn;
+    float P,I,D;
+    float sum;
+    queue<float> errors;
 };
 
 #endif /* CONTROL_H */

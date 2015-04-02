@@ -9,8 +9,12 @@ Control::Control()
 {
   this->gpio = GPIO::instance();
 
-  this->gpio->enableHBridge();
+  //this->gpio->enableHBridge();
   this->turn = 0.0f;
+  this->P = 0.8f;
+  this->I = 0.5f;
+  this->D = 0.0f;
+  this->sum = 0.0f;
 }
 
 /*
@@ -65,6 +69,21 @@ float Control::speedPID(float turn)
  */
 float Control::turnPID(float angle)
 {
-  float turn = angle;
+  float turn;
+  float error = angle;
+
+  this->errors.push(error);
+
+  float der = error;
+  
+  this->sum += angle;
+
+  if(this->errors.size() > 30)
+  {
+    this->sum -= this->errors.front();
+    this->errors.pop();
+  }
+  
+  turn = this->P * error + this->I * this->sum + this->D * der;
   return turn;
 }
