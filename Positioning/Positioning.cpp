@@ -11,7 +11,7 @@ Positioning::Positioning():
 hmc(i2c)
 {
     this->hmc.initialize();
-    this->target = 0;
+    this->target = 180;
 }
 
 /*
@@ -49,11 +49,23 @@ int Positioning::getMagZ()
   return this->hmc.getMagnitudeZ();
 }
 
-
 /*
- * Get heading from magnetometer from 0 to 360 degress
+ * Get heading from magnetometer from 0 to 360 degress by average three attempts
  */
 float Positioning::getHeading()
+{
+  float heading;
+  for(int i=0; i<2; i++)
+  {
+    heading += this->getHeading1()/3;
+  }
+  return heading;
+}
+
+/* 
+ * Gets one heading value
+ */
+float Positioning::getHeading1()
 {
     int X = this->getMagX();
     int Y = this->getMagY();
@@ -76,6 +88,7 @@ float Positioning::getHeading()
     
     // Convert radians to degrees
     heading = heading * 180/M_PI;
+
     
     return heading;
 }
@@ -87,5 +100,8 @@ float Positioning::getHeading()
 float Positioning::getHeadingOffset()
 {
     float current = this->getHeading();
-    return current - this->target;
+    
+    printf("Heading current: %f, Target: %f\n",current, this->target);
+
+    return this->target - current;
 }

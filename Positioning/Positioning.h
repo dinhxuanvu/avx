@@ -24,6 +24,7 @@ class Positioning
     int getMagY();
     int getMagZ();
     float getHeading();
+    float getHeading1();
     float target;
 };
 
