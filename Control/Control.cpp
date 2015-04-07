@@ -11,10 +11,10 @@ Control::Control()
 
   this->turn = 0.0f;
   this->P = 1.0f;
-  this->I = 0.0f;
+  this->I = 0.3f;
   this->D = 0.0f;
   this->sum = 0.0f;
-  //this->gpio->enableHBridge();
+  this->gpio->enableHBridge();
 
 }
 
@@ -57,9 +57,13 @@ void Control::update(float angle)
  */
 float Control::speedPID(float turn)
 {
-  float turnD = 36; //abs(turn);
-  float speed = (turnD/36.0f)*0.1 + (1- (turnD/36.0f))*1.0;
+  if(turn > 36)
+    turn = 36.0f;
+  if(turn < -36)
+    turn = -36.0f;
 
+  float turnD = abs(turn);
+  float speed = 0.01 + (1- (turnD/36.0f))*1.0;
   return speed;
 }
 

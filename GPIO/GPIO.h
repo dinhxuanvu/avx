@@ -15,20 +15,20 @@
 
 // TURN DUTY CYCLES
 #define TURN_LEFT       2.7f
-#define TURN_CENTER     4.425f
+#define TURN_CENTER     4.6f
 #define TURN_RIGHT      6.5f
 
 // CAMERA DUTY CYCLES
 #define CAM_LEFT        2.7f
-#define CAM_CENTER      4.425f
+#define CAM_CENTER      4.45f
 #define CAM_RIGHT       6.5f
 
 #define MOTOR_A_PWM     BBBIO_PWMSS0  // Both channels A,B
 #define MOTOR_B_PWM     BBBIO_PWMSS1  // Both channels A,B
 #define MOTOR_FREQ      15000.0f        // 20Khz
 
-#define MOTOR_MIN		48.0f
-#define MOTOR_MAX		80.0f
+#define MOTOR_MIN		46.0f
+#define MOTOR_MAX		46.0f
 
 class GPIO
 {

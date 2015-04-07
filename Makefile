@@ -33,9 +33,9 @@ all: bin/avx
 
 compile: bin/avx
 
-play: test_GPIO
+play: bin/avx
 	@echo "HERE WE GO"
-	sudo ./bin/test_GPIO
+	sudo ./bin/avx
 
 ######################################################
 ## Main program ######################################
@@ -130,8 +130,9 @@ updateBat: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 
 kill: bin/GPIO.o
+	sudo killall avx
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
-
+	sudo ./bin/kill
 
 ######################################################
 .PHONY: clean

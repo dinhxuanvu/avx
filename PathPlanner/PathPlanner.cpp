@@ -6,7 +6,8 @@ using namespace std;
 #define CAM_VIEW_W   56.0f
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
 #define CAM_WEIGHT  200000
-#define COMP_WEIGHT 50
+#define COMP_WEIGHT 100
+#define OBSTACLE_SIZE 150
 
 /*
  * Public constructor for path planning module
@@ -56,21 +57,21 @@ float PathPlanner::bestPath()
   for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
   {
     double angle = angleIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W;
-    double carWidthMM = 250;
+    double carWidthMM = OBSTACLE_SIZE;
     //Calcuate the potential of each obsticle.
     for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
     {
       double theta = it->theta;
       double angularWidth = it->width;
       double depth = it->depth;
-      double carAngularWidthAtDepth = 2*tan(carWidthMM/(2*depth));
+      double carAngularWidthAtDepth = 180 / M_PI * atan(carWidthMM/(2*depth));
       //if (theta - 0.5*angularWidth <= angle && theta + 0.5*angularWidth >= angle){
       //   histogram[angleIndex] = histogram[angleIndex] - 10000*1.0f/depth;
       //} else 
 
       //Remove score for being with a car width of the obsticle
       if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
-         histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f - abs(theta - angle))/(depth*CAM_VIEW_W);
+         histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f + carAngularWidthAtDepth  - abs(theta - angle))/(depth*CAM_VIEW_W);
       } else
 
       {

@@ -15,10 +15,10 @@ int main(void)
   cout << "Initializing GPIO: ";
   GPIO *gpio = GPIO::instance();
 
-  gpio->setTurn(-36.0f);
+  gpio->setTurn(-15.0f);
   cin.ignore();
   cout << "Verify wheels turned full right" << endl;
-  gpio->setTurn(+36.0f);
+  gpio->setTurn(+15.0f);
   cin.ignore();
   cout << "Verify wheels centered" << endl;
   gpio->setTurn(0.0f);
