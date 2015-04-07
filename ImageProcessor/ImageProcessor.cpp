@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESH         25
+#define BACK_THRESH         20
 #define CANNY_PARAM         9
 #define EDGE_ERODE          5
 #define EDGE_BLUR           5
@@ -12,7 +12,7 @@ using namespace std;
 #define MIN_AREA            200
 #define MAX_AREA            99999999
 #define MIN_DEPTH           450
-#define MAX_DEPTH           1800
+#define MAX_DEPTH           1500
 #define CONVERT_CONST       0.064f
 #define CALIBRATION_POINTS  25000
 #define SHOW_WINDOWS        0
@@ -54,16 +54,25 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   image.convertTo(working, CV_8U);
 
   // Don't count any 0 or 255 values
-  threshold(working, working2, 254, 1, CV_THRESH_BINARY_INV);
+  threshold(working, working2, 128, 1, CV_THRESH_BINARY_INV);
   working = working.mul(working2);
   threshold(working, working2, 1, 1, CV_THRESH_BINARY_INV);
   multiply(this->calibrationImage,working2,working2);
+  
+
   working += working2;
+
+#if DISPLAY_WINDOWS
+  namedWindow("W",0);
+  imshow("W", working);
+  #endif
+
 
   // Background subtraction
   // diff = |Image - background|
   absdiff(this->calibrationImage,working,working);
   
+
   // Find edges where objects overlap
   Mat edges;
   // Canny detector
@@ -84,7 +93,10 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   // Threshold background subtraction
   threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY);
-
+#if DISPLAY_WINDOWS
+  namedWindow("T",0);
+  imshow("T", working);
+  #endif
   // Split threshold image at edges for overlapping images
   working = working.mul(edges);
 
@@ -191,14 +203,17 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   // Fill in the matrix with the data
   for(int i=0; i<max; i++)
   {
-    row = rng.uniform(0.35*this->height,1.0*this->height);
+    row = rng.uniform(0.34*this->height,1.0*this->height);
     col = rng.uniform(0.1*this->width,0.9*this->width);
     unsigned char val = nextCalibration.at<unsigned char>(row,col);
-
-    matX.at<float>(i,0) = col;
-    matX.at<float>(i,1) = row;
-    matX.at<float>(i,2) = val;
-    matZ.at<float>(i,0) = 1;
+    if (val !=0){
+      matX.at<float>(i,0) = col;
+      matX.at<float>(i,1) = row;
+      matX.at<float>(i,2) = val;
+      matZ.at<float>(i,0) = 1;
+    } else{
+      i--;
+    }
   }
 
   // Solve the equation

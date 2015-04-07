@@ -45,7 +45,7 @@ float PathPlanner::bestPath()
   #if DISPLAY_WINDOWS==0
     servoCompensatedCompasHeading = 0; //this->position->getHeadingOffset();
   #else
-    servoCompensatedCompasHeading = 15;
+    servoCompensatedCompasHeading = 0;
   #endif
 
   int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
