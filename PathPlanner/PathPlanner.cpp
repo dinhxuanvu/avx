@@ -98,7 +98,7 @@ float PathPlanner::bestPath()
       }
     }
     //printf("Angle %-5.1f=%d\n",angle,counter);//histogram[angleIndex]);
-    printf("Angle Camera %-5.1f=%0.0f Angle Compass = %0.0f\n",angle,histogram[histIndex]-histogram_compass[histIndex],histogram_compass[histIndex]);
+    printf("Angle %-5.1f Camera =%-03.0f Compass = %-03.0f\n",angle,histogram[histIndex]-histogram_compass[histIndex],histogram_compass[histIndex]);
   }
   printHazards(this->hazards);
   float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
