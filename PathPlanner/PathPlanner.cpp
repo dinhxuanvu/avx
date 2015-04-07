@@ -51,7 +51,8 @@ float PathPlanner::bestPath()
   int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
   printf("TargetIndex:%d Angle:%0.0f\n",targetIndex, targetIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W);
   vector<double> histogram(numRays,0); 
-  
+  vector<double> histogram_compass(numRays,0);
+
   for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
   {
     double angle = angleIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W;
@@ -77,7 +78,9 @@ float PathPlanner::bestPath()
       }
     }
     //Add some score for being close to the target
-    histogram[angleIndex] += CAM_VIEW_W - COMP_WEIGHT*abs(angleIndex - targetIndex)/CAM_VIEW_W;
+    double compassScore = CAM_VIEW_W - COMP_WEIGHT*abs(angleIndex - targetIndex)/CAM_VIEW_W;
+    histogram[angleIndex] += compassScore;
+    histogram_compass[angleIndex] += compassScore; 
   }
   int maxIndex = 0;
   for(int histIndex = 0 ; histIndex < numRays ; ++histIndex)
@@ -95,7 +98,7 @@ float PathPlanner::bestPath()
       }
     }
     //printf("Angle %-5.1f=%d\n",angle,counter);//histogram[angleIndex]);
-    printf("Angle %-5.1f=%0.0f\n",angle,histogram[histIndex]);
+    printf("Angle Camera %-5.1f=%0.0f Angle Compass = %0.0f\n",angle,histogram[histIndex]-histogram_compass[histIndex],histogram_compass[histIndex]);
   }
   printHazards(this->hazards);
   float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
