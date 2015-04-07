@@ -94,6 +94,7 @@ float PathPlanner::bestPath()
     //printf("Angle %-5.1f=%d\n",angle,counter);//histogram[angleIndex]);
     printf("Angle %-5.1f=%0.0f\n",angle,histogram[histIndex]);
   }
+  printHazards(this->hazards);
   float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
   printf("Turn %0.0f\n",maxAngle);
   //boost::this_thread::sleep(boost::posix_time::milliseconds(150));

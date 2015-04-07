@@ -130,7 +130,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     // Set up parameters for hazard
     double w     = (boundRect[i].width * CAM_VIEW_W / this->width);
     double h     = (boundRect[i].height * CAM_VIEW_H / this->height);
-    double theta = ((boundRect[i].tl().x + (boundRect[i].width/2.0f)) * CAM_VIEW_W) / this->width - 0.5 * CAM_VIEW_W;
+    double theta = -(((boundRect[i].tl().x + (boundRect[i].width/2.0f)) * CAM_VIEW_W) / this->width - 0.5 * CAM_VIEW_W);
     double phi   = -((boundRect[i].tl().y + (boundRect[i].height/2.0f)) * CAM_VIEW_H) / this->height + 0.5 * CAM_VIEW_H;
 
     // Create and add into hazards list

@@ -9,8 +9,15 @@
 #include <OpenNI2/OpenNI.h>
 #include <boost/thread.hpp>
 #include "PathPlanner/PathPlanner.h"
+#include <csignal>
 
 using namespace std;
+
+sig_atomic_t sigflag = 0;
+void sighandler(int s)
+{
+  sigflag = 1; // something like that
+}
 
 void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camera)
 {
@@ -19,6 +26,10 @@ void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camer
   {
     for(;;)
 	    {
+        if (sigflag != 0) {
+          std::cerr << "Signal in Camera!\n";
+          return;
+        }
         VideoFrameRef* vfr = man->getWriteBuffer();
         camera->populateFrame(vfr);
         man->writingToBufferComplete();
@@ -34,6 +45,7 @@ void run_cameraThread(int threadID, int delay, BufferManager* man, Camera* camer
 
 void run_processingThread(int threadID, int delay, BufferManager* man, ImageProcessor* processor, PathPlanner* planner, Control* control)
 {
+
   //Wait for the camera to fill the buffers
   boost::this_thread::sleep(boost::posix_time::milliseconds(100));
   printf("Processing thead started\n");
@@ -64,6 +76,10 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
 	{  
     try
     {
+      if (sigflag != 0) {
+          std::cerr << "Signal in Processing!\n";
+          return;
+      }
       uint16_t* imgBuf = man->getReadBuffer();
       processor->nextFrame(imgBuf);
       man->readingFromBufferComplete();
@@ -79,8 +95,10 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
 }
 int main()
 {
+  std::signal(SIGINT, sighandler);
+
+
   BufferManager man;
-  
   // Start thread
   printf("Start threads please\n");
   Camera camera;
