@@ -5,6 +5,8 @@
 using namespace std;
 #define CAM_VIEW_W   56.0f
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
+#define CAM_WEIGHT  200000
+#define COMP_WEIGHT 50
 
 /*
  * Public constructor for path planning module
@@ -15,6 +17,7 @@ PathPlanner::PathPlanner(HazardList* haz_p)
   this->hazards = haz_p;
 #if DISPLAY_WINDOWS==0
   this->position = new Positioning();
+  this->position->setTarget();
 #endif
 }
 /*
@@ -40,7 +43,7 @@ float PathPlanner::bestPath()
   int numRays = 30;
   float servoCompensatedCompasHeading;
   #if DISPLAY_WINDOWS==0
-    servoCompensatedCompasHeading = this->position->getHeadingOffset();
+    servoCompensatedCompasHeading = 0; //this->position->getHeadingOffset();
   #else
     servoCompensatedCompasHeading = 15;
   #endif
@@ -52,7 +55,7 @@ float PathPlanner::bestPath()
   for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
   {
     double angle = angleIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W;
-    double carWidthMM = 100;
+    double carWidthMM = 250;
     //Calcuate the potential of each obsticle.
     for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
     {
@@ -66,7 +69,7 @@ float PathPlanner::bestPath()
 
       //Remove score for being with a car width of the obsticle
       if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
-         histogram[angleIndex] = histogram[angleIndex] - 200000*(angularWidth/2.0f - abs(theta - angle))/(depth*CAM_VIEW_W);
+         histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f - abs(theta - angle))/(depth*CAM_VIEW_W);
       } else
 
       {
@@ -74,7 +77,7 @@ float PathPlanner::bestPath()
       }
     }
     //Add some score for being close to the target
-    histogram[angleIndex] += CAM_VIEW_W - 100*abs(angleIndex - targetIndex)/CAM_VIEW_W;
+    histogram[angleIndex] += CAM_VIEW_W - COMP_WEIGHT*abs(angleIndex - targetIndex)/CAM_VIEW_W;
   }
   int maxIndex = 0;
   for(int histIndex = 0 ; histIndex < numRays ; ++histIndex)
@@ -120,7 +123,7 @@ float PathPlanner::getDirection()
 #if DISPLAY_WINDOWS
   float headingDisp = -26.0f;
 #else
-  float headingDisp = this->position->getHeadingOffset();
+  float headingDisp = 0; //this->position->getHeadingOffset();
 #endif
   headingDisp -= camAngle;
 

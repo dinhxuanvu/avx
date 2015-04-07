@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESH         20
+#define BACK_THRESH         25
 #define CANNY_PARAM         9
 #define EDGE_ERODE          5
 #define EDGE_BLUR           5

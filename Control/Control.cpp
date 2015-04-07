@@ -9,12 +9,13 @@ Control::Control()
 {
   this->gpio = GPIO::instance();
 
-  //this->gpio->enableHBridge();
   this->turn = 0.0f;
-  this->P = 0.8f;
-  this->I = 0.5f;
+  this->P = 1.0f;
+  this->I = 0.0f;
   this->D = 0.0f;
   this->sum = 0.0f;
+  //this->gpio->enableHBridge();
+
 }
 
 /*
@@ -49,8 +50,6 @@ void Control::update(float angle)
   this->gpio->setCamera(turn);
   // Set speed based on turn
   this->gpio->setSpeed(speed);
-  // Update battery status
-	this->gpio->updateBattery();
 }
 
 /*
@@ -58,7 +57,7 @@ void Control::update(float angle)
  */
 float Control::speedPID(float turn)
 {
-  float turnD = abs(turn);
+  float turnD = 36; //abs(turn);
   float speed = (turnD/36.0f)*0.1 + (1- (turnD/36.0f))*1.0;
 
   return speed;
@@ -76,7 +75,7 @@ float Control::turnPID(float angle)
 
   float der = error;
   
-  this->sum += angle;
+  this->sum += error;
 
   if(this->errors.size() > 30)
   {
