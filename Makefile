@@ -129,6 +129,9 @@ test_GPIO: bin/GPIO.o
 updateBat: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 
+kill: bin/GPIO.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+
 
 ######################################################
 .PHONY: clean
