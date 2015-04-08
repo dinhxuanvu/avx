@@ -47,7 +47,12 @@ void Control::update(float angle)
   if(angle == -100)
   {
     turn = 0;      // GO straight backwards
-    speed = -0.75; // 75% reverse
+    if(abs(this->turn) > 10)
+      turn = 0;
+    else
+      turn = this->turn;
+
+    speed = -1.0; // 75% reverse
     this->sum = 0; // Reset PID I sum
   }
   // Otherwise do PID
