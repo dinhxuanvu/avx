@@ -101,9 +101,7 @@ float PathPlanner::bestPath()
     //printf("Angle %-5.1f=%d\n",angle,counter);//histogram[angleIndex]);
     printf("Angle %-5.1f Camera =%-03.0f Compass = %-03.0f\n",angle,histogram[histIndex]-histogram_compass[histIndex],histogram_compass[histIndex]);
   }
-  printHazards(this->hazards);
   float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
-  printf("Turn %0.0f\n",maxAngle);
   //boost::this_thread::sleep(boost::posix_time::milliseconds(150));
   // Paul here
   return maxAngle;
@@ -123,19 +121,20 @@ float PathPlanner::getDirection()
   // Get camera angle
   float camAngle = 0.0f;
 
-  // Get heading from Positioning module
-#if DISPLAY_WINDOWS
-  float headingDisp = -26.0f;
-#else
-  float headingDisp = 0; //this->position->getHeadingOffset();
-#endif
-  headingDisp -= camAngle;
+  // Check for stop hazard
+  if(this->hazards->front().type == STOP)
+  {
+    return -100;
+  }
+
 
   //HazXYList hazXY;
-  //this->localMapping();
   dir = this->bestPath();
 
   dir += camAngle;
+
+  printf("Turn %0.0f\n",dir);
+  printHazards(this->hazards);
 
   return dir;
 }

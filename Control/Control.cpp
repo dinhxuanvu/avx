@@ -41,10 +41,24 @@ float Control::getTurn()
  */
 void Control::update(float angle)
 {
-	float turn = this->turnPID(angle);
-  this->turn = turn;
-	float speed = this->speedPID(turn);
+  float turn;
+  float speed;
+  // If stop hazard, go in reverse straight
+  if(angle == -100)
+  {
+    turn = 0;      // GO straight backwards
+    speed = -0.75; // 75% reverse
+    this->sum = 0; // Reset PID I sum
+  }
+  // Otherwise do PID
+  else
+  {
+    turn = this->turnPID(angle);
+    speed = this->speedPID(turn);
+  }
 
+  // Save current turn value
+  this->turn = turn;
   // Set both servos to same angle
   this->gpio->setTurn(turn);
   this->gpio->setCamera(turn);
@@ -57,6 +71,7 @@ void Control::update(float angle)
  */
 float Control::speedPID(float turn)
 {
+  // Cap speed based on maximum angles
   if(turn > 36)
     turn = 36.0f;
   if(turn < -36)

@@ -4,6 +4,8 @@
 #include <vector>
 #include "macros.h"
 
+enum Type { HAZARD, STOP };
+
 struct Hazard {
   int id;
   double theta;
@@ -11,6 +13,7 @@ struct Hazard {
   double width;
   double height;
   int depth;
+  Type type;
 };
 
 typedef std::vector<Hazard> HazardList;
@@ -32,8 +35,13 @@ inline void printHazards(HazardList* h_p)
   int i=1;
   for(HazardList::iterator it= h_p->begin(); it != h_p->end(); ++it)
   {
-    LOG_MESSAGE("Haz %d = center (%0.0f,%0.0f), depth: %dmm width: %0.0f, height: %0.0f\n", \
-              i, it->theta, it->phi, it->depth, it->width, it->height);
+    if(it->type == HAZARD)
+    {
+      LOG_MESSAGE("Haz %d = center (%0.0f,%0.0f), depth: %dmm width: %0.0f, height: %0.0f\n", \
+                i, it->theta, it->phi, it->depth, it->width, it->height);
+    } else if(it->type == STOP) {
+      LOG_MESSAGE("STOP HAZARD\n");
+    }
     i++;
   }
 }

@@ -53,6 +53,22 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   image *= CONVERT_CONST;
   image.convertTo(working, CV_8U);
 
+  // First check if majority of screen is 0
+  int nonzero = countNonZero(working);
+  printf("Non-zero: %f\n",nonzero/(1.0f*this->height*this->width));
+  if(nonzero < (0.5*this->height*this->width))
+  {
+    Hazard thisHaz = {
+      0,       // id
+      0, 0,    // center location
+      0, 0,    // width and height
+      0,       // depth
+      STOP     // Hazard type
+    };
+    this->hazards->push_back( thisHaz );
+    return;
+  }
+
   // Don't count any 0 or 255 values
   threshold(working, working2, 128, 1, CV_THRESH_BINARY_INV);
   working = working.mul(working2);
@@ -150,7 +166,8 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
       i,          // id
       theta, phi, // center location
       w, h,       // width and height
-      depth       // depth
+      depth,      // depth
+      HAZARD      // Hazard type
     };
     this->hazards->push_back( thisHaz );
   }
