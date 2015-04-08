@@ -119,9 +119,12 @@ float PathPlanner::getDirection()
   system("clear");
 
   // Check for stop hazard
-  if(this->hazards->front().type == STOP)
+  if(!(this->hazards->empty()))
   {
-    return -100;
+    if(this->hazards->front().type == STOP)
+    {
+      return -100;
+    }
   }
 
   #if DISPLAY_WINDOWS==0
