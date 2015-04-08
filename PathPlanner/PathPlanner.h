@@ -16,7 +16,7 @@ class PathPlanner
     Positioning* position;
 
 	//void localMapping();
-	float bestPath();
+	float bestPath(float);
 };
 
 #endif /* PATHPLANNER_H */

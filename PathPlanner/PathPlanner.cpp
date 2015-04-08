@@ -38,20 +38,15 @@ void PathPlanner::localMapping()
 }
 */
 
-float PathPlanner::bestPath()
+float PathPlanner::bestPath(float servoCompensatedCompasHeading)
 {
-  system("clear");
   int numRays = 30;
-  float servoCompensatedCompasHeading;
-  #if DISPLAY_WINDOWS==0
-    servoCompensatedCompasHeading = 0; //this->position->getHeadingOffset();
-  #else
-    servoCompensatedCompasHeading = 0;
-  #endif
 
   int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
+
   printf("TargetIndex:%d Angle:%0.0f\n",targetIndex, targetIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W);
-  vector<double> histogram(numRays,0); 
+
+  vector<double> histogram(numRays,0);
   vector<double> histogram_compass(numRays,0);
 
   for(int angleIndex = 0 ; angleIndex < numRays ; ++angleIndex)
@@ -99,7 +94,7 @@ float PathPlanner::bestPath()
       }
     }
     //printf("Angle %-5.1f=%d\n",angle,counter);//histogram[angleIndex]);
-    printf("Angle %-5.1f Camera =%-03.0f Compass = %-03.0f\n",angle,histogram[histIndex]-histogram_compass[histIndex],histogram_compass[histIndex]);
+    printf("Angle %-5.1f Camera =%-3.0f Compass = %-3.0f\n",angle,histogram[histIndex]-histogram_compass[histIndex],histogram_compass[histIndex]);
   }
   float maxAngle = ((float)maxIndex*CAM_VIEW_W)/((float)numRays) - HALF_CAM_VIEW_W;
   //boost::this_thread::sleep(boost::posix_time::milliseconds(150));
@@ -115,11 +110,13 @@ float PathPlanner::bestPath()
  */ 
 float PathPlanner::getDirection()
 {
-  // Always go straight for now.
   float dir;
+  float compass;
 
   // Get camera angle
   float camAngle = 0.0f;
+
+  system("clear");
 
   // Check for stop hazard
   if(this->hazards->front().type == STOP)
@@ -127,9 +124,14 @@ float PathPlanner::getDirection()
     return -100;
   }
 
+  #if DISPLAY_WINDOWS==0
+    compass = 0; //this->position->getHeadingOffset();
+  #else
+    compass = 0;
+  #endif
 
   //HazXYList hazXY;
-  dir = this->bestPath();
+  dir = this->bestPath(compass);
 
   dir += camAngle;
 
