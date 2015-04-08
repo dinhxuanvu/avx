@@ -130,9 +130,9 @@ updateBat: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 
 kill: bin/GPIO.o
-	sudo killall avx
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
 	sudo ./bin/kill
+	sudo killall avx
 
 ######################################################
 .PHONY: clean
