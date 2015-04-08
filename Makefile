@@ -33,8 +33,9 @@ all: bin/avx
 
 compile: bin/avx
 
-play: 
+play: bin/avx
 	@echo "HERE WE GO"
+	sudo ./bin/avx
 
 ######################################################
 ## Main program ######################################

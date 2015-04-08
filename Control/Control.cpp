@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define QUEUE_SIZE	30
+
 /*
  * Public constructor for control module
  */
@@ -10,8 +12,8 @@ Control::Control()
   this->gpio = GPIO::instance();
 
   this->turn = 0.0f;
-  this->P = 1.0f;
-  this->I = 0.3f;
+  this->P = 1.2f;
+  this->I = 0.2f;
   this->D = 0.0f;
   this->sum = 0.0f;
   this->gpio->enableHBridge();
@@ -46,12 +48,7 @@ void Control::update(float angle)
   // If stop hazard, go in reverse straight
   if(angle == -100)
   {
-    turn = 0;      // GO straight backwards
-    if(abs(this->turn) > 10)
-      turn = 0;
-    else
-      turn = this->turn;
-
+    turn = this->turn*1.5;
     speed = -1.0; // 75% reverse
     this->sum = 0; // Reset PID I sum
   }
@@ -101,7 +98,7 @@ float Control::turnPID(float angle)
   
   this->sum += error;
 
-  if(this->errors.size() > 30)
+  if(this->errors.size() > QUEUE_SIZE)
   {
     this->sum -= this->errors.front();
     this->errors.pop();

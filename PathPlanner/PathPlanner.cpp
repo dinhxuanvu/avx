@@ -7,7 +7,7 @@ using namespace std;
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
 #define CAM_WEIGHT  200000
 #define COMP_WEIGHT 100
-#define OBSTACLE_SIZE 150
+#define OBSTACLE_SIZE 250
 
 /*
  * Public constructor for path planning module
