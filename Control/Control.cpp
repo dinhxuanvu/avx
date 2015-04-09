@@ -50,6 +50,8 @@ void Control::update(float angle)
   {
     turn = this->turn*1.5;
     speed = -1.0; // 75% reverse
+    queue<float> empty;
+    swap(this->errors,empty);
     this->sum = 0; // Reset PID I sum
   }
   // Otherwise do PID
