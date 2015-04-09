@@ -21,27 +21,10 @@ PathPlanner::PathPlanner(HazardList* haz_p)
   this->position->setTarget();
 #endif
 }
-/*
-void PathPlanner::localMapping()
-{
-  for(HazardList::iterator it= this->hazards->begin(); it != this->hazards->end(); ++it)
-  {
-    double r = (double)it->depth;
-    double theta = it->theta-90;
-    double width = 2*tan(it->width * M_PI / 360.0)*r;
-    // Center point
-    double x = r*cos(theta * M_PI / 180.0);
-    double y = r*sin(theta * M_PI / 180.0);
-    HazXY thisHaz = { x,y,width };
-    hazXY.push_back( thisHaz );
-  }
-}
-*/
 
 float PathPlanner::bestPath(float servoCompensatedCompasHeading)
 {
   int numRays = 30;
-
   int targetIndex = floor((servoCompensatedCompasHeading + HALF_CAM_VIEW_W)*numRays/CAM_VIEW_W);
 
   printf("TargetIndex:%d Angle:%0.0f\n",targetIndex, targetIndex*CAM_VIEW_W/numRays - HALF_CAM_VIEW_W);
