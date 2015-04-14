@@ -55,7 +55,6 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   // First check if majority of screen is 0
   int nonzero = countNonZero(working);
-  printf("Non-zero: %f\n",nonzero/(1.0f*this->height*this->width));
   if(nonzero < (0.5*this->height*this->width))
   {
     Hazard thisHaz = {

@@ -130,7 +130,7 @@ float GPIO::getBatteryLevel(void)
 int GPIO::updateBattery(void)
 {
   float bat = this->getBatteryLevel();
-  LOG_MESSAGE("Battery level: %0.2f\n",bat*100.0f);
+  LOG_MESSAGE("Battery level: %0.0f\n",bat*100.0f);
   this->setBatteryLEDs(bat);
   return 1;
 }
@@ -226,7 +226,6 @@ int GPIO::setSpeed(float speed)
     duty[1] = 0.0f;
   }
 
-  cout << "Level A: " << duty[0] << endl << "Level B:" << duty[1] << endl;
 
   // Set each motor with new duty cycles
   setMotor(MOTOR_A_PWM, duty[0], duty[1]);

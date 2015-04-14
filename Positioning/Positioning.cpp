@@ -19,8 +19,9 @@ hmc(i2c)
  */
 void Positioning::setTarget()
 {
-    float heading = this->getHeading();
+    float heading = this->getHeading(5);
     this->target = heading;
+    this->lastH = heading;
 }
 
 /*
@@ -52,24 +53,27 @@ int Positioning::getMagZ()
 /*
  * Get heading from magnetometer from 0 to 360 degress by average three attempts
  */
-float Positioning::getHeading()
+float Positioning::getHead()
 {
-  float heading;
-  for(int i=0; i<2; i++)
-  {
-    heading += this->getHeading1()/3;
-  }
+  float heading = 0;
+  heading = this->getHeading(5);
+  this->lastH = heading;
   return heading;
 }
 
 /* 
  * Gets one heading value
  */
-float Positioning::getHeading1()
+float Positioning::getHeading(int n)
 {
-    int X = this->getMagX();
-    int Y = this->getMagY();
-    this->getMagZ();
+    int X = 0; int Y = 0;
+    for(int i=0; i<n; i++)
+    {
+      X += this->getMagX();
+      Y += this->getMagY();
+      this->getMagZ();
+      usleep(100);
+    }
 
     // Calculate heading
     float heading = atan2(Y, X);
@@ -99,9 +103,10 @@ float Positioning::getHeading1()
  */
 float Positioning::getHeadingOffset()
 {
-    float current = this->getHeading();
+    float current = this->getHead();
     
-    printf("Heading current: %f, Target: %f\n",current, this->target);
+    printf("Heading current: %0.0f, Target: %0.0f\n",current, this->target);
 
-    return this->target - current;
+    float offset = this->target - current;
+    return offset;
 }

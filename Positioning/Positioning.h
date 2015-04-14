@@ -23,9 +23,10 @@ class Positioning
     int getMagX();
     int getMagY();
     int getMagZ();
-    float getHeading();
-    float getHeading1();
+    float getHead();
+    float getHeading(int);
     float target;
+    float lastH;
 };
 
 #endif /* POSITIONING_H */

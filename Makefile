@@ -128,9 +128,9 @@ test_GPIO: bin/GPIO.o
 
 updateBat: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
-
-kill: bin/GPIO.o
+bin/kill: bin/GPIO.o
 	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+kill: bin/kill
 	sudo ./bin/kill
 	sudo killall avx
 
