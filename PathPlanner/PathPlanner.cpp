@@ -5,8 +5,8 @@
 using namespace std;
 #define CAM_VIEW_W   56.0f
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
-#define CAM_WEIGHT  200000
-#define COMP_WEIGHT 100
+#define CAM_WEIGHT 200000
+#define COMP_WEIGHT 150
 #define OBSTACLE_SIZE 250
 
 /*
@@ -91,7 +91,7 @@ float PathPlanner::bestPath(float servoCompensatedCompasHeading)
  * Get the best direction to go based on hazards.
  * Returns turn angle which can be passed to GPIO
  */ 
-float PathPlanner::getDirection()
+Path PathPlanner::getDirection()
 {
   float dir;
   float compass;
@@ -101,20 +101,22 @@ float PathPlanner::getDirection()
 
   system("clear");
 
-  // Check for stop hazard
-  if(!(this->hazards->empty()))
-  {
-    if(this->hazards->front().type == STOP)
-    {
-      return -100;
-    }
-  }
 
   #if DISPLAY_WINDOWS==0
-    compass = 0; //this->position->getHeadingOffset();
+    compass = -this->position->getHeadingOffset();
   #else
     compass = 0;
   #endif
+ 
+  // Check for stop hazard
+  if(!(this->hazards->empty()))
+  {
+    if(this->hazards->front().type == BLOCK)
+    {
+      Path p = {-compass, REVERSE}; 
+      return p;
+    }
+  }
 
   //HazXYList hazXY;
   dir = this->bestPath(compass);
@@ -124,5 +126,6 @@ float PathPlanner::getDirection()
   printf("Turn %0.0f\n",dir);
   printHazards(this->hazards);
 
-  return dir;
+  Path p = {dir, GO};
+  return p;
 }

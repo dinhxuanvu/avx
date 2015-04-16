@@ -38,7 +38,7 @@ int Positioning::getMagX()
  */
 int Positioning::getMagY()
 {
-  return this->hmc.getMagnitudeY();
+  return (int)this->hmc.getMagnitudeY();
 }
 
 
@@ -47,7 +47,7 @@ int Positioning::getMagY()
  */
 int Positioning::getMagZ()
 {
-  return this->hmc.getMagnitudeZ();
+  return (int)this->hmc.getMagnitudeZ();
 }
 
 /*
@@ -67,16 +67,17 @@ float Positioning::getHead()
 float Positioning::getHeading(int n)
 {
     int X = 0; int Y = 0;
-    for(int i=0; i<n; i++)
-    {
-      X += this->getMagX();
-      Y += this->getMagY();
+    //for(int i=0; i<n; i++)
+    //{
+      X = this->getMagX()+300;
+      Y = this->getMagY()+300;
       this->getMagZ();
       usleep(100);
-    }
+    //}
 
     // Calculate heading
-    float heading = atan2(Y, X);
+    printf("X: %df, Y: %d\n",X,Y);
+    float heading = atan2(X, Y);
     
     // Declineation Angle at Rochester (-11o30')
     float declinationAngle = -0.200712864;

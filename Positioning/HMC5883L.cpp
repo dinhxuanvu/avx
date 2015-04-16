@@ -44,7 +44,7 @@ void HMC5883L::initialize() {
     setSamplesAvarage(SAMPLES_AVARAGE_8);
     setOutputRate(OUTPUT_RATE_4);
     setMeasurementMode(MEASUREMENT_NORMAL);
-    setMeasurementGain(GAIN_1090);
+    setMeasurementGain(GAIN_1370);
     setOperationMode(OPERATION_MODE_CONT);
 }
 

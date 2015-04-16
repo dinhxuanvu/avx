@@ -4,7 +4,8 @@
 #include <vector>
 #include "macros.h"
 
-enum Type { HAZARD, STOP };
+enum Type { HAZARD, BLOCK };
+enum Command { GO, REVERSE, STOP };
 
 struct Hazard {
   int id;
@@ -14,6 +15,11 @@ struct Hazard {
   double height;
   int depth;
   Type type;
+};
+
+struct Path {
+  float angle;
+  Command cmd;
 };
 
 typedef std::vector<Hazard> HazardList;
@@ -31,7 +37,7 @@ inline bool compareByLength(const Hazard &a, const Hazard &b)
  */
 inline void printHazards(HazardList* h_p)
 {
-  LOG_ERROR("Current hazards: (%lu):\n", h_p->size());
+  LOG_ERROR("Current hazards: (%d):\n", (int) h_p->size());
   int i=1;
   for(HazardList::iterator it= h_p->begin(); it != h_p->end(); ++it)
   {
@@ -39,7 +45,7 @@ inline void printHazards(HazardList* h_p)
     {
       LOG_MESSAGE("Haz %d = center (%0.0f,%0.0f), depth: %dmm width: %0.0f, height: %0.0f\n", \
                 i, it->theta, it->phi, it->depth, it->width, it->height);
-    } else if(it->type == STOP) {
+    } else if(it->type == BLOCK) {
       LOG_MESSAGE("STOP HAZARD\n");
     }
     i++;

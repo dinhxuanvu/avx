@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define QUEUE_SIZE	30
+#define QUEUE_SIZE	20.0f
 
 /*
  * Public constructor for control module
@@ -12,12 +12,14 @@ Control::Control()
   this->gpio = GPIO::instance();
 
   this->turn = 0.0f;
-  this->P = 1.2f;
-  this->I = 0.2f;
+  this->P = 0.8f;
+  this->I = 0.4f;
   this->D = 0.0f;
   this->sum = 0.0f;
   this->gpio->enableHBridge();
-
+  this->I = this->I/QUEUE_SIZE;
+  Path p = {0, GO};
+  this->lpath = p;
 }
 
 /*
@@ -41,24 +43,36 @@ float Control::getTurn()
  * Update GPIO for new angle
  * Called every loop
  */
-void Control::update(float angle)
+void Control::update(Path path)
 {
   float turn;
   float speed;
-  // If stop hazard, go in reverse straight
-  if(angle == -100)
+
+  // Clear I term if changing direction
+  if(path.cmd != this->lpath.cmd)
   {
-    turn = this->turn*1.5;
-    speed = -1.0; // 75% reverse
     queue<float> empty;
     swap(this->errors,empty);
     this->sum = 0; // Reset PID I sum
   }
-  // Otherwise do PID
-  else
+  // Save this path for next time
+  this->lpath = path;
+  // Get turn PID value
+  turn = this->turnPID(path.angle);
+
+  switch(path.cmd)
   {
-    turn = this->turnPID(angle);
-    speed = this->speedPID(turn);
+    case GO:
+      speed = this->speedPID(turn);
+      break;
+    case REVERSE:
+      speed = -1.0; // 75% reverse
+      break;
+    default:
+    case STOP:
+      turn = 0;
+      speed = 0;
+      break;
   }
 
   // Save current turn value
@@ -107,5 +121,6 @@ float Control::turnPID(float angle)
   }
   
   turn = this->P * error + this->I * this->sum + this->D * der;
+  printf("P: %0.1f, I: %0.1f, D: %0.1f\n",this->P * error, this->I * this->sum + this->D * der);
   return turn;
 }

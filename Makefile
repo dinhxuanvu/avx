@@ -123,13 +123,15 @@ endif
 bin/GPIO.o: $(GPIO_SRC) GPIO/GPIO.h
 	$(CC) $(CFLAGS) -c -o $@ $(GPIO_SRC)
 
-test_GPIO: bin/GPIO.o
-	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+bin/test_GPIO: bin/GPIO.o
+	$(CC) $(CFLAGS) -o $@ bin/GPIO.o GPIO/test_GPIO.cpp $(LIBGPIO)
 
-updateBat: bin/GPIO.o
-	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+bin/updateBat: bin/GPIO.o
+	$(CC) $(CFLAGS) -o $@ bin/GPIO.o GPIO/updateBat.cpp $(LIBGPIO)
+
 bin/kill: bin/GPIO.o
-	$(CC) $(CFLAGS) -o bin/$@ bin/GPIO.o GPIO/$@.cpp $(LIBGPIO)
+	$(CC) $(CFLAGS) -o $@ bin/GPIO.o GPIO/kill.cpp $(LIBGPIO)
+
 kill: bin/kill
 	sudo ./bin/kill
 	sudo killall avx

@@ -9,14 +9,13 @@ class PathPlanner
 {
   public:
     PathPlanner(HazardList*);
-    float getDirection();
+    Path getDirection();
     
   private:
     HazardList* hazards;
     Positioning* position;
-
-	//void localMapping();
-	float bestPath(float);
+    //void localMapping();
+    float bestPath(float);
 };
 
 #endif /* PATHPLANNER_H */

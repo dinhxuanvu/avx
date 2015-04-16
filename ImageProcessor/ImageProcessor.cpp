@@ -62,7 +62,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
       0, 0,    // center location
       0, 0,    // width and height
       0,       // depth
-      STOP     // Hazard type
+      BLOCK     // Hazard type
     };
     this->hazards->push_back( thisHaz );
     return;
@@ -189,7 +189,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 #endif
   //CLEAR_SCREEN;
   if (0){
-  LOG_MESSAGE("Hazards: %lu\n",this->hazards->size());
+  LOG_MESSAGE("Hazards: %d\n",(int)this->hazards->size());
   sort(this->hazards->begin(), this->hazards->end(), compareByLength);
   printHazards(this->hazards);
   }

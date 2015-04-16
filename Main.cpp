@@ -83,7 +83,7 @@ void run_processingThread(int threadID, int delay, BufferManager* man, ImageProc
       uint16_t* imgBuf = man->getReadBuffer();
       processor->nextFrame(imgBuf);
       man->readingFromBufferComplete();
-      float path = planner->getDirection();
+      Path path = planner->getDirection();
       control->update(path);
     }
     catch(boost::thread_interrupted&)
