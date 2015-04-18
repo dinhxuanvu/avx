@@ -4,3 +4,4 @@ bin/
 *.o
 *.*~
 cron.log
+PythonDaemon/lcd-log

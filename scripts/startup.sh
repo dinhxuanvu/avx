@@ -2,6 +2,8 @@
 (
 cd /home/ubuntu/develop/
 su ubuntu -c 'git pull'
+make python-daemon
+exec 2> /home/ubuntu/develop/PythonDaemon/lcd-log
 )
 ntpdate pool.ntp.org
 echo 65 > /sys/class/gpio/export

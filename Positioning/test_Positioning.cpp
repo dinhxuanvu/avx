@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
   while(1)
   {
-    cout << "Heading: " << fixed << setw(0) << setprecision(0) << pos.getHeadingOffset() << endl;
+    PRINT_LCD("Heading: %0.0f\n",  pos.getHeadingOffset());
     usleep(100000);
   }
 

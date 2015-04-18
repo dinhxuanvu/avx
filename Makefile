@@ -34,7 +34,7 @@ all: bin/avx
 compile: bin/avx
 
 play: test_Positioning kill-python-daemon python-daemon
-	sudo ./bin/test_Positioning >> PythonDaemon/lcd-log
+	sudo ./bin/test_Positioning 2>PythonDaemon/lcd-log
 
 .PHONY: python-daemon
 python-daemon:

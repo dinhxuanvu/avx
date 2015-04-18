@@ -26,6 +26,8 @@
 #define LOG_ERROR(fmt, ...) 	do{} while (0)
 #endif
 
+#define PRINT_LCD(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__);
+
 #define CLEAR_SCREEN	std::system("clear");
 
 #endif /* MACROS_H */
