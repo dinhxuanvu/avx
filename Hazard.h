@@ -29,7 +29,7 @@ typedef std::vector<Hazard> HazardList;
  */
 inline bool compareByLength(const Hazard &a, const Hazard &b)
 {
-    return a.depth < b.depth;
+    return a.depth > b.depth;
 }
 
 /*

@@ -13,7 +13,7 @@ Control::Control()
 
   this->turn = 0.0f;
   this->P = 0.8f;
-  this->I = 0.4f;
+  this->I = 0.9f;
   this->D = 0.0f;
   this->sum = 0.0f;
   this->gpio->enableHBridge();
@@ -66,10 +66,10 @@ void Control::update(Path path)
       speed = this->speedPID(turn);
       break;
     case REVERSE:
-      speed = -0.75; // 75% reverse
+      speed = -0.5; // 75% reverse
       break;
     case CAUTIOUS:
-      speed = 0.2;
+      speed = 0.1;
       break;
     default:
     case STOP:
@@ -100,7 +100,6 @@ float Control::speedPID(float turn)
 
   float turnD = abs(turn);
   float speed = 0.01 + (1- (turnD/36.0f))*1.0;
-  speed = 0.75;
   return speed;
 }
 

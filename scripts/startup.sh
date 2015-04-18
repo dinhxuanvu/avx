@@ -1,10 +1,9 @@
 #!/bin/bash
 (
 cd /home/ubuntu/develop/
-su ubuntu -c 'make kill-python-daemon'
-su ubuntu -c 'make python-daemon'
+make kill-python-daemon
+make python-daemon
 su ubuntu -c 'git pull'
-echo "Pulling code" >> /home/ubuntu/develop/PythonDaemon/lcd-log
 )
 ntpdate pool.ntp.org
 echo "Update ntp" >> /home/ubuntu/develop/PythonDaemon/lcd-log

@@ -27,8 +27,8 @@
 #define MOTOR_B_PWM     BBBIO_PWMSS1  // Both channels A,B
 #define MOTOR_FREQ      15000.0f        // 20Khz
 
-#define MOTOR_MIN		42.0f
-#define MOTOR_MAX		48.0f
+#define MOTOR_MIN		38.0f
+#define MOTOR_MAX		46.0f
 
 class GPIO
 {

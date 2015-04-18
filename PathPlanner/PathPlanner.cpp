@@ -5,9 +5,11 @@
 using namespace std;
 #define CAM_VIEW_W   56.0f
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
-#define CAM_WEIGHT 200000
-#define COMP_WEIGHT 150
-#define OBSTACLE_SIZE 250
+#define CAM_RATIO  2
+#define COMP_RATIO 1
+#define CAM_WEIGHT (CAM_RATIO*200000)
+#define COMP_WEIGHT (COMP_RATIO*150)
+#define OBSTACLE_SIZE 350
 
 /*
  * Public constructor for path planning module
@@ -49,7 +51,7 @@ float PathPlanner::bestPath(float servoCompensatedCompasHeading)
 
       //Remove score for being with a car width of the obsticle
       if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
-         //histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f + carAngularWidthAtDepth  - abs(theta - angle))/(depth*CAM_VIEW_W);
+         histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f + carAngularWidthAtDepth  - abs(theta - angle))/(depth*CAM_VIEW_W);
       } else
 
       {
@@ -108,14 +110,12 @@ Path PathPlanner::getDirection()
     compass = 0;
   #endif
 
-  PRINT_LCD("Offset: %0.0f\n",compass);
- 
   // Check for stop hazard
   if(!(this->hazards->empty()))
   {
     if(this->hazards->front().type == BLOCK)
     {
-      //PRINT_LCD("REVERSE\n");
+      PRINT_LCD("REVERSE\n");
       Path p = {-compass, REVERSE}; 
       return p;
     }
@@ -125,19 +125,18 @@ Path PathPlanner::getDirection()
   {
     if(this->hazards->front().type == HAZARD)
     {
-      if((this->hazards->front().depth < 500) & (abs(this->hazards->front().theta) < 10))
+      if((this->hazards->front().depth < 600))
       {
-        //PRINT_LCD("CAUTIOUS\n");
+        PRINT_LCD("CAUTIOUS\n");
         cmd = CAUTIOUS;
       }
       else
       {
-        //PRINT_LCD("GO\n");
+        PRINT_LCD("GO\n");
         cmd = GO;
       }
     }
   }
-
 
   //HazXYList hazXY;
   dir = this->bestPath(compass);
@@ -146,7 +145,7 @@ Path PathPlanner::getDirection()
 
   printf("Turn %0.0f\n",dir);
   printHazards(this->hazards);
-  //PRINT_LCD("Turn %0.0f\n",dir);
+  PRINT_LCD("Turn %0.0f\n",dir);
   cmd = CAUTIOUS;
   Path p = {dir, cmd};
   return p;

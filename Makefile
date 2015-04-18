@@ -35,11 +35,12 @@ all: bin/avx
 compile: bin/avx
 
 play: test_Positioning
-	sudo ./bin/test_Positioning 2>PythonDaemon/lcd-log
+	sudo ./bin/test_Positioning 2>>PythonDaemon/lcd-log
 
 .PHONY: python-daemon
 python-daemon:
 	touch PythonDaemon/lcd-log
+	chmod 777 PythonDaemon/lcd-log
 	sudo python PythonDaemon/lcd_write.py &
 .PHONY: kill-python-daemon
 kill-python-daemon:

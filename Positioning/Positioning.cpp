@@ -138,5 +138,9 @@ float Positioning::getHeadingOffset()
     //printf("Heading current: %0.0f, Target: %0.0f\n",current, this->target);
 
     float offset = this->target - current;
+    if(offset > 180)
+      offset -= 360;
+    if(offset < -180)
+      offset += 360;
     return offset;
 }
