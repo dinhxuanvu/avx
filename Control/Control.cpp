@@ -12,8 +12,8 @@ Control::Control()
   this->gpio = GPIO::instance();
 
   this->turn = 0.0f;
-  this->P = 0.8f;
-  this->I = 0.9f;
+  this->P = 0.7f;
+  this->I = 0.8f;
   this->D = 0.0f;
   this->sum = 0.0f;
   this->gpio->enableHBridge();
