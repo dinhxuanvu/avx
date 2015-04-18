@@ -1,6 +1,7 @@
 #include "Positioning.h"
 #include "BBB_I2C.h"
 #include "HMC5883L.h"
+#include "../GPIO/GPIO.h"
 
 using namespace std;
 
@@ -12,7 +13,8 @@ hmc(i2c)
 {
     this->hmc.initialize();
     this->target = 180;
-    this->calibrate();
+    this->calX = -15;
+    this->calY = 153;
 }
 
 /*
@@ -27,11 +29,11 @@ void Positioning::setTarget()
 
 void Positioning::calibrate()
 {
-    this->calX = -15;
-    this->calY = 153;
-    return;
+    PRINT_LCD("Calibrating compass\n");
     int maxX = 0; int maxY = 0;
     int minX = 0; int minY = 0;
+    GPIO *gpio = GPIO::instance();
+    gpio->startCircle();
     for(int i=0; i<500; i++)
     {
       int X = this->getMagX();
@@ -43,9 +45,17 @@ void Positioning::calibrate()
       if(Y < minY) { minY = Y; }
       usleep(200000);
     }
-    this->calX = (float)(maxX + minX) / -2.0f;
-    this->calY = (float)(maxY + minY) / -2.0f;
-    printf("Compass clibrated.\n X-offset: %d Y-offset: %d\n",this->calX,this->calY);
+    gpio->stopCircle();
+    // ENsure range is big enough to calibrate off of
+    if(((maxX - minX) > 300) & ((maxY-minY) > 300))
+    {
+      this->calX = (float)(maxX + minX) / -2.0f;
+      this->calY = (float)(maxY + minY) / -2.0f;
+      printf("Compass clibrated.\n X-offset: %d Y-offset: %d\n",this->calX,this->calY);
+      PRINT_LCD("Compass calibrated.\n X=%d Y=%d",this->calX, this->calY);
+    } else {
+      PRINT_LCD("Calibration failed.\n");
+    }
 }
 
 /*

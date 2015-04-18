@@ -82,6 +82,21 @@ int GPIO::disableHBridge(void)
   return 1;
 }
 
+/* Drive in a cirlce */
+void GPIO::startCircle(void)
+{
+  this->enableHBridge();
+  this->setTurn(+50);
+  this->setSpeed(0.75);
+}
+
+void GPIO::stopCircle(void)
+{
+  this->disableHBridge();
+  this->setTurn(0);
+  this->setSpeed(0);
+}
+
 /* setBattery - sets battery level by 4 LEDs on motor-board
  * Param: percent (float 0.0 to 1.0)
  */

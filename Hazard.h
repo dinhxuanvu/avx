@@ -5,7 +5,7 @@
 #include "macros.h"
 
 enum Type { HAZARD, BLOCK };
-enum Command { GO, REVERSE, STOP };
+enum Command { GO, REVERSE, CAUTIOUS, STOP };
 
 struct Hazard {
   int id;

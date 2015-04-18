@@ -49,7 +49,7 @@ float PathPlanner::bestPath(float servoCompensatedCompasHeading)
 
       //Remove score for being with a car width of the obsticle
       if (theta - 0.5*angularWidth - carAngularWidthAtDepth <= angle && theta + 0.5*angularWidth + carAngularWidthAtDepth >= angle){
-         histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f + carAngularWidthAtDepth  - abs(theta - angle))/(depth*CAM_VIEW_W);
+         //histogram[angleIndex] = histogram[angleIndex] - CAM_WEIGHT*(angularWidth/2.0f + carAngularWidthAtDepth  - abs(theta - angle))/(depth*CAM_VIEW_W);
       } else
 
       {
@@ -103,20 +103,41 @@ Path PathPlanner::getDirection()
 
 
   #if DISPLAY_WINDOWS==0
-    compass = 0; //-this->position->getHeadingOffset();
+    compass = -this->position->getHeadingOffset();
   #else
     compass = 0;
   #endif
+
+  PRINT_LCD("Offset: %0.0f\n",compass);
  
   // Check for stop hazard
   if(!(this->hazards->empty()))
   {
     if(this->hazards->front().type == BLOCK)
     {
+      //PRINT_LCD("REVERSE\n");
       Path p = {-compass, REVERSE}; 
       return p;
     }
   }
+  Command cmd;
+  if(!(this->hazards->empty()))
+  {
+    if(this->hazards->front().type == HAZARD)
+    {
+      if((this->hazards->front().depth < 500) & (abs(this->hazards->front().theta) < 10))
+      {
+        //PRINT_LCD("CAUTIOUS\n");
+        cmd = CAUTIOUS;
+      }
+      else
+      {
+        //PRINT_LCD("GO\n");
+        cmd = GO;
+      }
+    }
+  }
+
 
   //HazXYList hazXY;
   dir = this->bestPath(compass);
@@ -125,7 +146,8 @@ Path PathPlanner::getDirection()
 
   printf("Turn %0.0f\n",dir);
   printHazards(this->hazards);
-
-  Path p = {dir, GO};
+  //PRINT_LCD("Turn %0.0f\n",dir);
+  cmd = CAUTIOUS;
+  Path p = {dir, cmd};
   return p;
 }

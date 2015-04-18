@@ -29,11 +29,12 @@ DIR_BIN=bin
 
 # Build all targets
 all: bin/avx
-	sudo ./bin/avx
+	echo "Ready to run" >> PythonDaemon/lcd-log
+	sudo ./bin/avx 2>>PythonDaemon/lcd-log
 
 compile: bin/avx
 
-play: test_Positioning kill-python-daemon python-daemon
+play: test_Positioning
 	sudo ./bin/test_Positioning 2>PythonDaemon/lcd-log
 
 .PHONY: python-daemon
@@ -42,8 +43,8 @@ python-daemon:
 	sudo python PythonDaemon/lcd_write.py &
 .PHONY: kill-python-daemon
 kill-python-daemon:
-	rm -f PythonDaemon/lcd-log
 	sudo killall python
+	rm -f PythonDaemon/lcd-log
 
 ######################################################
 ## Main program ######################################
@@ -97,11 +98,11 @@ test_PathPlanner: bin/PathPlanner.o bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L
 ######################################################
 ## mod_Positioning ################################
 ######################################################
-bin/Positioning.o: Positioning/Positioning.cpp Positioning/Positioning.h
-	$(CC) $(CFLAGS) -c -o $@ Positioning/Positioning.cpp
+bin/Positioning.o: Positioning/Positioning.cpp Positioning/Positioning.h 
+	$(CC) $(CFLAGS) -c -o $@ Positioning/Positioning.cpp bin/GPIO.o
 
-test_Positioning: bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o
-	$(CC) $(CFLAGS) -o bin/$@ bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o Positioning/$@.cpp
+test_Positioning: bin/Positioning.o bin/BBB_I2C.o bin/HMC5883L.o bin/GPIO.o
+	$(CC) $(CFLAGS) -o bin/$@ bin/Positioning.o bin/BBB_I2C.o bin/GPIO.o bin/HMC5883L.o Positioning/$@.cpp $(LIBGPIO)
 
 bin/BBB_I2C.o: Positioning/BBB_I2C.cpp
 	$(CC) $(CFLAGS) -c -o $@ Positioning/BBB_I2C.cpp

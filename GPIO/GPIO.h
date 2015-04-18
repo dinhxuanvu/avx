@@ -28,7 +28,7 @@
 #define MOTOR_FREQ      15000.0f        // 20Khz
 
 #define MOTOR_MIN		42.0f
-#define MOTOR_MAX		45.0f
+#define MOTOR_MAX		48.0f
 
 class GPIO
 {
@@ -50,6 +50,7 @@ class GPIO
 
     /* getBatteryLevel - gets the battery level as a percentage */
     float getBatteryLevel(void);
+
   public:
     /* get the instance of the GPIO b/c of singleton */
     static GPIO *instance();
@@ -78,6 +79,10 @@ class GPIO
      * param: speed in [-1,1], where < 0 is reverse, and > 0 is forward
      */
     int setSpeed(float);
+
+    void startCircle();
+    void stopCircle();
+
 };
 
 #endif /* GPIO_H_ */

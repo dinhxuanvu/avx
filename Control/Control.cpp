@@ -66,7 +66,10 @@ void Control::update(Path path)
       speed = this->speedPID(turn);
       break;
     case REVERSE:
-      speed = -1.0; // 75% reverse
+      speed = -0.75; // 75% reverse
+      break;
+    case CAUTIOUS:
+      speed = 0.2;
       break;
     default:
     case STOP:
@@ -97,6 +100,7 @@ float Control::speedPID(float turn)
 
   float turnD = abs(turn);
   float speed = 0.01 + (1- (turnD/36.0f))*1.0;
+  speed = 0.75;
   return speed;
 }
 
