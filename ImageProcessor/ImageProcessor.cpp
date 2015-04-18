@@ -12,10 +12,11 @@ using namespace std;
 #define MIN_AREA            200
 #define MAX_AREA            99999999
 #define MIN_DEPTH           450
-#define MAX_DEPTH           1500
+#define MAX_DEPTH           1400
 #define CONVERT_CONST       0.064f
 #define CALIBRATION_POINTS  25000
 #define SHOW_WINDOWS        0
+#define MIN_PHI             -20
 
 
 RNG rng(1234);
@@ -77,7 +78,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   working += working2;
 
-#if DISPLAY_WINDOWS
+  #if DISPLAY_WINDOWS
   namedWindow("W",0);
   imshow("W", working);
   #endif
@@ -87,7 +88,10 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   // diff = |Image - background|
   absdiff(this->calibrationImage,working,working);
   
-
+  #if DISPLAY_WINDOWS
+  namedWindow("ABS",0);
+  imshow("ABS", working);
+  #endif
   // Find edges where objects overlap
   Mat edges;
   // Canny detector
@@ -105,6 +109,12 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   //namedWindow("W",0);
   //imshow("W", edges);
 #endif
+#if DISPLAY_WINDOWS
+  namedWindow("CAL",0);
+  imshow("CAL", this->calibrationImage);
+#endif
+
+
 
   // Threshold background subtraction
   threshold(working, working, BACK_THRESH, 256, CV_THRESH_BINARY);
@@ -122,9 +132,39 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
   // Find outlines of boxes
   findContours( working, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0,0) );
 
+
+  for(unsigned int i=0; i < contours.size(); i++)
+  {
+    // Bound shape in a rectangle
+    // Make polygonal approximation of shape detected (can be skipped)
+    vector<Point> anothercontour;
+    approxPolyDP( Mat(contours[i]), anothercontour, 3, true );
+    // Bound shape in a rectangle
+    Rect anotherect = boundingRect( Mat(anothercontour) );
+
+    if(anotherect.width > (this->width*0.5))
+    {
+      int center = anotherect.x + anotherect.width/2;
+      vector<Point> contoursL;
+      vector<Point> contoursR;
+      for(int j=contours[i].size()-1; j >=0; j--)
+      {
+        if(contours[i][j].x < center){
+          contoursL.push_back(contours[i][j]);
+        } else {
+          contoursR.push_back(contours[i][j]);
+        }
+      }
+      contours.push_back(contoursL);
+      contours.push_back(contoursR);
+      // Remove from countors of too small or large
+      contours.erase(contours.begin()+i);
+    }
+  }
+
   // Approximate contours to polygons and get bounding rects
-  vector<vector<Point> > contours_poly( contours.size() );
-  vector<Rect> boundRect( contours.size() );
+  vector<vector<Point> > contours_poly(contours.size());
+  vector<Rect> boundRect(contours.size());
 
   // Loop through contours that are found
   // Remove too small or too large
@@ -140,8 +180,8 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     // Depth calculator for box
     Scalar ddepth = mean(image(boundRect[i]));
     int depth = (int)ddepth[0]/CONVERT_CONST;
-
-    if((area < MIN_AREA) | (area > MAX_AREA) | (depth < MIN_DEPTH) | (depth > MAX_DEPTH))
+    double phi   = -((boundRect[i].tl().y + (boundRect[i].height/2.0f)) * CAM_VIEW_H) / this->height + 0.5 * CAM_VIEW_H;
+    if((area < MIN_AREA) | (area > MAX_AREA) | (depth < MIN_DEPTH) | (depth > MAX_DEPTH) | (phi < MIN_PHI))
     {
       // Remove from countors of too small or large
       contours.erase(contours.begin()+i);
@@ -158,7 +198,6 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
     double w     = (boundRect[i].width * CAM_VIEW_W / this->width);
     double h     = (boundRect[i].height * CAM_VIEW_H / this->height);
     double theta = -(((boundRect[i].tl().x + (boundRect[i].width/2.0f)) * CAM_VIEW_W) / this->width - 0.5 * CAM_VIEW_W);
-    double phi   = -((boundRect[i].tl().y + (boundRect[i].height/2.0f)) * CAM_VIEW_H) / this->height + 0.5 * CAM_VIEW_H;
 
     // Create and add into hazards list
     Hazard thisHaz = {
@@ -219,7 +258,7 @@ void ImageProcessor::calibrate(uint16_t* dataBuffer)
   // Fill in the matrix with the data
   for(int i=0; i<max; i++)
   {
-    row = rng.uniform(0.34*this->height,1.0*this->height);
+    row = rng.uniform(0.5*this->height,0.9*this->height);
     col = rng.uniform(0.1*this->width,0.9*this->width);
     unsigned char val = nextCalibration.at<unsigned char>(row,col);
     if (val !=0){

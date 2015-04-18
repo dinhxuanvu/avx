@@ -173,6 +173,7 @@ int GPIO::setSpeed(float speed)
     speed = -speed;
   }
 
+
   // Set duty[0] for forward, duty[1] for backward.
   duty[index] = (MOTOR_MAX-MOTOR_MIN)*speed + MOTOR_MIN;
 
@@ -183,5 +184,19 @@ int GPIO::setSpeed(float speed)
   setMotor(MOTOR_B_PWM, duty[0], duty[1]);
 
   return 1;
+}
+/* Drive in a cirlce */
+void GPIO::startCircle(void)
+{
+  this->enableHBridge();
+  this->setTurn(+50);
+  this->setSpeed(0.75);
+}
+
+void GPIO::stopCircle(void)
+{
+  this->disableHBridge();
+  this->setTurn(0);
+  this->setSpeed(0);
 }
 
