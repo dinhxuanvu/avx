@@ -13,8 +13,8 @@ hmc(i2c)
 {
     this->hmc.initialize();
     this->target = 180;
-    this->calX = -15;
-    this->calY = 153;
+    this->calX = -4; //-15;
+    this->calY = 40; //153;
 }
 
 /*
@@ -34,7 +34,7 @@ void Positioning::calibrate()
     int minX = 0; int minY = 0;
     GPIO *gpio = GPIO::instance();
     gpio->startCircle();
-    for(int i=0; i<500; i++)
+    for(int i=0; i<250; i++)
     {
       int X = this->getMagX();
       int Y = this->getMagY();
@@ -43,7 +43,7 @@ void Positioning::calibrate()
       if(Y > maxY) { maxY = Y; } 
       if(X < minX) { minX = X; } 
       if(Y < minY) { minY = Y; }
-      usleep(200000);
+      usleep(100000);
     }
     gpio->stopCircle();
     // ENsure range is big enough to calibrate off of

@@ -17,9 +17,9 @@
 #define CLEAR		"\033[2J"
 
 #if DEBUG
-#define LOG_MESSAGE(fmt, ...) printf(GREEN "(%s:%s:%d)\n\t" RESET fmt "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
-#define LOG_WARNING(fmt, ...) printf(YELLOW "(%s:%s:%d)\n\t" RESET fmt , __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
-#define LOG_ERROR(fmt, ...) printf(RED "(%s:%s:%d)\n\t" RESET fmt , __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define LOG_MESSAGE(fmt, ...) printf(GREEN "(%s:%s:%d) " RESET fmt, __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define LOG_WARNING(fmt, ...) printf(YELLOW "(%s:%s:%d) " RESET fmt , __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define LOG_ERROR(fmt, ...) printf(RED "(%s:%s:%d) " RESET fmt , __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
 #else
 #define LOG_MESSAGE(fmt, ...) 	do{} while (0)
 #define LOG_WARNING(fmt, ...) 	do{} while (0)

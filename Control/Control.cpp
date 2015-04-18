@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define QUEUE_SIZE	20.0f
+#define QUEUE_SIZE	30.0f
 
 /*
  * Public constructor for control module
@@ -12,8 +12,8 @@ Control::Control()
   this->gpio = GPIO::instance();
 
   this->turn = 0.0f;
-  this->P = 0.7f;
-  this->I = 0.8f;
+  this->P = 0.8f;
+  this->I = 1.5f;
   this->D = 0.0f;
   this->sum = 0.0f;
   this->gpio->enableHBridge();

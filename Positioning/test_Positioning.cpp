@@ -12,6 +12,8 @@ int main(int argc, char** argv)
 {
   Positioning pos;
 
+  //pos.calibrate();
+
   while(1)
   {
     PRINT_LCD("Heading: %0.0f\n",  pos.getHeadingOffset());

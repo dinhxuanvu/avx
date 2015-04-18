@@ -5,7 +5,7 @@
 using namespace std;
 #define CAM_VIEW_W   56.0f
 #define HALF_CAM_VIEW_W  (CAM_VIEW_W/2.0f)
-#define CAM_RATIO  2
+#define CAM_RATIO  1
 #define COMP_RATIO 1
 #define CAM_WEIGHT (CAM_RATIO*200000)
 #define COMP_WEIGHT (COMP_RATIO*150)
@@ -105,7 +105,7 @@ Path PathPlanner::getDirection()
 
 
   #if DISPLAY_WINDOWS==0
-    compass = -this->position->getHeadingOffset();
+    compass = 0; //-this->position->getHeadingOffset();
   #else
     compass = 0;
   #endif
@@ -146,7 +146,6 @@ Path PathPlanner::getDirection()
   printf("Turn %0.0f\n",dir);
   printHazards(this->hazards);
   PRINT_LCD("Turn %0.0f\n",dir);
-  cmd = CAUTIOUS;
   Path p = {dir, cmd};
   return p;
 }
