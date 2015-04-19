@@ -11,12 +11,12 @@ using namespace std;
 #define CAM_VIEW_H          45.0f
 #define MIN_AREA            200
 #define MAX_AREA            99999999
-#define MIN_DEPTH           450
+#define MIN_DEPTH           0
 #define MAX_DEPTH           1400
 #define CONVERT_CONST       0.064f
 #define CALIBRATION_POINTS  25000
 #define SHOW_WINDOWS        0
-#define MIN_PHI             -20
+#define MIN_PHI             -15
 
 
 RNG rng(1234);

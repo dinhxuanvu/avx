@@ -120,7 +120,7 @@ Path PathPlanner::getDirection()
       return p;
     }
   }
-  Command cmd;
+  Command cmd = GO;
   if(!(this->hazards->empty()))
   {
     if(this->hazards->front().type == HAZARD)
@@ -129,11 +129,6 @@ Path PathPlanner::getDirection()
       {
         PRINT_LCD("CAUTIOUS\n");
         cmd = CAUTIOUS;
-      }
-      else
-      {
-        PRINT_LCD("GO\n");
-        cmd = GO;
       }
     }
   }

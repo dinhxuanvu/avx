@@ -49,7 +49,7 @@ void Control::update(Path path)
   float speed;
 
   // Clear I term if changing direction
-  if(path.cmd != this->lpath.cmd)
+  if(path.cmd == REVERSE)
   {
     queue<float> empty;
     swap(this->errors,empty);
@@ -66,7 +66,7 @@ void Control::update(Path path)
       speed = this->speedPID(turn);
       break;
     case REVERSE:
-      speed = -0.5; // 75% reverse
+      speed = -0.8; // 75% reverse
       break;
     case CAUTIOUS:
       speed = 0.1;
