@@ -40,7 +40,6 @@ lcd.blink(True)
 for line in loglines:
 	lcd.clear()
 	lcd.home()
-	lcd.message(lastline.rstrip()[0:15])
-	lcd.message('\n')
 	lcd.message(line.rstrip()[0:15])
-	lastline = line
+	lcd.message('\n')
+	lcd.message(line.rstrip()[16:31])

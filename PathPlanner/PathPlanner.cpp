@@ -116,11 +116,10 @@ Path PathPlanner::getDirection()
   {
     if(this->hazards->front().type == BLOCK)
     {
-      PRINT_LCD("REVERSE\n");
       cmd = REVERSE;
       if (this->previousCmd != cmd)
       {
-        PRINT_LCD("CAUTIOUS\n");
+        PRINT_LCD("REVERSE\n");
       }
       Path p = {-compass, REVERSE}; 
       previousCmd = cmd;
@@ -141,7 +140,7 @@ Path PathPlanner::getDirection()
       }
     }
   }
-  if (previousCmd != GO)
+  if (this->previousCmd != GO)
   {
     PRINT_LCD("GO\n");
   }
@@ -153,7 +152,7 @@ Path PathPlanner::getDirection()
 
   printf("Turn %0.0f\n",dir);
   printHazards(this->hazards);
-  PRINT_LCD("Turn %0.0f\n",dir);
+  //PRINT_LCD("Turn %0.0f\n",dir);
   Path p = {dir, cmd};
   return p;
 }
