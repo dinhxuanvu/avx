@@ -98,11 +98,7 @@ Path PathPlanner::getDirection()
   float dir;
   float compass;
 
-  // Get camera angle
-  float camAngle = 0.0f;
-
   system("clear");
-
 
   #if DISPLAY_WINDOWS==0
     compass = 0; //-this->position->getHeadingOffset();
@@ -111,48 +107,37 @@ Path PathPlanner::getDirection()
   #endif
 
   // Check for stop hazard
-  Command cmd = GO;
+  Path p;
+  p.angle = this->bestPath(compass);
   if(!(this->hazards->empty()))
   {
     if(this->hazards->front().type == BLOCK)
     {
-      cmd = REVERSE;
-      if (this->previousCmd != cmd)
-      {
-        PRINT_LCD("REVERSE\n");
-      }
-      Path p = {-compass, REVERSE}; 
-      previousCmd = cmd;
-      return p;
+      p.cmd = REVERSE;
+      p.angle = -compass;
     }
-  }
-  if(!(this->hazards->empty()))
-  {
     if(this->hazards->front().type == HAZARD)
     {
-      if((this->hazards->front().depth < 600))
+      if((this->hazards->front().depth < 700))
       {
-        cmd = CAUTIOUS;
-        if (this->previousCmd != cmd)
-        {
-          PRINT_LCD("CAUTIOUS\n");
-        }
+        p.cmd = CAUTIOUS;
+      }
+      else
+      {
+        p.cmd = GO;
       }
     }
   }
-  if (this->previousCmd != GO)
-  {
-    PRINT_LCD("GO\n");
-  }
-  this->previousCmd = cmd;
-  //HazXYList hazXY;
-  dir = this->bestPath(compass);
 
-  dir += camAngle;
+  int hazCount = (int)this->hazards->size();
+  if (this->previousCmd != p.cmd || this->lastHazCount != hazCount)
+  {
+    PRINT_LCD("State: %-9sHazards: %d\n",path_name[p.cmd].c_str(),hazCount);
+  }
+  this->lastHazCount = hazCount;
+  this->previousCmd = p.cmd;
 
   printf("Turn %0.0f\n",dir);
   printHazards(this->hazards);
-  //PRINT_LCD("Turn %0.0f\n",dir);
-  Path p = {dir, cmd};
   return p;
 }

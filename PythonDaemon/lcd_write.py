@@ -35,11 +35,14 @@ lcd = LCD.Adafruit_CharLCD(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7,
 # Print a two line message
 logfile = open("PythonDaemon/lcd-log","r")
 loglines = follow(logfile)
-lastline = ""
-lcd.blink(True)
+lline1 = ""
+lline2 = ""
 for line in loglines:
-	lcd.clear()
-	lcd.home()
-	lcd.message(line.rstrip()[0:15])
-	lcd.message('\n')
-	lcd.message(line.rstrip()[16:31])
+        line1 = line.rstrip()[0:15]
+        line2 = line.rstrip()[16:31]
+        if(line1 != lline1):
+		lcd.set_cursor(0,0)
+		lcd.message(line1.ljust(16))
+	if(line2 != lline2):
+		lcd.set_cursor(0,1)
+		lcd.message(line2.ljust(16))

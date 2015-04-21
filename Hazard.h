@@ -2,10 +2,12 @@
 #define HAZARD_H
 
 #include <vector>
+#include <string>
 #include "macros.h"
 
 enum Type { HAZARD, BLOCK };
 enum Command { GO, REVERSE, CAUTIOUS, STOP };
+const std::string path_name[] = {"Go", "Reverse", "Cautious", "Stop" };
 
 struct Hazard {
   int id;
@@ -29,7 +31,7 @@ typedef std::vector<Hazard> HazardList;
  */
 inline bool compareByLength(const Hazard &a, const Hazard &b)
 {
-    return a.depth > b.depth;
+    return a.depth < b.depth;
 }
 
 /*

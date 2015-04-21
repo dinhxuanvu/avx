@@ -132,6 +132,9 @@ endif
 bin/GPIO.o: $(GPIO_SRC) GPIO/GPIO.h
 	$(CC) $(CFLAGS) -c -o $@ $(GPIO_SRC)
 
+bin/control: bin/GPIO.o GPIO/control.cpp
+	$(CC) $(CFLAGS) -o $@ bin/GPIO.o GPIO/control.cpp $(LIBGPIO)
+
 bin/test_GPIO: bin/GPIO.o
 	$(CC) $(CFLAGS) -o $@ bin/GPIO.o GPIO/test_GPIO.cpp $(LIBGPIO)
 
