@@ -56,7 +56,7 @@ void ImageProcessor::nextFrame(uint16_t* dataBuffer)
 
   // First check if majority of screen is 0
   int nonzero = countNonZero(working);
-  if(nonzero < (0.5*this->height*this->width))
+  if(nonzero < (0.75*this->height*this->width))
   {
     Hazard thisHaz = {
       0,       // id
