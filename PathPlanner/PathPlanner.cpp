@@ -111,28 +111,41 @@ Path PathPlanner::getDirection()
   #endif
 
   // Check for stop hazard
+  Command cmd = GO;
   if(!(this->hazards->empty()))
   {
     if(this->hazards->front().type == BLOCK)
     {
       PRINT_LCD("REVERSE\n");
+      cmd = REVERSE;
+      if (this->previousCmd != cmd)
+      {
+        PRINT_LCD("CAUTIOUS\n");
+      }
       Path p = {-compass, REVERSE}; 
+      previousCmd = cmd;
       return p;
     }
   }
-  Command cmd = GO;
   if(!(this->hazards->empty()))
   {
     if(this->hazards->front().type == HAZARD)
     {
       if((this->hazards->front().depth < 600))
       {
-        PRINT_LCD("CAUTIOUS\n");
         cmd = CAUTIOUS;
+        if (this->previousCmd != cmd)
+        {
+          PRINT_LCD("CAUTIOUS\n");
+        }
       }
     }
   }
-
+  if (previousCmd != GO)
+  {
+    PRINT_LCD("GO\n");
+  }
+  this->previousCmd = cmd;
   //HazXYList hazXY;
   dir = this->bestPath(compass);
 

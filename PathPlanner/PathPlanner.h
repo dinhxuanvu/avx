@@ -14,6 +14,7 @@ class PathPlanner
   private:
     HazardList* hazards;
     Positioning* position;
+    Command previousCmd;
     //void localMapping();
     float bestPath(float);
 };
